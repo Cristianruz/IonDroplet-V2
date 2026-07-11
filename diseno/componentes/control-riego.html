@@ -1,0 +1,38 @@
+<!-- @dsCard group="Componentes" -->
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Control de riego — automático y manual</title><style>
+  body{font-family:system-ui;background:#F6F7F4;color:#1A2E1A;margin:0;padding:32px;display:flex;gap:24px;flex-wrap:wrap}
+  .card{background:#fff;border-radius:24px;padding:32px;width:380px;border:1px solid rgba(0,0,0,.05);box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;flex-direction:column;gap:20px}
+  .titulo{font-size:24px;font-weight:600}
+  .banda{border-radius:16px;padding:18px;text-align:center;font-size:26px;font-weight:800;color:#fff}
+  @keyframes pulso{0%,100%{opacity:1}50%{opacity:.55}}
+  .pregunta{font-size:19px;color:#5C6B5C}
+  .modos{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .modo{border-radius:16px;padding:16px 10px;font-size:19px;font-weight:700;text-align:center;border:4px solid #D6DDD6;background:#fff;color:#5C6B5C}
+  .modo.activo{background:#2E7D32;border-color:#1B5E20;color:#fff}
+  .accion{border-radius:16px;padding:26px;text-align:center;font-size:26px;font-weight:800;color:#fff}
+  .nota{font-size:19px;color:#5C6B5C;text-align:center;padding:12px 0}
+</style></head><body>
+
+<div class="card">
+  <div class="titulo">🌊 Riego — modo automático</div>
+  <div class="banda" style="background:#8A978A">SIN REGAR</div>
+  <div class="pregunta">¿Quién decide cuándo regar?</div>
+  <div class="modos">
+    <div class="modo activo">✨ Solo (automático)</div>
+    <div class="modo">✋ Yo decido</div>
+  </div>
+  <div class="nota">El sistema riega solo cuando la tierra lo necesita. Usted no tiene que hacer nada. 🌱</div>
+</div>
+
+<div class="card">
+  <div class="titulo">🌊 Riego — manual, regando</div>
+  <div class="banda" style="background:#0277BD;animation:pulso 1.4s infinite">💧 REGANDO AHORA</div>
+  <div class="pregunta">¿Quién decide cuándo regar?</div>
+  <div class="modos">
+    <div class="modo">✨ Solo (automático)</div>
+    <div class="modo activo">✋ Yo decido</div>
+  </div>
+  <div class="accion" style="background:#B91C1C">⏹ DETENER RIEGO</div>
+</div>
+
+</body></html>

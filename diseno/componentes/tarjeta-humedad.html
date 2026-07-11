@@ -1,0 +1,38 @@
+<!-- @dsCard group="Componentes" -->
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Tarjeta de humedad — 3 estados</title><style>
+  body{font-family:system-ui;background:#F6F7F4;color:#1A2E1A;margin:0;padding:32px;display:flex;gap:24px;flex-wrap:wrap}
+  .card{background:#fff;border-radius:24px;padding:32px;width:340px;border:1px solid rgba(0,0,0,.05);box-shadow:0 1px 3px rgba(0,0,0,.06)}
+  .titulo{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:600;margin-bottom:6px}
+  .num{font-size:84px;font-weight:800;line-height:1}
+  .num small{font-size:42px}
+  .estado{font-size:28px;font-weight:800;margin-top:8px}
+  .detalle{font-size:19px;color:#5C6B5C;margin-top:4px}
+  .barra{height:22px;border-radius:999px;background:#E5E7E2;margin-top:22px;overflow:hidden}
+  .barra div{height:100%;border-radius:999px}
+</style></head><body>
+
+<div class="card">
+  <div class="titulo">💧 Humedad de la tierra</div>
+  <div class="num" style="color:#B45309">13<small>%</small></div>
+  <div class="estado" style="color:#B45309">TIERRA SECA</div>
+  <div class="detalle">Le falta agua a tu tierra</div>
+  <div class="barra"><div style="width:13%;background:#B45309"></div></div>
+</div>
+
+<div class="card">
+  <div class="titulo">💧 Humedad de la tierra</div>
+  <div class="num" style="color:#2E7D32">58<small>%</small></div>
+  <div class="estado" style="color:#2E7D32">HUMEDAD BIEN</div>
+  <div class="detalle">Tu tierra está en buen punto</div>
+  <div class="barra"><div style="width:58%;background:#2E7D32"></div></div>
+</div>
+
+<div class="card">
+  <div class="titulo">💧 Humedad de la tierra</div>
+  <div class="num" style="color:#0277BD">86<small>%</small></div>
+  <div class="estado" style="color:#0277BD">MUY HÚMEDA</div>
+  <div class="detalle">Tu tierra tiene agua de sobra</div>
+  <div class="barra"><div style="width:86%;background:#0277BD"></div></div>
+</div>
+
+</body></html>

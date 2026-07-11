@@ -1,0 +1,18 @@
+<!-- @dsCard group="Componentes" -->
+<!doctype html><html lang="es"><head><meta charset="utf-8"><title>Estados del sistema</title><style>
+  body{font-family:system-ui;background:#F6F7F4;color:#1A2E1A;margin:0;padding:32px;display:flex;flex-direction:column;gap:18px;max-width:640px}
+  .rol{color:#5C6B5C;font-size:14px;text-transform:uppercase;letter-spacing:.05em;margin-top:6px}
+  .chip{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:12px 22px;font-size:19px;font-weight:700;color:#fff;width:fit-content}
+  .banner{border-radius:16px;padding:20px;font-size:20px;font-weight:600;color:#fff}
+  .aviso{font-size:19px;font-weight:700;color:#B45309}
+</style></head><body>
+<div class="rol">Chip de conexión (siempre visible en el encabezado)</div>
+<span class="chip" style="background:#2E7D32">📶 Sistema conectado</span>
+<span class="chip" style="background:#B91C1C">📵 Sin conexión</span>
+<div class="rol">Banner sin conexión (instrucción simple, sin tecnicismos)</div>
+<div class="banner" style="background:#B91C1C">No encuentro el sistema de riego. Revise que la computadora del riego esté prendida y vuelva a intentar.</div>
+<div class="rol">Aviso de sensor callado (dentro de la tarjeta de humedad)</div>
+<div class="aviso">⚠️ El sensor lleva rato sin mandar datos. Revisa que el aparato esté conectado.</div>
+<div class="rol">Esperando primer dato</div>
+<div style="font-size:26px;font-weight:700;color:#5C6B5C">Esperando al sensor…</div>
+</body></html>
