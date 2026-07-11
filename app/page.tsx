@@ -1,0 +1,68 @@
+'use client'
+
+import { useIonDroplet } from '@/hooks/use-iondroplet'
+import { HumedadCard } from '@/components/humedad-card'
+import { RiegoCard } from '@/components/riego-card'
+import { IonizacionCard } from '@/components/ionizacion-card'
+import { GraficaHumedad } from '@/components/grafica-humedad'
+import { Sprout, Wifi, WifiOff } from 'lucide-react'
+
+export default function Dashboard() {
+  const {
+    humedad,
+    conectado,
+    sensorActivo,
+    estadoEsp,
+    historial,
+    ionizacion,
+    cambiarModo,
+    cambiarBomba,
+    cambiarIonizacion,
+  } = useIonDroplet()
+
+  return (
+    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+      <header className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <Sprout size={40} style={{ color: 'var(--verde)' }} aria-hidden />
+          <div>
+            <h1 className="text-3xl font-bold leading-tight">IonDroplet</h1>
+            <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>Su riego, vigilado día y noche</p>
+          </div>
+        </div>
+
+        <div
+          className="flex items-center gap-2 rounded-full px-5 py-2.5 text-lg font-semibold text-white"
+          style={{ background: conectado ? 'var(--verde)' : 'var(--peligro)' }}
+          role="status"
+        >
+          {conectado ? <Wifi size={22} aria-hidden /> : <WifiOff size={22} aria-hidden />}
+          {conectado ? 'Sistema conectado' : 'Sin conexión'}
+        </div>
+      </header>
+
+      {!conectado && (
+        <div
+          className="rounded-2xl p-5 text-xl font-semibold text-white"
+          style={{ background: 'var(--peligro)' }}
+        >
+          No encuentro el sistema de riego. Revise que la computadora del riego esté prendida
+          (INICIAR_SISTEMA.bat) y vuelva a intentar.
+        </div>
+      )}
+
+      <div className="grid md:grid-cols-2 gap-6">
+        <HumedadCard humedad={humedad} sensorActivo={sensorActivo} />
+        <RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} />
+      </div>
+
+      <GraficaHumedad historial={historial} />
+
+      <IonizacionCard encendida={ionizacion} cambiar={cambiarIonizacion} />
+
+      <footer className="text-center text-lg py-4" style={{ color: 'var(--tinta-suave)' }}>
+        IonDroplet · InnovaTecNM 2026
+      </footer>
+    </main>
+  )
+}

@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+:root {
+  --fondo: #f6f7f4;
+  --tarjeta: #ffffff;
+  --tinta: #1a2e1a;
+  --tinta-suave: #5c6b5c;
+  --verde: #2e7d32;
+  --verde-fuerte: #1b5e20;
+  --agua: #0277bd;
+  --alerta: #b45309;
+  --peligro: #b91c1c;
+}
+
+html {
+  /* Base grande: UX para agricultores 45-50 años */
+  font-size: 18px;
+}
+
+body {
+  background: var(--fondo);
+  color: var(--tinta);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+@keyframes pulso-riego {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+
+.regando {
+  animation: pulso-riego 1.4s ease-in-out infinite;
+}
