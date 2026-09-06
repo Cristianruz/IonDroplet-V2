@@ -204,3 +204,49 @@ scrollean dentro de su contenedor.
 El servidor de la app corría con `next start`, no con `next dev`. **Una ruta nueva no aparece
 hasta que se reconstruye**: `npm run build` y reiniciar. Perdí un rato buscando un 404 que no
 era del código.
+
+---
+
+## 7. La ionización — el hueco en el centro del producto
+
+Levantado el 6 de septiembre de 2026, a raíz de una pregunta del usuario.
+
+El sistema se llama IonDroplet y la ionización es lo que le da nombre. **Es también lo menos
+instrumentado de todo el sistema.** Cinco hechos verificados:
+
+1. **`/api/esp/data` recibe `ionizador` y lo descarta.** La variable se destructura en la
+   línea del handler y **no se lee en ninguna parte del archivo** (verificado: aparece 3 veces
+   en `server.js`, dos son comentarios). Aunque el firmware reportara, el backend lo tira.
+   A diferencia del GPS, aquí **la puerta no está abierta**.
+2. **Nada mide el efecto.** No hay ORP —el potencial redox en mV, que es la magnitud estándar
+   del agua ionizada—, ni pH, ni conductividad. El sistema no tiene una sola evidencia de que
+   la ionización sirva.
+3. **Ionización y riego son independientes.** Si el producto es riego con agua ionizada, el
+   ionizador debería estar encendido mientras corre la bomba. Nadie lo verificaba.
+4. **`ionization_log` tiene 4 filas**, todas del 6 de septiembre a las 05:26 con un segundo
+   entre cada una. Son pruebas. **No hay un solo uso real registrado.**
+5. **El panel de operación la omitía por completo.** Cero menciones en la primera versión.
+
+### Lo que se hizo, sin hardware
+
+- **Cifra nueva: "Riego con ionización (%)"** — qué porcentaje del tiempo de bomba ocurrió con
+  el ionizador encendido. Sale del **solape de intervalos de `action_log`**, sin ningún sensor
+  nuevo. Verificado con un caso construido: riego de 6 s, ionización cubriendo 3 s → **50%**,
+  calculado igual por el panel y por una comprobación independiente.
+- **Cifra nueva: "Ionización 7 d"** — eventos y tiempo acumulado.
+- **Bloque "Alcance de la medición de ionización"** en el panel, que dice los cuatro límites de
+  arriba con esas palabras.
+- **Tres filas nuevas en la tabla de procedencia**: estado del ionizador (*solicitada, sin
+  confirmación*), ORP y pH/conductividad (*no disponible*).
+
+### Lo que sigue necesitando hardware
+
+| Qué | Para qué | Nota |
+|---|---|---|
+| Sensor de corriente en el ionizador | Confirmar que encendió de verdad | Barato. También hay que **persistir el campo `ionizador`**, que hoy se descarta |
+| **Sonda ORP (mV)** | **Lo único que evidenciaría que la ionización hace algo** | Es la medida estándar del agua ionizada |
+| pH y conductividad | Completar la caracterización del agua | Se comparte con fertirriego |
+
+**Recomendación:** si algún día se compra un solo sensor, discutir seriamente si va antes el
+**ORP** que el caudalímetro. El caudalímetro da litros y pesos; el ORP defiende el nombre del
+producto. La pregunta *"¿cómo saben que la ionización sirve?"* hoy no tiene respuesta.
