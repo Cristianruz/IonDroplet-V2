@@ -1,10 +1,13 @@
 'use client'
 
-import { useState, useEffect, useCallback, useRef } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { useEffect } from 'react'
+import { useDatos } from './datos-provider'
 
 // Contrato del backend existente (iondroplet-backend/server.js).
-// Este hook SOLO consume endpoints que ya existen — el backend no se modifica.
+// Este hook SOLO consume endpoints que ya existen.
+//
+// Desde la optimización, quien pide los datos es <ProveedorDatos>: aquí solo
+// se leen. La interfaz no cambió, así que las pantallas siguen igual.
 
 export interface EstadoEsp {
   autoMode: boolean
@@ -18,137 +21,37 @@ export interface PuntoHistorial {
 }
 
 interface Opciones {
-  intervaloMs?: number
   /**
    * La gráfica de 24 h solo la enseña el panel de inicio. Las demás pantallas
-   * pasan false y se ahorran esa petición: en un día de operación son más de
-   * 23,000 lecturas del otro lado.
+   * pasan false y nadie la pide: en un día de operación son más de 23,000
+   * lecturas del otro lado.
    */
   conHistorial?: boolean
 }
 
-// Puntos que se dibujan en la gráfica del panel. Más no se distinguen.
-const PUNTOS_GRAFICA = 240
+export function useIonDroplet(opciones: Opciones = {}) {
+  const { conHistorial = true } = opciones
+  const datos = useDatos()
+  const { registrarHistorial } = datos
 
-export function useIonDroplet(opciones: Opciones | number = {}) {
-  const { intervaloMs = 3000, conHistorial = true } =
-    typeof opciones === 'number' ? { intervaloMs: opciones, conHistorial: true } : opciones
-
-  const [humedad, setHumedad] = useState<number | null>(null)
-  const [ultimaLectura, setUltimaLectura] = useState<Date | null>(null)
-  const [conectado, setConectado] = useState(false)
-  const [estadoEsp, setEstadoEsp] = useState<EstadoEsp>({ autoMode: true, pumpState: 0, espIp: null })
-  const [historial, setHistorial] = useState<PuntoHistorial[]>([])
-  const [ionizacion, setIonizacion] = useState(false)
-
-  // Evita que una respuesta lenta pise el estado optimista de un clic reciente
-  const ultimoComando = useRef(0)
-
-  const leerSensores = useCallback(async () => {
-    try {
-      const [resLatest, resStatus] = await Promise.all([
-        fetch(`${API_URL}/api/sensors/latest`),
-        fetch(`${API_URL}/api/esp/status`),
-      ])
-      if (!resLatest.ok || !resStatus.ok) throw new Error()
-
-      const latest = await resLatest.json()
-      const status: EstadoEsp = await resStatus.json()
-
-      if (latest && latest.humidity !== undefined && latest.humidity !== null) {
-        setHumedad(Number(latest.humidity))
-        if (latest.timestamp) setUltimaLectura(parseTimestampUTC(latest.timestamp))
-      }
-      if (Date.now() - ultimoComando.current > 2000) {
-        setEstadoEsp(status)
-      }
-      setConectado(true)
-    } catch {
-      setConectado(false)
-    }
-  }, [])
-
-  const leerHistorial = useCallback(async () => {
-    try {
-      const res = await fetch(`${API_URL}/api/sensors/history?hours=24&max=${PUNTOS_GRAFICA}`)
-      if (!res.ok) return
-      const filas: Array<{ humidity: number | null; timestamp: string }> = await res.json()
-      setHistorial(
-        filas
-          .filter(f => f.humidity !== null && f.humidity !== undefined)
-          .map(f => ({ humedad: Number(f.humidity), fecha: parseTimestampUTC(f.timestamp) }))
-      )
-    } catch {}
-  }, [])
-
+  // Mientras esta pantalla esté montada y quiera la gráfica, el proveedor la
+  // mantiene al día. Al desmontarse, deja de pedirla.
   useEffect(() => {
-    leerSensores()
-    const idSensores = setInterval(leerSensores, intervaloMs)
-    if (!conHistorial) return () => clearInterval(idSensores)
-
-    leerHistorial()
-    const idHistorial = setInterval(leerHistorial, 60000)
-    return () => {
-      clearInterval(idSensores)
-      clearInterval(idHistorial)
-    }
-  }, [leerSensores, leerHistorial, intervaloMs, conHistorial])
-
-  // Misma llamada que usa la versión que funciona: POST /api/esp/control
-  const cambiarModo = useCallback(async (automatico: boolean) => {
-    ultimoComando.current = Date.now()
-    setEstadoEsp(prev => ({ ...prev, autoMode: automatico }))
-    try {
-      const res = await fetch(`${API_URL}/api/esp/control`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ autoMode: automatico }),
-      })
-      const json = await res.json()
-      if (json.settings) setEstadoEsp(json.settings)
-    } catch {}
-  }, [])
-
-  const cambiarBomba = useCallback(async (encender: boolean) => {
-    ultimoComando.current = Date.now()
-    setEstadoEsp(prev => ({ ...prev, autoMode: false, pumpState: encender ? 1 : 0 }))
-    try {
-      const res = await fetch(`${API_URL}/api/esp/control`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ bomba: encender ? 1 : 0, autoMode: false }),
-      })
-      const json = await res.json()
-      if (json.settings) setEstadoEsp(json.settings)
-    } catch {}
-  }, [])
-
-  const cambiarIonizacion = useCallback(async () => {
-    const nuevo = !ionizacion
-    setIonizacion(nuevo)
-    try {
-      await fetch(`${API_URL}/api/ionization/toggle`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ state: nuevo }),
-      })
-    } catch {}
-  }, [ionizacion])
-
-  // Sensor "activo" = lectura de hace menos de 5 minutos
-  const sensorActivo =
-    ultimaLectura !== null && Date.now() - ultimaLectura.getTime() < 5 * 60 * 1000
+    if (!conHistorial) return
+    registrarHistorial(true)
+    return () => registrarHistorial(false)
+  }, [conHistorial, registrarHistorial])
 
   return {
-    humedad,
-    ultimaLectura,
-    conectado,
-    sensorActivo,
-    estadoEsp,
-    historial,
-    ionizacion,
-    cambiarModo,
-    cambiarBomba,
-    cambiarIonizacion,
+    humedad: datos.humedad,
+    ultimaLectura: datos.ultimaLectura,
+    conectado: datos.conectado,
+    sensorActivo: datos.sensorActivo,
+    estadoEsp: datos.estadoEsp,
+    historial: datos.historial,
+    ionizacion: datos.ionizacion,
+    cambiarModo: datos.cambiarModo,
+    cambiarBomba: datos.cambiarBomba,
+    cambiarIonizacion: datos.cambiarIonizacion,
   }
 }

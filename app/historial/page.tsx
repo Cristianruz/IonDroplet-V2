@@ -11,7 +11,7 @@ import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function PantallaHistorial() {
   const [rango, setRango] = useState<RangoHistorial>('hoy')
-  const { puntos, totalLecturas, promedio, resumen, riegos, cargando, conectado, horas } = useHistorial(rango)
+  const { puntos, totalLecturas, promedio, resumen, cargando, conectado, horas } = useHistorial(rango)
   const { estadoEsp } = useIonDroplet({ conHistorial: false })
   const registro = useRegistro(horas)
 
@@ -56,7 +56,7 @@ export default function PantallaHistorial() {
             historial={puntos}
             titulo={`Humedad de la tierra · ${etiquetaRango.toLowerCase()}`}
             altura={320}
-            riegos={riegos}
+            riegos={registro.riegos}
           />
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

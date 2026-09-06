@@ -39,7 +39,6 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
   const [totalLecturas, setTotalLecturas] = useState(0)
   const [promedio, setPromedio] = useState<number | null>(null)
   const [resumen, setResumen] = useState<ResumenRiegos | null>(null)
-  const [riegos, setRiegos] = useState<Date[]>([])
   const [cargando, setCargando] = useState(true)
   const [conectado, setConectado] = useState(false)
 
@@ -47,12 +46,13 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
 
   const cargar = useCallback(async () => {
     try {
-      const [res, resResumen, resRiegos, resSensores] = await Promise.all([
+      // La bitácora no se pide aquí: los riegos para la gráfica salen de la
+      // misma respuesta que ya trae useRegistro.
+      const [res, resResumen, resSensores] = await Promise.all([
         // El servidor manda la muestra ya reducida: un día de operación son
         // más de 23,000 lecturas y la gráfica dibuja unos cientos.
         fetch(`${API_URL}/api/sensors/history?hours=${horas}&max=${MAXIMO_PUNTOS}`),
         fetch(`${API_URL}/api/logs/resumen?hours=${horas}`),
-        fetch(`${API_URL}/api/logs?hours=${horas}&limit=200`),
         // El promedio se saca aparte, sobre todas las lecturas, no sobre la muestra.
         fetch(`${API_URL}/api/sensors/resumen?hours=${horas}`),
       ])
@@ -69,15 +69,6 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
         setPromedio(null)
       }
 
-      // Cuándo empezó cada riego, para marcarlo en la gráfica.
-      if (resRiegos.ok) {
-        const acciones: Array<{ tipo: string; timestamp: string }> = await resRiegos.json()
-        setRiegos(
-          acciones.filter(a => a.tipo === 'riego').map(a => parseTimestampUTC(a.timestamp))
-        )
-      } else {
-        setRiegos([])
-      }
 
       const limpias = filas
         .filter(f => f.humidity !== null && f.humidity !== undefined)
@@ -101,5 +92,5 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
     return () => clearInterval(id)
   }, [cargar, intervaloMs])
 
-  return { puntos, totalLecturas, promedio, resumen, riegos, cargando, conectado, horas }
+  return { puntos, totalLecturas, promedio, resumen, cargando, conectado, horas }
 }
