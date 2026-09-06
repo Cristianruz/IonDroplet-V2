@@ -1,6 +1,6 @@
 # Pendientes de IonDroplet V2
 
-Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2 y 3**. Faltan: 4, 5 y 6.
+Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2, 3 y 4**. Faltan: 5 y 6.
 
 ---
 
@@ -44,8 +44,9 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2 y 3**. Faltan: 4,
 | # | Dónde | Qué falta |
 |---|---|---|
 | 3.2 | Ajustes | Falta el enlace a **Dispositivos** (Fase 6). Los wireframes dicen que se llega desde ahí, no desde la barra. |
-| 3.3 | Plagas (Fase 4) | El botón "Preguntar" debe abrir el asistente de la Fase 5 con la plaga ya escrita. |
-| 3.4 | Plagas y Asistente | **Ninguna de las dos es destino de la barra** en los wireframes. Falta decidir desde dónde se llega. |
+| 3.3 | Plagas | Falta el botón **"Preguntar"**, que debe abrir el asistente de la Fase 5 con la plaga ya escrita. No se puso un botón que no lleve a ningún lado. |
+| 3.4 | Asistente | No es destino de la barra en los wireframes. Falta decidir desde dónde se llega. (Plagas ya se resolvió: se entra desde la pantalla de Parcela, porque dependen del cultivo.) |
+| 3.5 | Plagas | El catálogo es una primera versión escrita a mano. Convendría que un técnico agrónomo lo revise antes de la demo, sobre todo las temporadas por mes. |
 
 ---
 
@@ -86,13 +87,6 @@ Para revisar tipos sin apagar nada: `npx tsc --noEmit`.
 ---
 
 ## 5. Fases que faltan
-
-**Fase 4 — Plagas.** `app/plagas/page.tsx` y `lib/plagas.ts`, sin backend. Forma del dato:
-`{ nombre, icono, comoReconocerla, queHacer, mesesActiva, favorecidaPor }`, con
-`favorecidaPor: 'seco' | 'humedo' | 'calor'`. Riesgo **alto** si el mes está en `mesesActiva`
-y además coincide la condición actual; **medio** si solo una; **bajo** si ninguna. La de riesgo
-más alto va arriba en `--alerta`. Sin parcela: "Registra tu parcela para ver sus plagas".
-La función de riesgo va pura y con pruebas de `node --test`.
 
 **Fase 5 — Asistente.** `POST /api/chat` nuevo (sin tocar `/api/ai/analyze`) y
 `app/asistente/page.tsx`. El contexto lo arma el backend con la última lectura, el estado del

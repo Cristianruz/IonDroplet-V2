@@ -1,6 +1,7 @@
 'use client'
 
-import { Pencil } from 'lucide-react'
+import Link from 'next/link'
+import { Pencil, ChevronRight } from 'lucide-react'
 import { cultivoPorId, etapaPorId } from '@/lib/cultivos'
 import type { Parcela } from '@/hooks/use-parcela'
 
@@ -61,6 +62,20 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
           El aparato que la mide es {parcela.device_id}
         </p>
       )}
+
+      {/* Las plagas dependen del cultivo, por eso se llega desde aquí y no
+          desde la barra de abajo. */}
+      <Link
+        href="/plagas"
+        className="rounded-2xl py-5 px-6 text-xl font-bold border-4 flex items-center justify-between"
+        style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+      >
+        <span className="flex items-center gap-3">
+          <span className="text-2xl leading-none" aria-hidden>🐛</span>
+          Plagas de este cultivo
+        </span>
+        <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+      </Link>
 
       <button
         type="button"
