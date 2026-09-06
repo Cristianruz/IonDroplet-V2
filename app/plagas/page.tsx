@@ -8,6 +8,7 @@ import { useParcela } from '@/hooks/use-parcela'
 import { PlagaCard } from '@/components/plaga-card'
 import { cultivoPorId } from '@/lib/cultivos'
 import { plagasDeCultivo, ordenarPorRiesgo } from '@/lib/plagas'
+import { RevisarFoto } from '@/components/revisar-foto'
 
 // Lo que el agricultor ya revisó vive en su teléfono: no hay tabla para esto
 // y no vale la pena inventarle una.
@@ -106,6 +107,8 @@ export default function PantallaPlagas() {
         </section>
       ) : (
         <>
+          <RevisarFoto />
+
           {principal && (
             <PlagaCard
               plaga={principal.plaga}
