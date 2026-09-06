@@ -5,6 +5,7 @@ import { Hand, Sparkles, ChevronRight } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/umbral-card'
+import { SelectorTema } from '@/components/selector-tema'
 import { API_URL } from '@/lib/api'
 
 export default function PantallaAjustes() {
@@ -41,7 +42,7 @@ export default function PantallaAjustes() {
 
         <p
           className="text-xl rounded-2xl px-5 py-4 break-all"
-          style={{ background: '#e5e7e2', color: 'var(--tinta)' }}
+          style={{ background: 'var(--pista)', color: 'var(--tinta)' }}
         >
           {API_URL}
         </p>
@@ -67,7 +68,7 @@ export default function PantallaAjustes() {
             style={
               estadoEsp.autoMode
                 ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                : { background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }
+                : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
             }
             aria-pressed={estadoEsp.autoMode}
           >
@@ -80,7 +81,7 @@ export default function PantallaAjustes() {
             style={
               !estadoEsp.autoMode
                 ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                : { background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }
+                : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
             }
             aria-pressed={!estadoEsp.autoMode}
           >
@@ -100,7 +101,7 @@ export default function PantallaAjustes() {
       <Link
         href="/dispositivos"
         className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
-        style={{ background: 'var(--tarjeta)', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
           <span className="text-2xl leading-none" aria-hidden>📡</span>
@@ -108,6 +109,8 @@ export default function PantallaAjustes() {
         </span>
         <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>
+
+      <SelectorTema />
 
       <UmbralCard
         umbral={umbralRiego}

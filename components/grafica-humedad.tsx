@@ -125,9 +125,9 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
                 <g key={v}>
                   <line
                     x1={MARGEN.izquierda} x2={ANCHO - MARGEN.derecha} y1={y} y2={y}
-                    stroke="#e2e6e0" strokeWidth={1}
+                    stroke="var(--pista)" strokeWidth={1}
                   />
-                  <text x={MARGEN.izquierda - 8} y={y + 5} textAnchor="end" fontSize={15} fill="#5c6b5c">
+                  <text x={MARGEN.izquierda - 8} y={y + 5} textAnchor="end" fontSize={15} fill="var(--tinta-suave)">
                     {v}%
                   </text>
                 </g>
@@ -158,7 +158,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
                 <text
                   x={Math.min(puntos[puntos.length - 1].x + 8, ANCHO - MARGEN.derecha - 4)}
                   y={puntos[puntos.length - 1].y - 10}
-                  fontSize={16} fontWeight={700} fill="#1a2e1a" textAnchor="end"
+                  fontSize={16} fontWeight={700} fill="var(--tinta)" textAnchor="end"
                 >
                   {Math.round(puntos[puntos.length - 1].humedad)}%
                 </text>
@@ -168,10 +168,10 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
             {/* Crosshair + tooltip al pasar el mouse/dedo */}
             {punto && (
               <g>
-                <line x1={punto.x} x2={punto.x} y1={MARGEN.arriba} y2={ALTO - MARGEN.abajo} stroke="#9aa79a" strokeWidth={1} strokeDasharray="4 3" />
+                <line x1={punto.x} x2={punto.x} y1={MARGEN.arriba} y2={ALTO - MARGEN.abajo} stroke="var(--apagado)" strokeWidth={1} strokeDasharray="4 3" />
                 <circle cx={punto.x} cy={punto.y} r={6} fill="var(--agua)" stroke="white" strokeWidth={2} />
                 <g transform={`translate(${Math.min(Math.max(punto.x - 60, MARGEN.izquierda), ANCHO - MARGEN.derecha - 120)}, ${MARGEN.arriba})`}>
-                  <rect width={120} height={52} rx={10} fill="#1a2e1a" opacity={0.92} />
+                  <rect width={120} height={52} rx={10} fill="var(--tinta)" opacity={0.92} />
                   <text x={60} y={22} textAnchor="middle" fontSize={17} fontWeight={700} fill="white">
                     {Math.round(punto.humedad)}% humedad
                   </text>
@@ -184,7 +184,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
 
             {/* Inicio, medio y fin en el eje X */}
             {puntos.length > 0 && [0, Math.floor(puntos.length / 2), puntos.length - 1].map(i => (
-              <text key={i} x={puntos[i].x} y={ALTO - 10} textAnchor="middle" fontSize={15} fill="#5c6b5c">
+              <text key={i} x={puntos[i].x} y={ALTO - 10} textAnchor="middle" fontSize={15} fill="var(--tinta-suave)">
                 {etiquetaEje(puntos[i].fecha)}
               </text>
             ))}

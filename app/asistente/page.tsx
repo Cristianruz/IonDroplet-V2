@@ -54,7 +54,7 @@ function Asistente() {
       {!conectado && (
         <div
           className="rounded-2xl p-5 text-xl font-semibold"
-          style={{ background: '#fdf3e3', color: 'var(--alerta)' }}
+          style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
           role="status"
         >
           Sin conexión no puedo responder. <strong>El riego sigue funcionando igual</strong>: esto
@@ -108,7 +108,7 @@ function Asistente() {
         {aviso && (
           <div
             className="rounded-2xl p-5 text-xl font-semibold"
-            style={{ background: '#fdf3e3', color: 'var(--alerta)' }}
+            style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
             role="alert"
           >
             {aviso}
@@ -124,7 +124,7 @@ function Asistente() {
         style={{
           bottom: 'calc(68px + env(safe-area-inset-bottom))',
           background: 'var(--fondo)',
-          borderTop: '1px solid #e5e7e2',
+          borderTop: '1px solid var(--pista)',
         }}
       >
         <label htmlFor="pregunta" className="sr-only">Escribe tu pregunta</label>
@@ -138,7 +138,7 @@ function Asistente() {
           placeholder="Escribe tu pregunta…"
           maxLength={500}
           className="flex-1 min-w-0 rounded-2xl px-5 py-4 text-xl border-4 outline-none disabled:opacity-60"
-          style={{ borderColor: '#d6ddd6', background: 'white', color: 'var(--tinta)' }}
+          style={{ borderColor: 'var(--borde)', background: 'var(--tarjeta)', color: 'var(--tinta)' }}
         />
         <button
           type="button"

@@ -10,7 +10,7 @@ const COLOR: Record<EstadoAparato, string> = {
   activo: 'var(--agua)',
   tarde: 'var(--alerta)',
   nunca: 'var(--peligro)',
-  apagado: '#8a978a',
+  apagado: 'var(--apagado)',
 }
 
 interface Props {
@@ -55,7 +55,7 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
         {etiqueta && (
           <span
             className="text-lg font-bold rounded-full px-3 py-1 whitespace-nowrap"
-            style={{ background: '#e5e7e2', color: COLOR[estado] }}
+            style={{ background: 'var(--pista)', color: COLOR[estado] }}
           >
             {etiqueta}
           </span>
@@ -69,7 +69,7 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
             onClick={() => setAbierto(a => !a)}
             aria-expanded={abierto}
             className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
-            style={{ background: 'white', borderColor: 'var(--alerta)', color: 'var(--alerta)' }}
+            style={{ background: 'var(--tarjeta)', borderColor: 'var(--alerta)', color: 'var(--alerta)' }}
           >
             CÓMO REVISARLO
             <ChevronDown

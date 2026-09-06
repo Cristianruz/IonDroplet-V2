@@ -48,7 +48,7 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
             style={{
               fontSize: 'clamp(3.5rem, 20vw, 6rem)',
               color: estado!.color,
-              opacity: sensorActivo ? 1 : 0.35,
+              opacity: sensorActivo ? 1 : 0.5,
             }}
           >
             {Math.round(humedad!)}
@@ -72,7 +72,7 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
 
           <div
             className="mt-6 h-6 rounded-full overflow-hidden"
-            style={{ background: '#e5e7e2', opacity: sensorActivo ? 1 : 0.35 }}
+            style={{ background: 'var(--pista)', opacity: sensorActivo ? 1 : 0.5 }}
             role="progressbar"
             aria-valuenow={Math.round(humedad!)}
             aria-valuemin={0}

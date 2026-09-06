@@ -41,7 +41,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
             onClick={pedirPropuesta}
             disabled={pensando}
             className="rounded-2xl py-6 text-xl font-bold border-4 disabled:opacity-60"
-            style={{ background: 'white', borderColor: 'var(--verde)', color: 'var(--verde)' }}
+            style={{ background: 'var(--tarjeta)', borderColor: 'var(--verde)', color: 'var(--verde)' }}
           >
             {pensando ? 'Pensando…' : 'Que me recomiende un punto de riego'}
           </button>
@@ -82,7 +82,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
             type="button"
             onClick={descartar}
             className="rounded-2xl py-5 text-xl font-bold border-4"
-            style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+            style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
           >
             Dejarlo como está
           </button>
@@ -92,7 +92,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
       {aviso && (
         <p
           className="text-xl font-semibold rounded-2xl p-4"
-          style={{ background: '#fdf3e3', color: 'var(--alerta)' }}
+          style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
           role="alert"
         >
           {aviso}

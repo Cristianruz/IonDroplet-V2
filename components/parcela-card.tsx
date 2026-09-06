@@ -48,7 +48,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
       </div>
 
       {/* La etapa nunca va sola: siempre con lo que significa para el riego. */}
-      <p className="text-xl" style={{ color: etapa ? 'var(--tinta)' : '#8a978a' }}>
+      <p className="text-xl" style={{ color: etapa ? 'var(--tinta)' : 'var(--apagado)' }}>
         {etapa ? (
           <>
             <span className="font-bold">Etapa: {etapa.nombre.toLowerCase()}</span>
@@ -71,7 +71,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
       <Link
         href="/plagas"
         className="rounded-2xl py-5 px-6 text-xl font-bold border-4 flex items-center justify-between"
-        style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
           <span className="text-2xl leading-none" aria-hidden>🐛</span>
@@ -84,7 +84,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
         type="button"
         onClick={onEditar}
         className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
-        style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
       >
         <Pencil size={24} aria-hidden />
         Editar parcela

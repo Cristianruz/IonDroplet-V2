@@ -9,9 +9,11 @@ import { Sprout, Wifi, WifiOff, MessageCircle, ChevronRight } from 'lucide-react
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { ClimaCard } from '@/components/clima-card'
 import { useParcela } from '@/hooks/use-parcela'
+import { Aparece } from '@/components/aparece'
+import { EsqueletoHumedad, EsqueletoGrafica } from '@/components/esqueletos'
 
 export default function Dashboard() {
-  const { parcela } = useParcela()
+  const { parcela, cargando } = useParcela()
   const {
     humedad,
     conectado,
@@ -25,7 +27,7 @@ export default function Dashboard() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
-      <header className="flex items-center justify-between flex-wrap gap-3">
+      <header className="hero flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
           <Sprout size={40} style={{ color: 'var(--verde)' }} aria-hidden />
           <div>
@@ -46,26 +48,37 @@ export default function Dashboard() {
 
       {!conectado && <AvisoSinConexion />}
 
-      <div className="grid md:grid-cols-2 gap-6">
-        <HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} />
-        <RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} />
-      </div>
+      {cargando && humedad === null ? (
+        <div className="grid md:grid-cols-2 gap-6">
+          <EsqueletoHumedad />
+          <EsqueletoHumedad />
+        </div>
+      ) : (
+        <div className="grid md:grid-cols-2 gap-6">
+          <Aparece><HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} /></Aparece>
+          <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} /></Aparece>
+        </div>
+      )}
 
-      <ClimaCard parcelaId={parcela?.id ?? null} />
+      <Aparece><ClimaCard parcelaId={parcela?.id ?? null} /></Aparece>
 
-      <GraficaHumedad historial={historial} />
+      {cargando && historial.length === 0 ? (
+        <EsqueletoGrafica />
+      ) : (
+        <Aparece><GraficaHumedad historial={historial} /></Aparece>
+      )}
 
-      <Link
+      <Aparece><Link
         href="/asistente"
         className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
-        style={{ background: 'var(--tarjeta)', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
           <MessageCircle size={28} style={{ color: 'var(--verde)' }} aria-hidden />
           Preguntarle al asistente
         </span>
         <ChevronRight size={28} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
-      </Link>
+      </Link></Aparece>
     </main>
   )
 }

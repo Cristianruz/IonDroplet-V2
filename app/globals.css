@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   TEMA CLARO — el de siempre, y el que se usa bajo el sol.
+   ------------------------------------------------------------------ */
 :root {
   --fondo: #f6f7f4;
   --tarjeta: #ffffff;
@@ -10,19 +13,153 @@
   --agua: #0277bd;
   --alerta: #b45309;
   --peligro: #b91c1c;
+
+  /* Grises que ya se usaban, ahora como tokens para que el modo oscuro
+     los pueda cambiar sin ir archivo por archivo. */
+  --pista: #e5e7e2;
+  --borde: #d6ddd6;
+  --apagado: #8a978a;
+  --riesgo-medio: #8a6508;
+  --oro: #b8860b;
+
+  /* Fondos suaves de los avisos */
+  --fondo-alerta: #fdf3e3;
+  --fondo-peligro: #fdeaea;
+
+  --sombra-tarjeta: 0 1px 2px rgba(26, 46, 26, .06);
+  --sombra-elevada: 0 6px 20px rgba(26, 46, 26, .12);
+
+  /* Una sola curva para toda la app: nada rebota ni se pasa de listo. */
+  --curva: cubic-bezier(.22, .61, .36, 1);
+  --rapido: 140ms;
+  --normal: 240ms;
+  --lento: 420ms;
+}
+
+/* ------------------------------------------------------------------
+   TEMA OSCURO — para la noche y el galerón. Bajo el sol se lee peor,
+   por eso nunca se fuerza: sigue al sistema salvo que el agricultor
+   escoja otra cosa en Ajustes.
+   ------------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) {
+    --fondo: #10160f;
+    --tarjeta: #1a221a;
+    --tinta: #eaf1e8;
+    --tinta-suave: #a3b3a1;
+    /* Los colores del semáforo se aclaran para que contrasten con el
+       fondo oscuro. Siguen significando lo mismo. */
+    --verde: #5cbf62;
+    --verde-fuerte: #7dd382;
+    --agua: #4fb3e8;
+    --alerta: #e0a44b;
+    --peligro: #f0736b;
+    --pista: #2b352a;
+    --borde: #3a463a;
+    --apagado: #6f7d6e;
+    --riesgo-medio: #d9a441;
+    --oro: #e0b341;
+    --fondo-alerta: #2e2415;
+    --fondo-peligro: #33191a;
+    --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .4);
+    --sombra-elevada: 0 6px 20px rgba(0, 0, 0, .5);
+  }
+}
+
+:root[data-tema="oscuro"] {
+  --fondo: #10160f;
+  --tarjeta: #1a221a;
+  --tinta: #eaf1e8;
+  --tinta-suave: #a3b3a1;
+  --verde: #5cbf62;
+  --verde-fuerte: #7dd382;
+  --agua: #4fb3e8;
+  --alerta: #e0a44b;
+  --peligro: #f0736b;
+  --pista: #2b352a;
+  --borde: #3a463a;
+  --apagado: #6f7d6e;
+  --riesgo-medio: #d9a441;
+  --oro: #e0b341;
+  --fondo-alerta: #2e2415;
+  --fondo-peligro: #33191a;
+  --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .4);
+  --sombra-elevada: 0 6px 20px rgba(0, 0, 0, .5);
 }
 
 html {
   /* Base grande: UX para agricultores 45-50 años */
   font-size: 18px;
+  scroll-behavior: smooth;
+  color-scheme: light;
 }
+
+@media (prefers-color-scheme: dark) {
+  html:not([data-tema="claro"]) { color-scheme: dark; }
+}
+html[data-tema="oscuro"] { color-scheme: dark; }
 
 body {
   background: var(--fondo);
   color: var(--tinta);
   font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
+  transition: background var(--normal) var(--curva), color var(--normal) var(--curva);
 }
+
+/* ------------------------------------------------------------------
+   MICROINTERACCIONES
+   Todo con transform y opacity, que son las dos cosas que el navegador
+   anima sin repintar. En un celular de gama baja se nota.
+   ------------------------------------------------------------------ */
+
+/* Cualquier cosa en la que se pueda tocar o hacer clic */
+button,
+a,
+input,
+select,
+textarea {
+  transition:
+    transform var(--rapido) var(--curva),
+    background-color var(--normal) var(--curva),
+    border-color var(--normal) var(--curva),
+    box-shadow var(--normal) var(--curva),
+    color var(--normal) var(--curva),
+    opacity var(--normal) var(--curva);
+}
+
+/* El hover solo en aparatos con puntero de verdad: en un celular el
+   hover se queda "pegado" después de tocar y se ve mal. */
+@media (hover: hover) and (pointer: fine) {
+  button:not(:disabled):hover,
+  a:hover {
+    transform: translateY(-2px);
+  }
+  section:hover {
+    box-shadow: var(--sombra-elevada);
+  }
+}
+
+button:not(:disabled):active,
+a:active {
+  transform: scale(.97);
+}
+
+/* Foco visible para quien navega con teclado, sin ensuciar el clic. */
+:focus-visible {
+  outline: 3px solid var(--agua);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+section {
+  transition: box-shadow var(--normal) var(--curva),
+              background var(--normal) var(--curva);
+}
+
+/* ------------------------------------------------------------------
+   ANIMACIONES
+   ------------------------------------------------------------------ */
 
 @keyframes pulso-riego {
   0%, 100% { opacity: 1; }
@@ -31,4 +168,85 @@ body {
 
 .regando {
   animation: pulso-riego 1.4s ease-in-out infinite;
+}
+
+/* Aparecer desde abajo: la usan el encabezado y las tarjetas al entrar
+   en pantalla. */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.aparece {
+  opacity: 0;
+}
+
+.aparece.visible {
+  animation: aparecer var(--lento) var(--curva) forwards;
+}
+
+/* El encabezado de la pantalla de inicio, que entra solo al cargar. */
+.hero > * {
+  opacity: 0;
+  animation: aparecer var(--lento) var(--curva) forwards;
+}
+.hero > *:nth-child(1) { animation-delay: 40ms; }
+.hero > *:nth-child(2) { animation-delay: 120ms; }
+.hero > *:nth-child(3) { animation-delay: 200ms; }
+
+/* Brillo que recorre los esqueletos de carga */
+@keyframes destello {
+  from { background-position: -220% 0; }
+  to   { background-position: 220% 0; }
+}
+
+.esqueleto {
+  background-color: var(--pista);
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, .55) 50%,
+    transparent 100%
+  );
+  background-size: 220% 100%;
+  animation: destello 1.5s ease-in-out infinite;
+  border-radius: 12px;
+}
+
+:root[data-tema="oscuro"] .esqueleto,
+html:not([data-tema="claro"]) .esqueleto {
+  background-image: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, .08) 50%,
+    transparent 100%
+  );
+}
+
+/* Entrada de cada pantalla al navegar */
+@keyframes entrar-pantalla {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: none; }
+}
+
+.pantalla {
+  animation: entrar-pantalla var(--normal) var(--curva);
+}
+
+/* ------------------------------------------------------------------
+   QUIEN PIDE MENOS MOVIMIENTO, RECIBE MENOS MOVIMIENTO.
+   No es un detalle: hay gente a la que el movimiento le marea de verdad.
+   ------------------------------------------------------------------ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .aparece { opacity: 1; }
+  .hero > * { opacity: 1; }
 }

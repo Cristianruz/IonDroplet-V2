@@ -15,7 +15,7 @@ export function IonizacionCard({ encendida, cambiar }: Props) {
       aria-label="Ionización del agua"
     >
       <div className="flex items-center gap-3">
-        <Zap size={32} style={{ color: '#b8860b' }} aria-hidden />
+        <Zap size={32} style={{ color: 'var(--oro)' }} aria-hidden />
         <h2 className="text-2xl font-semibold">Agua ionizada</h2>
       </div>
 
@@ -28,8 +28,8 @@ export function IonizacionCard({ encendida, cambiar }: Props) {
         className="rounded-2xl py-6 text-2xl font-bold border-4 transition-colors"
         style={
           encendida
-            ? { background: '#b8860b', borderColor: '#8a6508', color: 'white' }
-            : { background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }
+            ? { background: 'var(--oro)', borderColor: 'var(--riesgo-medio)', color: 'white' }
+            : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
         }
         aria-pressed={encendida}
       >

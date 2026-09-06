@@ -67,7 +67,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(-PASO)}
               disabled={valor <= MINIMO}
               className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               aria-label={`Bajar el punto de riego a ${Math.max(MINIMO, valor - PASO)} por ciento`}
             >
               <Minus size={40} aria-hidden />
@@ -83,7 +83,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(PASO)}
               disabled={valor >= MAXIMO}
               className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               aria-label={`Subir el punto de riego a ${Math.min(MAXIMO, valor + PASO)} por ciento`}
             >
               <Plus size={40} aria-hidden />
@@ -93,8 +93,8 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
           {humedad !== null && (
             <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
               {humedad < valor
-                ? `Su tierra está en ${Math.round(humedad)}%, o sea abajo de ese punto: le toca agua.`
-                : `Su tierra está en ${Math.round(humedad)}%, todavía arriba de ese punto.`}
+                ? `Tu tierra está en ${Math.round(humedad)}%, o sea abajo de ese punto: le toca agua.`
+                : `Tu tierra está en ${Math.round(humedad)}%, todavía arriba de ese punto.`}
             </p>
           )}
 

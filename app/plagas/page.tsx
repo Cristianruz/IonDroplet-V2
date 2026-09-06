@@ -9,6 +9,8 @@ import { PlagaCard } from '@/components/plaga-card'
 import { cultivoPorId } from '@/lib/cultivos'
 import { plagasDeCultivo, ordenarPorRiesgo } from '@/lib/plagas'
 import { RevisarFoto } from '@/components/revisar-foto'
+import { Aparece } from '@/components/aparece'
+import { EsqueletoLista } from '@/components/esqueletos'
 
 // Lo que el agricultor ya revisó vive en su teléfono: no hay tabla para esto
 // y no vale la pena inventarle una.
@@ -82,9 +84,7 @@ export default function PantallaPlagas() {
       </header>
 
       {cargando ? (
-        <p className="text-2xl font-bold py-10" style={{ color: 'var(--tinta-suave)' }}>
-          Buscando qué tienes sembrado…
-        </p>
+        <EsqueletoLista filas={4} />
       ) : parcela === null || !parcela.cultivo ? (
         <section
           className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
@@ -107,16 +107,16 @@ export default function PantallaPlagas() {
         </section>
       ) : (
         <>
-          <RevisarFoto />
+          <Aparece><RevisarFoto /></Aparece>
 
           {principal && (
-            <PlagaCard
+            <Aparece><PlagaCard
               plaga={principal.plaga}
               riesgo={principal.riesgo}
               destacada
               revisadaEl={revisadaEl(principal.plaga.id)}
               onRevisar={() => marcarRevisada(principal.plaga.id)}
-            />
+            /></Aparece>
           )}
 
           {resto.length > 0 && (

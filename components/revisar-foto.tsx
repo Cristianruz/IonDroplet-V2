@@ -8,7 +8,7 @@ import { useFoto, type RevisionDeFoto } from '@/hooks/use-foto'
 const COLOR_URGENCIA: Record<RevisionDeFoto['urgencia'], string> = {
   alta: 'var(--peligro)',
   media: 'var(--alerta)',
-  baja: '#8a6508',
+  baja: 'var(--riesgo-medio)',
   ninguna: 'var(--verde)',
 }
 
@@ -115,7 +115,7 @@ export function RevisarFoto() {
                 `En la foto de mi cultivo se ve esto: ${revision.posible}. ¿Qué hago?`
               )}`}
               className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
-              style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+              style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
             >
               <MessageCircle size={24} aria-hidden />
               Preguntar más sobre esto
@@ -129,7 +129,7 @@ export function RevisarFoto() {
               entrada.current?.click()
             }}
             className="rounded-2xl py-5 text-xl font-bold border-4"
-            style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+            style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
           >
             Tomar otra foto
           </button>
@@ -144,7 +144,7 @@ export function RevisarFoto() {
       {aviso && (
         <p
           className="text-xl font-semibold rounded-2xl p-4"
-          style={{ background: '#fdf3e3', color: 'var(--alerta)' }}
+          style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
           role="alert"
         >
           {aviso}

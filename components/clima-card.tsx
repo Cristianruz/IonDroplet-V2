@@ -112,8 +112,8 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
               className="text-xl font-semibold rounded-2xl px-5 py-4 flex items-start gap-3"
               style={
                 a.nivel === 'peligro'
-                  ? { background: '#fdeaea', color: 'var(--peligro)' }
-                  : { background: '#fdf3e3', color: 'var(--alerta)' }
+                  ? { background: 'var(--fondo-peligro)', color: 'var(--peligro)' }
+                  : { background: 'var(--fondo-alerta)', color: 'var(--alerta)' }
               }
               role={a.nivel === 'peligro' ? 'alert' : 'status'}
             >
@@ -131,7 +131,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
             <div
               key={fecha}
               className="flex-1 rounded-2xl py-3 px-2 text-center"
-              style={{ background: '#f2f4f1', minWidth: 62 }}
+              style={{ background: 'var(--pista)', minWidth: 62 }}
             >
               <p className="text-lg font-bold capitalize">{nombreDelDia(fecha, i)}</p>
               <p className="text-xl font-bold" style={{ color: 'var(--tinta)' }}>

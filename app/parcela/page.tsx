@@ -9,6 +9,8 @@ import { ParcelaForm } from '@/components/parcela-form'
 import { UmbralCard } from '@/components/umbral-card'
 import { PropuestaUmbral } from '@/components/propuesta-umbral'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
+import { Aparece } from '@/components/aparece'
+import { EsqueletoParcela, EsqueletoHumedad } from '@/components/esqueletos'
 
 export default function PantallaParcela() {
   const { humedad, sensorActivo, ultimaLectura } = useIonDroplet({ conHistorial: false })
@@ -22,9 +24,10 @@ export default function PantallaParcela() {
       {!conectado && !cargando && <AvisoSinConexion />}
 
       {cargando ? (
-        <p className="text-2xl font-bold py-10" style={{ color: 'var(--tinta-suave)' }}>
-          Buscando los datos de tu parcela…
-        </p>
+        <>
+          <EsqueletoParcela />
+          <EsqueletoHumedad />
+        </>
       ) : editando ? (
         <ParcelaForm
           parcela={parcela}
@@ -60,7 +63,7 @@ export default function PantallaParcela() {
         </section>
       ) : (
         <>
-          <ParcelaCard parcela={parcela} onEditar={() => setEditando(true)} />
+          <Aparece><ParcelaCard parcela={parcela} onEditar={() => setEditando(true)} /></Aparece>
 
           <div className="grid md:grid-cols-2 gap-6">
             <HumedadCard
@@ -77,7 +80,7 @@ export default function PantallaParcela() {
             />
           </div>
 
-          <PropuestaUmbral umbralActual={umbralRiego} onAplicado={() => window.location.reload()} />
+          <Aparece><PropuestaUmbral umbralActual={umbralRiego} onAplicado={() => window.location.reload()} /></Aparece>
         </>
       )}
     </main>

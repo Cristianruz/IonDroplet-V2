@@ -26,7 +26,7 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
       {/* Estado actual, imposible de no ver */}
       <div
         className={`rounded-2xl py-5 text-center text-3xl font-bold text-white ${regando ? 'regando' : ''}`}
-        style={{ background: regando ? 'var(--agua)' : '#8a978a' }}
+        style={{ background: regando ? 'var(--agua)' : 'var(--apagado)' }}
         role="status"
       >
         {regando ? '💧 REGANDO AHORA' : 'SIN REGAR'}
@@ -44,7 +44,7 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
             style={
               estadoEsp.autoMode
                 ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                : { background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }
+                : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
             }
             aria-pressed={estadoEsp.autoMode}
           >
@@ -56,7 +56,7 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
             style={
               !estadoEsp.autoMode
                 ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                : { background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }
+                : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
             }
             aria-pressed={!estadoEsp.autoMode}
           >

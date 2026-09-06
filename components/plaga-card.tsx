@@ -6,8 +6,8 @@ import type { Plaga, Riesgo } from '@/lib/plagas'
 
 const COLOR_RIESGO: Record<Riesgo, string> = {
   alto: 'var(--alerta)',
-  medio: '#8a6508',
-  bajo: '#8a978a',
+  medio: 'var(--riesgo-medio)',
+  bajo: 'var(--apagado)',
 }
 
 // En la tarjeta destacada cabe la frase completa; en la lista compacta solo
@@ -37,14 +37,14 @@ interface Props {
 export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevisar }: Props) {
   if (!destacada) {
     return (
-      <div className="flex items-center justify-between gap-3 py-4" style={{ borderTop: '1px solid #e5e7e2' }}>
+      <div className="flex items-center justify-between gap-3 py-4" style={{ borderTop: '1px solid var(--pista)' }}>
         <div className="flex items-center gap-3 min-w-0">
           <span className="text-3xl leading-none" aria-hidden>{plaga.icono}</span>
           <p className="text-xl font-bold">{plaga.nombre}</p>
         </div>
         <span
           className="text-lg font-bold rounded-full px-3 py-1 whitespace-nowrap"
-          style={{ background: '#e5e7e2', color: COLOR_RIESGO[riesgo] }}
+          style={{ background: 'var(--pista)', color: COLOR_RIESGO[riesgo] }}
         >
           {TEXTO_CORTO[riesgo]}
         </span>
@@ -82,7 +82,7 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
       <Link
         href={`/asistente?pregunta=${encodeURIComponent(`¿Qué hago con ${plaga.nombre.toLowerCase()} en mi cultivo?`)}`}
         className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
-        style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
       >
         <MessageCircle size={24} aria-hidden />
         Preguntar al asistente

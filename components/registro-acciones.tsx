@@ -56,7 +56,7 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
               <li
                 key={a.id}
                 className="flex items-start gap-4 py-4"
-                style={{ borderTop: i === 0 ? 'none' : '1px solid #e5e7e2' }}
+                style={{ borderTop: i === 0 ? 'none' : '1px solid var(--pista)' }}
               >
                 <span className="text-3xl leading-none" aria-hidden>
                   {ICONOS[a.tipo] ?? '🌱'}
@@ -82,7 +82,7 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
               type="button"
               onClick={onVerMas}
               className="rounded-2xl py-5 text-xl font-bold border-4"
-              style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+              style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
             >
               Ver más
             </button>

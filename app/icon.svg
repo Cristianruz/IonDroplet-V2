@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="IonDroplet">
+  <rect width="64" height="64" rx="14" fill="#1a2e1a"/>
+  <!-- La gota: el agua del riego -->
+  <path d="M32 12c0 0 13 14.5 13 23.2A13 13 0 0 1 19 35.2C19 26.5 32 12 32 12z"
+        fill="#0277bd"/>
+  <!-- Brillo, para que la gota se lea como gota y no como mancha -->
+  <path d="M26.5 33.5a6 6 0 0 0 4.2 8.2" stroke="#8fd3f4" stroke-width="2.6"
+        stroke-linecap="round" fill="none" opacity=".85"/>
+  <!-- La hoja: el cultivo -->
+  <path d="M32 47c6.5 0 11.5-4.2 12.5-10.5-6.8-.7-12 3-12.5 10.5z" fill="#2e7d32"/>
+  <path d="M32 47c-6.5 0-11.5-4.2-12.5-10.5 6.8-.7 12 3 12.5 10.5z" fill="#43a047"/>
+  <path d="M32 47v6" stroke="#2e7d32" stroke-width="3" stroke-linecap="round"/>
+</svg>

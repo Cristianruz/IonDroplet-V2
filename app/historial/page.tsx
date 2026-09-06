@@ -7,6 +7,8 @@ import { useHistorial, RANGOS, type RangoHistorial } from '@/hooks/use-historial
 import { useRegistro } from '@/hooks/use-registro'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { duracionLarga } from '@/lib/tiempo'
+import { Aparece } from '@/components/aparece'
+import { EsqueletoGrafica, EsqueletoCifras, EsqueletoLista } from '@/components/esqueletos'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function PantallaHistorial() {
@@ -36,7 +38,7 @@ export default function PantallaHistorial() {
               style={
                 activo
                   ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                  : { background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }
+                  : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
               }
               aria-pressed={activo}
             >
@@ -47,17 +49,19 @@ export default function PantallaHistorial() {
       </div>
 
       {cargando ? (
-        <p className="text-2xl font-bold py-10" style={{ color: 'var(--tinta-suave)' }}>
-          Juntando las lecturas…
-        </p>
+        <>
+          <EsqueletoGrafica />
+          <EsqueletoCifras />
+          <EsqueletoLista />
+        </>
       ) : (
         <>
-          <GraficaHumedad
+          <Aparece><GraficaHumedad
             historial={puntos}
             titulo={`Humedad de la tierra · ${etiquetaRango.toLowerCase()}`}
             altura={320}
             riegos={registro.riegos}
-          />
+          /></Aparece>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <Cifra
@@ -93,13 +97,13 @@ export default function PantallaHistorial() {
             />
           </div>
 
-          <RegistroAcciones
+          <Aparece retraso={60}><RegistroAcciones
             acciones={registro.acciones}
             hayMas={registro.hayMas}
             cargando={registro.cargando}
             onVerMas={registro.verMas}
             bombaEncendida={estadoEsp.pumpState === 1}
-          />
+          /></Aparece>
         </>
       )}
     </main>
@@ -119,7 +123,7 @@ function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: stri
         style={{
           // Un valor largo ("menos de 1 min") no cabe al tamaño de un número.
           fontSize: valor && valor.length > 7 ? 'clamp(1.5rem, 8vw, 2rem)' : 'clamp(2.25rem, 11vw, 3rem)',
-          color: valor ? 'var(--agua)' : '#8a978a',
+          color: valor ? 'var(--agua)' : 'var(--apagado)',
         }}
       >
         {valor ?? '—'}
