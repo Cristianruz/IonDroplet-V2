@@ -8,6 +8,7 @@ import { useRegistro } from '@/hooks/use-registro'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { duracionLarga } from '@/lib/tiempo'
 import { Aparece } from '@/components/aparece'
+import { ConsejoIA } from '@/components/consejo-ia'
 import { EsqueletoGrafica, EsqueletoCifras, EsqueletoLista } from '@/components/esqueletos'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
@@ -24,6 +25,8 @@ export default function PantallaHistorial() {
       <h1 className="text-3xl font-bold leading-tight">Historial</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
+
+      <ConsejoIA pantalla="historial" />
 
       {/* Hoy / 7 días / 30 días */}
       <div className="grid grid-cols-3 gap-3" role="group" aria-label="Qué tanto tiempo ver">

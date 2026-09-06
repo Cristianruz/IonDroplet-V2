@@ -10,10 +10,11 @@ import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { ClimaCard } from '@/components/clima-card'
 import { useParcela } from '@/hooks/use-parcela'
 import { Aparece } from '@/components/aparece'
+import { ConsejoIA } from '@/components/consejo-ia'
 import { EsqueletoHumedad, EsqueletoGrafica } from '@/components/esqueletos'
 
 export default function Dashboard() {
-  const { parcela, cargando } = useParcela()
+  const { parcela, umbralRiego, cargando } = useParcela()
   const {
     humedad,
     conectado,
@@ -21,8 +22,8 @@ export default function Dashboard() {
     ultimaLectura,
     estadoEsp,
     historial,
-    cambiarModo,
-    cambiarBomba,
+    regarAhora,
+    terminarRiegoManual,
   } = useIonDroplet()
 
   return (
@@ -48,6 +49,8 @@ export default function Dashboard() {
 
       {!conectado && <AvisoSinConexion />}
 
+      <ConsejoIA pantalla="inicio" destacado />
+
       {cargando && humedad === null ? (
         <div className="grid md:grid-cols-2 gap-4">
           <EsqueletoHumedad />
@@ -56,7 +59,7 @@ export default function Dashboard() {
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           <Aparece><HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} /></Aparece>
-          <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} /></Aparece>
+          <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} humedad={humedad} sensorActivo={sensorActivo} umbral={umbralRiego} regarAhora={regarAhora} terminarRiegoManual={terminarRiegoManual} /></Aparece>
         </div>
       )}
 

@@ -43,6 +43,8 @@ interface ValorDatos {
   ionizacion: boolean
   cambiarModo: (automatico: boolean) => Promise<void>
   cambiarBomba: (encender: boolean) => Promise<void>
+  regarAhora: () => Promise<void>
+  terminarRiegoManual: () => Promise<void>
   cambiarIonizacion: () => Promise<void>
   // Parcela y punto de riego
   parcela: Parcela | null
@@ -291,6 +293,36 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     } catch {}
   }, [])
 
+  // Riego a mano, como excepción. El backend solo obedece `bomba` cuando
+  // autoMode es false, así que hay que pasar a manual y encender en la misma
+  // llamada.
+  const regarAhora = useCallback(async () => {
+    await cambiarBomba(true)
+  }, [cambiarBomba])
+
+  // Y al terminar, el sistema retoma el control. OJO CON EL ORDEN: si se
+  // mandara { bomba: 0, autoMode: true } de una sola vez, el backend pondría
+  // autoMode en true primero y luego ignoraría el bomba:0 — la bomba se
+  // quedaría encendida. Por eso son dos llamadas.
+  const terminarRiegoManual = useCallback(async () => {
+    ultimoComando.current = Date.now()
+    setEstadoEsp(prev => ({ ...prev, autoMode: true, pumpState: 0 }))
+    try {
+      await fetch(`${API_URL}/api/esp/control`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ bomba: 0 }),
+      })
+      const res = await fetch(`${API_URL}/api/esp/control`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ autoMode: true }),
+      })
+      const json = await res.json()
+      if (json.settings) setEstadoEsp(json.settings)
+    } catch {}
+  }, [])
+
   const cambiarIonizacion = useCallback(async () => {
     const nuevo = !ionizacion
     ultimoComando.current = Date.now()
@@ -390,6 +422,8 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
         ionizacion,
         cambiarModo,
         cambiarBomba,
+        regarAhora,
+        terminarRiegoManual,
         cambiarIonizacion,
         parcela,
         umbralRiego,

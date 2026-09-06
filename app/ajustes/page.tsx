@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Hand, Sparkles, ChevronRight } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/umbral-card'
@@ -9,7 +9,7 @@ import { SelectorTema } from '@/components/selector-tema'
 import { API_URL } from '@/lib/api'
 
 export default function PantallaAjustes() {
-  const { conectado, estadoEsp, humedad, cambiarModo } = useIonDroplet({ conHistorial: false })
+  const { conectado, humedad } = useIonDroplet({ conHistorial: false })
   const { umbralRiego, guardando, guardarUmbral } = useParcela()
 
   return (
@@ -49,50 +49,6 @@ export default function PantallaAjustes() {
         <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
           Esta dirección se cambia en el archivo <code>.env.local</code> de la aplicación. Aquí solo
           se muestra.
-        </p>
-      </section>
-
-      {/* Modo de riego — mismo control que la pantalla de inicio */}
-      <section
-        className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
-        style={{ background: 'var(--tarjeta)' }}
-        aria-label="Quién decide cuándo regar"
-      >
-        <h2 className="text-xl font-semibold">¿Quién decide cuándo regar?</h2>
-
-        <div className="grid grid-cols-2 gap-3">
-          <button
-            type="button"
-            onClick={() => cambiarModo(true)}
-            className="rounded-2xl py-5 px-4 text-xl font-bold border-4 transition-colors flex items-center justify-center gap-2"
-            style={
-              estadoEsp.autoMode
-                ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
-            }
-            aria-pressed={estadoEsp.autoMode}
-          >
-            <Sparkles size={26} aria-hidden /> Solo (automático)
-          </button>
-          <button
-            type="button"
-            onClick={() => cambiarModo(false)}
-            className="rounded-2xl py-5 px-4 text-xl font-bold border-4 transition-colors flex items-center justify-center gap-2"
-            style={
-              !estadoEsp.autoMode
-                ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
-            }
-            aria-pressed={!estadoEsp.autoMode}
-          >
-            <Hand size={26} aria-hidden /> Yo decido
-          </button>
-        </div>
-
-        <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
-          {estadoEsp.autoMode
-            ? 'El sistema riega solo cuando la tierra lo necesita.'
-            : 'El sistema no riega solo: tú mandas desde la pantalla de inicio.'}
         </p>
       </section>
 

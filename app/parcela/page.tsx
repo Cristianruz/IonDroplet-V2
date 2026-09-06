@@ -10,6 +10,7 @@ import { UmbralCard } from '@/components/umbral-card'
 import { PropuestaUmbral } from '@/components/propuesta-umbral'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { Aparece } from '@/components/aparece'
+import { ConsejoIA } from '@/components/consejo-ia'
 import { EsqueletoParcela, EsqueletoHumedad } from '@/components/esqueletos'
 
 export default function PantallaParcela() {
@@ -22,6 +23,8 @@ export default function PantallaParcela() {
       <h1 className="text-3xl font-bold leading-tight">Mi parcela</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
+
+      <ConsejoIA pantalla="parcela" />
 
       {cargando ? (
         <>

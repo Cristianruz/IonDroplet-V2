@@ -10,6 +10,7 @@ import { cultivoPorId } from '@/lib/cultivos'
 import { plagasDeCultivo, ordenarPorRiesgo } from '@/lib/plagas'
 import { RevisarFoto } from '@/components/revisar-foto'
 import { Aparece } from '@/components/aparece'
+import { ConsejoIA } from '@/components/consejo-ia'
 import { EsqueletoLista } from '@/components/esqueletos'
 
 // Lo que el agricultor ya revisó vive en su teléfono: no hay tabla para esto
@@ -82,6 +83,8 @@ export default function PantallaPlagas() {
             : 'Según la temporada. Sin lectura del sensor no se puede decir más.'}
         </p>
       </header>
+
+      <ConsejoIA pantalla="plagas" />
 
       {cargando ? (
         <EsqueletoLista filas={4} />
