@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronRight } from 'lucide-react'
+import { ChevronRight, Gauge } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/umbral-card'
@@ -62,6 +62,26 @@ export default function PantallaAjustes() {
         <span className="flex items-center gap-3">
           <span className="text-2xl leading-none" aria-hidden>📡</span>
           Aparatos del campo
+        </span>
+        <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+      </Link>
+
+      {/* La vista técnica vive aparte a propósito: esta pantalla y las demás
+          están calibradas para el campo, y el panel de operación es para
+          quien tiene que auditar de dónde salió cada número. */}
+      <Link
+        href="/operacion"
+        className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+      >
+        <span className="flex items-center gap-3">
+          <Gauge size={26} style={{ color: 'var(--agua)' }} aria-hidden />
+          <span className="flex flex-col">
+            Panel de operación
+            <span className="text-base font-normal" style={{ color: 'var(--tinta-suave)' }}>
+              Vista técnica, para revisar el sistema a detalle
+            </span>
+          </span>
         </span>
         <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>

@@ -8,6 +8,7 @@ import Link from 'next/link'
 import { Sprout, Wifi, WifiOff, MessageCircle, ChevronRight } from 'lucide-react'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { ClimaCard } from '@/components/clima-card'
+import { BalanceCard } from '@/components/balance-card'
 import { useParcela } from '@/hooks/use-parcela'
 import { Aparece } from '@/components/aparece'
 import { ConsejoIA } from '@/components/consejo-ia'
@@ -64,6 +65,8 @@ export default function Dashboard() {
       )}
 
       <Aparece><ClimaCard parcelaId={parcela?.id ?? null} /></Aparece>
+
+      <Aparece><BalanceCard /></Aparece>
 
       {cargando && historial.length === 0 ? (
         <EsqueletoGrafica />

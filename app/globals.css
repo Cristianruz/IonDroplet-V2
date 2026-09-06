@@ -253,3 +253,140 @@ html:not([data-tema="claro"]) .esqueleto {
   .aparece { opacity: 1; }
   .hero > * { opacity: 1; }
 }
+
+/* ------------------------------------------------------------------
+   MODO OPERACIÓN
+   Todo va bajo .op para que nada de esto se filtre al Modo Campo, que
+   está calibrado para un agricultor con guantes bajo el sol y no se
+   toca. Aquí manda la densidad: base 14 px, esquinas de 6 px, tablas.
+   ------------------------------------------------------------------ */
+.op {
+  font-size: 14px;
+  line-height: 1.45;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.op-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--borde);
+}
+.op-header-izq { display: flex; flex-direction: column; gap: 4px; }
+.op-header-der { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; }
+
+.op-volver {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 12px; font-weight: 600; letter-spacing: .02em;
+  color: var(--tinta-suave); text-transform: uppercase;
+  width: fit-content;
+}
+.op-volver:hover { color: var(--verde); }
+
+.op-titulo { font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
+.op-sub { font-size: 13px; color: var(--tinta-suave); max-width: 62ch; }
+
+.op-sello { font-size: 12px; color: var(--apagado); font-variant-numeric: tabular-nums; }
+
+.op-estado { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--tinta-suave); }
+.op-punto { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.op-seccion { display: flex; flex-direction: column; gap: 10px; }
+
+.op-h2 {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .06em; color: var(--tinta-suave);
+}
+
+/* --- Cifras del resumen --- */
+.op-kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
+  gap: 1px;
+  background: var(--borde);
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.op-kpi { background: var(--tarjeta); padding: 11px 13px; display: flex; flex-direction: column; gap: 2px; }
+.op-kpi-etiqueta { font-size: 11px; text-transform: uppercase; letter-spacing: .045em; color: var(--tinta-suave); }
+.op-kpi-valor { font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.op-kpi-unidad { font-size: 14px; font-weight: 600; margin-left: 2px; }
+.op-kpi-nota { font-size: 11px; color: var(--apagado); }
+
+/* --- Tablas --- */
+.op-tabla-envoltura {
+  overflow-x: auto;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  background: var(--tarjeta);
+}
+.op-tabla { width: 100%; border-collapse: collapse; font-size: 13px; }
+.op-tabla th {
+  text-align: left; font-size: 11px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .045em;
+  color: var(--tinta-suave); padding: 8px 11px;
+  border-bottom: 1px solid var(--borde); white-space: nowrap;
+  background: var(--fondo);
+}
+.op-tabla td { padding: 7px 11px; border-bottom: 1px solid var(--pista); vertical-align: top; }
+.op-tabla tbody tr:last-child td { border-bottom: none; }
+.op-tabla tbody tr:hover { background: var(--fondo); }
+.op-tabla tfoot td {
+  padding: 8px 11px; border-top: 1px solid var(--borde);
+  font-weight: 700; background: var(--fondo);
+}
+.op-tabla .num { text-align: right; }
+.op-tabla .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-variant-numeric: tabular-nums; }
+.op-detalle { color: var(--tinta-suave); max-width: 46ch; }
+.op-vacio-celda { color: var(--apagado); text-align: center; padding: 18px 11px; }
+
+.op-eje { font-size: 10px; fill: var(--apagado); font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+.op-pie { font-size: 12px; color: var(--tinta-suave); max-width: 96ch; }
+.op-pie code, .op-faltantes code, .op-ficha code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 11.5px; background: var(--pista); padding: 1px 4px; border-radius: 3px;
+}
+
+.op-vacio { font-size: 13px; color: var(--apagado); padding: 14px; border: 1px dashed var(--borde); border-radius: 6px; }
+
+/* --- Lo que falta, dicho de frente --- */
+.op-faltantes {
+  border: 1px solid var(--borde); border-left: 3px solid var(--alerta);
+  border-radius: 6px; padding: 10px 13px; background: var(--tarjeta);
+  display: flex; flex-direction: column; gap: 6px;
+}
+.op-faltantes-titulo {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: .045em; color: var(--alerta);
+}
+.op-faltantes ul { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.op-faltantes li { font-size: 12.5px; color: var(--tinta-suave); }
+
+/* --- Ficha técnica --- */
+.op-ficha {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1px; background: var(--borde);
+  border: 1px solid var(--borde); border-radius: 6px; overflow: hidden;
+}
+.op-ficha > div { background: var(--tarjeta); padding: 9px 13px; display: flex; flex-direction: column; gap: 2px; }
+.op-ficha dt { font-size: 11px; text-transform: uppercase; letter-spacing: .045em; color: var(--tinta-suave); }
+.op-ficha dd { font-size: 13px; margin: 0; }
+
+@media (max-width: 640px) {
+  .op { padding: 14px 10px 32px; }
+  .op-header-der { align-items: flex-start; }
+  .op-kpi-valor { font-size: 21px; }
+}

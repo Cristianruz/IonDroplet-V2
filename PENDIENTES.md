@@ -129,3 +129,78 @@ tienen 6 grados de diferencia en la mínima, y de eso depende un aviso de helada
 **Huracanes.** Si lo quieres, se conecta el centro de huracanes de NOAA. Con la salvedad de
 siempre: Chihuahua está a 400 km de la costa y a 1,400 m de altura, los huracanes no tocan
 tierra ahí, y el aviso de helada que ya existe salva más cosecha.
+
+---
+
+## 6. Etapa A entregada — 6 de septiembre de 2026
+
+Alcance recortado a A1–A3 porque el pitch es en menos de un mes. Ver [PLAN.md](PLAN.md).
+
+### A1 — Índices en la base
+
+Seis índices sobre `sensor_readings`, `action_log` e `ionization_log`. Medido sobre una copia,
+nunca sobre producción:
+
+| | Sin índices | Con índices |
+|---|---|---|
+| Última lectura (corre cada 3 s) | 11.82 ms | **0.93 ms** |
+| Resumen de 30 días | 12.22 ms | **4.08 ms** |
+| Historial completo | 229 ms | 214 ms |
+| `INSERT` | 0.097 ms | 0.104 ms |
+
+El plan de consulta pasó de `SCAN sensor_readings` a `SCAN sensor_readings USING INDEX
+idx_lecturas_tiempo`. Escribir cuesta ~7% más, que a una lectura cada 3 segundos no se nota.
+
+**Corrección de lo que dije antes de medir:** afirmé que sin índices "cualquier demo con datos
+reales se ve lenta". A 36,307 filas es falso —9 ms no los nota nadie. El argumento verdadero es
+que el costo crece lineal y un mes de operación continua con un solo sensor son ~706,000 filas.
+
+### A2 — Evapotranspiración y balance hídrico
+
+- `guia-cultivos.js`: tabla nueva `KC_POR_ETAPA`, ocho cultivos por seis etapas, de FAO-56.
+  `otro` va en `null` a propósito: sin saber qué se sembró no hay coeficiente que valga.
+  **Pendiente de revisión agronómica, igual que el resto del archivo.**
+- `pedirClima()`: se agregó `et0_fao_evapotranspiration` al `daily=`. No se tocó `past_days`
+  para no correr los índices de los arreglos que ya consume el frontend.
+- Endpoint nuevo `GET /api/agua/balance?parcela_id=&dias=`. Ninguno existente se modificó.
+- `components/balance-card.tsx` en Inicio, y el detalle diario en el panel de operación.
+
+**Va hacia adelante, no hacia atrás**: el pronóstico da los 7 días que vienen. El riego ya hecho
+se reporta aparte y en minutos, sin restarlo de la demanda futura.
+
+**Lo que NO calcula, y lo dice en pantalla:** la lámina aplicada. Faltan el caudal de la bomba y
+`area_ha`. Van en `null` y se listan en `faltantes`. El déficit sí se da en litros **por
+hectárea**, que es conversión de unidades (1 mm sobre 1 ha = 10,000 L), no una estimación.
+
+### A3 — Modo Operación
+
+Ruta nueva `/operacion`, con entrada desde Ajustes. **El Modo Campo no se tocó.**
+
+Es una ruta aparte y no un interruptor global a propósito: cambiar las ocho pantallas según un
+modo era mucho más riesgo del que aguanta un mes de plazo, y la vista aparte da el mismo
+resultado. Base 14 px, esquinas de 6 px, iconos Lucide, tablas densas, cero emoji. CSS bajo
+`.op` para que nada se filtre.
+
+Secciones: resumen, balance hídrico por día, serie de humedad con banda de umbral, unidades de
+manejo, **procedencia del dato**, bitácora y ficha técnica.
+
+La de procedencia es la que responde al jurado: por cada magnitud dice si es medida, calculada,
+pronosticada o **no disponible**, y con qué instrumento. Las que no tienen sensor salen como "No
+disponible" en vez de esconderse.
+
+Verificado en tema claro, oscuro y a 375 px: sin desbordamiento lateral, las cuatro tablas
+scrollean dentro de su contenedor.
+
+### Sin resolver, y son tuyos
+
+| Dato | Para qué | Cómo se consigue |
+|---|---|---|
+| Caudal de la bomba (L/min) | Lámina aplicada, m³, pesos, eficiencia | Bombear a una taza medidora 60 s y anotar |
+| `area_ha` de la Parcela 1 | Litros de **esta** parcela, no por hectárea | Capturarlo en la pantalla de Parcela |
+| Etapa del cultivo | Afina el Kc; hoy se usa la intermedia | Capturarlo en la pantalla de Parcela |
+
+### Trampa nueva de operación
+
+El servidor de la app corría con `next start`, no con `next dev`. **Una ruta nueva no aparece
+hasta que se reconstruye**: `npm run build` y reiniciar. Perdí un rato buscando un 404 que no
+era del código.
