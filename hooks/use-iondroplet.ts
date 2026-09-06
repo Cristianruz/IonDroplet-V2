@@ -17,7 +17,23 @@ export interface PuntoHistorial {
   fecha: Date
 }
 
-export function useIonDroplet(intervaloMs = 3000) {
+interface Opciones {
+  intervaloMs?: number
+  /**
+   * La gráfica de 24 h solo la enseña el panel de inicio. Las demás pantallas
+   * pasan false y se ahorran esa petición: en un día de operación son más de
+   * 23,000 lecturas del otro lado.
+   */
+  conHistorial?: boolean
+}
+
+// Puntos que se dibujan en la gráfica del panel. Más no se distinguen.
+const PUNTOS_GRAFICA = 240
+
+export function useIonDroplet(opciones: Opciones | number = {}) {
+  const { intervaloMs = 3000, conHistorial = true } =
+    typeof opciones === 'number' ? { intervaloMs: opciones, conHistorial: true } : opciones
+
   const [humedad, setHumedad] = useState<number | null>(null)
   const [ultimaLectura, setUltimaLectura] = useState<Date | null>(null)
   const [conectado, setConectado] = useState(false)
@@ -54,7 +70,7 @@ export function useIonDroplet(intervaloMs = 3000) {
 
   const leerHistorial = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/sensors/history?hours=24`)
+      const res = await fetch(`${API_URL}/api/sensors/history?hours=24&max=${PUNTOS_GRAFICA}`)
       if (!res.ok) return
       const filas: Array<{ humidity: number | null; timestamp: string }> = await res.json()
       setHistorial(
@@ -67,14 +83,16 @@ export function useIonDroplet(intervaloMs = 3000) {
 
   useEffect(() => {
     leerSensores()
-    leerHistorial()
     const idSensores = setInterval(leerSensores, intervaloMs)
+    if (!conHistorial) return () => clearInterval(idSensores)
+
+    leerHistorial()
     const idHistorial = setInterval(leerHistorial, 60000)
     return () => {
       clearInterval(idSensores)
       clearInterval(idHistorial)
     }
-  }, [leerSensores, leerHistorial, intervaloMs])
+  }, [leerSensores, leerHistorial, intervaloMs, conHistorial])
 
   // Misma llamada que usa la versión que funciona: POST /api/esp/control
   const cambiarModo = useCallback(async (automatico: boolean) => {

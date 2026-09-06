@@ -24,7 +24,7 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
 
   return (
     <section
-      className="rounded-3xl p-8 shadow-sm border border-black/5"
+      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Humedad de la tierra"
     >
@@ -41,12 +41,18 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
         <>
           {/* Si el sensor lleva rato callado, el número se atenúa: sigue siendo
               el último dato real, pero ya no es de fiar como "ahorita". */}
+          {/* Enorme a propósito, pero sin desbordar un teléfono angosto:
+              crece con la pantalla y se topa en 6rem. */}
           <p
             className="font-bold leading-none"
-            style={{ fontSize: '6rem', color: estado!.color, opacity: sensorActivo ? 1 : 0.35 }}
+            style={{
+              fontSize: 'clamp(3.5rem, 20vw, 6rem)',
+              color: estado!.color,
+              opacity: sensorActivo ? 1 : 0.35,
+            }}
           >
             {Math.round(humedad!)}
-            <span className="text-5xl">%</span>
+            <span style={{ fontSize: '0.5em' }}>%</span>
           </p>
 
           {sensorActivo ? (

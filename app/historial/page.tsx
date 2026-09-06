@@ -12,7 +12,7 @@ import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 export default function PantallaHistorial() {
   const [rango, setRango] = useState<RangoHistorial>('hoy')
   const { puntos, totalLecturas, promedio, resumen, riegos, cargando, conectado, horas } = useHistorial(rango)
-  const { estadoEsp } = useIonDroplet()
+  const { estadoEsp } = useIonDroplet({ conHistorial: false })
   const registro = useRegistro(horas)
 
   const etiquetaRango = RANGOS.find(r => r.id === rango)?.etiqueta ?? 'Hoy'
@@ -110,7 +110,7 @@ export default function PantallaHistorial() {
 function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: string; nota: string }) {
   return (
     <section
-      className="rounded-3xl p-6 shadow-sm border border-black/5"
+      className="rounded-3xl p-5 sm:p-6 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={etiqueta}
     >
@@ -118,7 +118,7 @@ function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: stri
         className="font-bold leading-none"
         style={{
           // Un valor largo ("menos de 1 min") no cabe al tamaño de un número.
-          fontSize: valor && valor.length > 7 ? '2rem' : '3rem',
+          fontSize: valor && valor.length > 7 ? 'clamp(1.5rem, 8vw, 2rem)' : 'clamp(2.25rem, 11vw, 3rem)',
           color: valor ? 'var(--agua)' : '#8a978a',
         }}
       >

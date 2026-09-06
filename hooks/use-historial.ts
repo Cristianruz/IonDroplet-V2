@@ -47,14 +47,27 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
 
   const cargar = useCallback(async () => {
     try {
-      const [res, resResumen, resRiegos] = await Promise.all([
-        fetch(`${API_URL}/api/sensors/history?hours=${horas}`),
+      const [res, resResumen, resRiegos, resSensores] = await Promise.all([
+        // El servidor manda la muestra ya reducida: un día de operación son
+        // más de 23,000 lecturas y la gráfica dibuja unos cientos.
+        fetch(`${API_URL}/api/sensors/history?hours=${horas}&max=${MAXIMO_PUNTOS}`),
         fetch(`${API_URL}/api/logs/resumen?hours=${horas}`),
         fetch(`${API_URL}/api/logs?hours=${horas}&limit=200`),
+        // El promedio se saca aparte, sobre todas las lecturas, no sobre la muestra.
+        fetch(`${API_URL}/api/sensors/resumen?hours=${horas}`),
       ])
       if (!res.ok) throw new Error()
       const filas: Array<{ humidity: number | null; timestamp: string }> = await res.json()
       setResumen(resResumen.ok ? await resResumen.json() : null)
+
+      if (resSensores.ok) {
+        const cifras: { lecturas: number; promedio: number | null } = await resSensores.json()
+        setTotalLecturas(cifras.lecturas)
+        setPromedio(cifras.promedio)
+      } else {
+        setTotalLecturas(0)
+        setPromedio(null)
+      }
 
       // Cuándo empezó cada riego, para marcarlo en la gráfica.
       if (resRiegos.ok) {
@@ -70,13 +83,8 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
         .filter(f => f.humidity !== null && f.humidity !== undefined)
         .map(f => ({ humedad: Number(f.humidity), fecha: parseTimestampUTC(f.timestamp) }))
 
-      setTotalLecturas(limpias.length)
-      // El promedio se calcula sobre TODAS las lecturas, no sobre las aligeradas.
-      setPromedio(
-        limpias.length > 0
-          ? limpias.reduce((suma, p) => suma + p.humedad, 0) / limpias.length
-          : null
-      )
+      // El servidor ya mandó la muestra; aligerar aquí es solo un seguro por
+      // si algún día responde de más.
       setPuntos(aligerar(limpias))
       setConectado(true)
     } catch {

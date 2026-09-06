@@ -7,7 +7,7 @@ import { UmbralCard } from '@/components/umbral-card'
 import { API_URL } from '@/lib/api'
 
 export default function PantallaAjustes() {
-  const { conectado, estadoEsp, humedad, cambiarModo } = useIonDroplet()
+  const { conectado, estadoEsp, humedad, cambiarModo } = useIonDroplet({ conHistorial: false })
   const { umbralRiego, guardando, guardarUmbral } = useParcela()
 
   return (
@@ -16,7 +16,7 @@ export default function PantallaAjustes() {
 
       {/* Conexión — solo lectura en esta versión */}
       <section
-        className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-4"
+        className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-4"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Conexión con la computadora del riego"
       >
@@ -52,7 +52,7 @@ export default function PantallaAjustes() {
 
       {/* Modo de riego — mismo control que la pantalla de inicio */}
       <section
-        className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-4"
+        className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-4"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Quién decide cuándo regar"
       >

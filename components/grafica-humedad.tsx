@@ -81,7 +81,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
 
   return (
     <section
-      className="rounded-3xl p-8 shadow-sm border border-black/5"
+      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={encabezado}
     >

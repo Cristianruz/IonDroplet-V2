@@ -45,7 +45,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Punto de riego"
     >
@@ -67,15 +67,15 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(-PASO)}
               disabled={valor <= MINIMO}
               className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-              style={{ width: 84, height: 84, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
               aria-label={`Bajar el punto de riego a ${Math.max(MINIMO, valor - PASO)} por ciento`}
             >
               <Minus size={40} aria-hidden />
             </button>
 
-            <p className="font-bold leading-none" style={{ fontSize: '4rem', color: 'var(--agua)' }} role="status">
+            <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.5rem, 13vw, 4rem)', color: 'var(--agua)' }} role="status">
               {valor}
-              <span className="text-4xl">%</span>
+              <span style={{ fontSize: '0.6em' }}>%</span>
             </p>
 
             <button
@@ -83,7 +83,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(PASO)}
               disabled={valor >= MAXIMO}
               className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-              style={{ width: 84, height: 84, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
               aria-label={`Subir el punto de riego a ${Math.min(MAXIMO, valor + PASO)} por ciento`}
             >
               <Plus size={40} aria-hidden />

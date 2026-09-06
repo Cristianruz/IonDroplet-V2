@@ -14,7 +14,7 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-6"
+      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Control de riego"
     >

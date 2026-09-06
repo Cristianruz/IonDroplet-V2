@@ -5,7 +5,7 @@ import { IonizacionCard } from '@/components/ionizacion-card'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function PantallaIonizacion() {
-  const { conectado, ionizacion, cambiarIonizacion } = useIonDroplet()
+  const { conectado, ionizacion, cambiarIonizacion } = useIonDroplet({ conHistorial: false })
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">

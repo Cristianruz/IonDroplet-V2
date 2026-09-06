@@ -57,7 +57,8 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2, 3 y 4**. Faltan:
 | 4.1 | Un riego que empieza y **no alcanza a cerrarse** (porque se reinicia el backend) se queda sin duración | Es a propósito, y es lo correcto: nunca se le inventa una duración. La cifra "de agua" avisa cuántos riegos quedaron sin cerrar en vez de sumar de menos en silencio. Con el hardware actual el tiempo real es inaverigable. |
 | 4.2 | La ionización se registra por **lo que se pide**, no por lo que el ionizador confirma | El aparato no reporta su estado. Mismo problema que 4.10. |
 | 4.6 | El cultivo se guardará como `id` (`"nogal"`) en vez del nombre (`"Nogal"`) la próxima vez que se guarde la parcela | La lectura acepta las dos formas. Es la normalización que la Fase 4 necesita. |
-| 4.7 | La gráfica de 30 días **submuestrea** a 720 puntos | Son lecturas reales, una de cada N. El promedio sí se calcula sobre todas. |
+| 4.7 | Las gráficas **submuestrean** (240 puntos en Inicio, 720 en Historial) | Lo hace el servidor con el parámetro `max`. Son lecturas reales, una de cada N, nunca promedios. Las cifras exactas salen aparte de `/api/sensors/resumen`, calculadas sobre todas. |
+| 4.15 | La pantalla de Historial pide la bitácora **dos veces** | Una para los puntos verdes de la gráfica y otra para la lista. Son pocos KB, pero se podrían unir en una sola petición. |
 | 4.10 | El estado del ionizador vive en memoria del navegador | Se pierde al recargar. No hay endpoint que devuelva el estado real; `devices` está vacía y solo tiene `id` e `ionization_on`. La Fase 6 va a necesitar campos ahí. |
 
 ### Ya resueltos
@@ -77,6 +78,20 @@ y fueron probados guardando y leyendo. **Pero nada los alimenta todavía**: el E
 se puede tocar. Mientras no haya mediciones reales **no se hace pantalla para ellos**: no se
 enseña un número que nadie midió. Falta también decidir de qué aparato salen (sensores a
 varias profundidades, sonda de nivel freático) y con qué `device_id`.
+
+### Rendimiento — medido, no supuesto
+
+Un día real de operación son **23,545 lecturas** (el 10 de junio, en la base). El panel pedía
+las últimas 24 horas completas **cada minuto**:
+
+| | Antes | Ahora |
+|---|---|---|
+| Historial completo (36,263 lecturas) | 5.18 MB en 4,215 ms | 44 KB en 154 ms |
+| Peticiones al arrancar una pantalla que no dibuja gráfica | pedía las 24 h igual | no la pide |
+
+En producción (`npm run build` + `npm start`) la app carga en **90–155 ms** y pesa **142 KB**.
+Lo que se sentía lento era el servidor de desarrollo compilando cada pantalla la primera vez
+que se entra: eso no le pasa al agricultor.
 
 ### Trampa de operación
 

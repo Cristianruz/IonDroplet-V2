@@ -26,16 +26,19 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-6"
+      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Datos de la parcela"
     >
       <div className="flex items-center gap-4">
-        <span className="text-5xl leading-none" aria-hidden>
+        <span className="leading-none" style={{ fontSize: 'clamp(2.5rem, 11vw, 3rem)' }} aria-hidden>
           {cultivo?.icono ?? '🌱'}
         </span>
-        <div>
-          <h2 className="text-4xl font-bold leading-tight">
+        <div className="min-w-0">
+          <h2
+            className="font-bold leading-tight"
+            style={{ fontSize: 'clamp(1.75rem, 8vw, 2.25rem)' }}
+          >
             {vacio(parcela.nombre) ? 'Parcela sin nombre' : parcela.nombre}
           </h2>
           <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
@@ -72,7 +75,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
       >
         <span className="flex items-center gap-3">
           <span className="text-2xl leading-none" aria-hidden>🐛</span>
-          Plagas de este cultivo
+          Plagas del cultivo
         </span>
         <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>

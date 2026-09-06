@@ -59,7 +59,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
   return (
     <section
-      className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-8"
+      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-8"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={parcela ? 'Editar la parcela' : 'Registrar la parcela'}
     >
@@ -162,12 +162,12 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             onClick={() => setUmbral(v => Math.max(UMBRAL_MINIMO, v - 5))}
             disabled={umbral <= UMBRAL_MINIMO}
             className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-            style={{ width: 72, height: 72, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+            style={{ width: 'clamp(60px, 18vw, 72px)', height: 'clamp(60px, 18vw, 72px)', flexShrink: 0, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
             aria-label="Bajar el punto de riego"
           >
             <Minus size={34} aria-hidden />
           </button>
-          <p className="font-bold leading-none" style={{ fontSize: '3rem', color: 'var(--agua)' }} role="status">
+          <p className="font-bold leading-none" style={{ fontSize: 'clamp(2rem, 11vw, 3rem)', color: 'var(--agua)' }} role="status">
             {umbral}
             <span className="text-3xl">%</span>
           </p>
@@ -176,7 +176,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             onClick={() => setUmbral(v => Math.min(UMBRAL_MAXIMO, v + 5))}
             disabled={umbral >= UMBRAL_MAXIMO}
             className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-            style={{ width: 72, height: 72, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+            style={{ width: 'clamp(60px, 18vw, 72px)', height: 'clamp(60px, 18vw, 72px)', flexShrink: 0, background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
             aria-label="Subir el punto de riego"
           >
             <Plus size={34} aria-hidden />

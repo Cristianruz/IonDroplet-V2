@@ -10,7 +10,7 @@ import { UmbralCard } from '@/components/umbral-card'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function PantallaParcela() {
-  const { humedad, sensorActivo, ultimaLectura } = useIonDroplet()
+  const { humedad, sensorActivo, ultimaLectura } = useIonDroplet({ conHistorial: false })
   const { parcela, umbralRiego, cargando, conectado, guardando, guardarParcela, guardarUmbral } = useParcela()
   const [editando, setEditando] = useState(false)
 
@@ -39,7 +39,7 @@ export default function PantallaParcela() {
       ) : parcela === null ? (
         // Todavía no hay parcela: tarjeta vacía, no el formulario de golpe.
         <section
-          className="rounded-3xl p-8 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
+          className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
           style={{ background: 'var(--tarjeta)' }}
           aria-label="Todavía no hay parcela registrada"
         >
