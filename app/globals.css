@@ -88,8 +88,11 @@
 }
 
 html {
-  /* Base grande: UX para agricultores 45-50 años */
-  font-size: 18px;
+  /* 16 px de base. Antes eran 18 y todo salía enorme: una tarjeta ocupaba
+     media pantalla y la de Inicio medía tres pantallas de alto. Sigue siendo
+     grande para lo que se estila, que era el punto para un agricultor de 50
+     años, pero ahora caben dos tarjetas de un vistazo. */
+  font-size: 16px;
   scroll-behavior: smooth;
   color-scheme: light;
 }

@@ -14,18 +14,18 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-6"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Control de riego"
     >
       <div className="flex items-center gap-3">
         <Waves size={32} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">Riego</h2>
+        <h2 className="text-xl font-semibold">Riego</h2>
       </div>
 
       {/* Estado actual, imposible de no ver */}
       <div
-        className={`rounded-2xl py-5 text-center text-3xl font-bold text-white ${regando ? 'regando' : ''}`}
+        className={`rounded-2xl py-4 text-center text-2xl font-bold text-white ${regando ? 'regando' : ''}`}
         style={{ background: regando ? 'var(--agua)' : 'var(--apagado)' }}
         role="status"
       >
@@ -72,7 +72,7 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
       ) : (
         <button
           onClick={() => cambiarBomba(!regando)}
-          className="rounded-2xl py-8 text-3xl font-bold text-white shadow-md active:scale-95 transition-transform"
+          className="rounded-2xl py-6 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform"
           style={{ background: regando ? 'var(--peligro)' : 'var(--agua)' }}
         >
           {regando ? '⏹ DETENER RIEGO' : '💧 REGAR AHORA'}

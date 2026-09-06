@@ -26,7 +26,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-6"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Datos de la parcela"
     >
@@ -37,7 +37,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
         <div className="min-w-0">
           <h2
             className="font-bold leading-tight"
-            style={{ fontSize: 'clamp(1.75rem, 8vw, 2.25rem)' }}
+            style={{ fontSize: 'clamp(1.5rem, 7vw, 2rem)' }}
           >
             {vacio(parcela.nombre) ? 'Parcela sin nombre' : parcela.nombre}
           </h2>
@@ -83,7 +83,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
       <button
         type="button"
         onClick={onEditar}
-        className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
+        className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
       >
         <Pencil size={24} aria-hidden />

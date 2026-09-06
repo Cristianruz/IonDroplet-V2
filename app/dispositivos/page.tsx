@@ -48,7 +48,7 @@ export default function PantallaDispositivos() {
       : `Midió ${Math.round(humedad ?? 0)}% ${haceCuanto(ultimaLectura)}`
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/ajustes"

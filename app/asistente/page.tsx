@@ -35,7 +35,7 @@ function Asistente() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-5">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/"
@@ -65,7 +65,7 @@ function Asistente() {
       <section className="flex flex-col gap-4" aria-label="Conversación con el asistente">
         {burbujas.length === 0 && !enviando && (
           <div
-            className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
+            className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
             style={{ background: 'var(--tarjeta)' }}
           >
             <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>

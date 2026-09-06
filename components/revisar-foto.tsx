@@ -25,13 +25,13 @@ export function RevisarFoto() {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Revisar una foto de la planta"
     >
       <div className="flex items-center gap-3">
-        <Camera size={30} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">¿Ves algo raro en la planta?</h2>
+        <Camera size={24} style={{ color: 'var(--verde)' }} aria-hidden />
+        <h2 className="text-xl font-semibold">¿Ves algo raro en la planta?</h2>
       </div>
 
       {/* La cámara del celular, sin librerías: es HTML de toda la vida. */}
@@ -57,17 +57,17 @@ export function RevisarFoto() {
           <button
             type="button"
             onClick={() => entrada.current?.click()}
-            className="rounded-2xl py-7 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
+            className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
             style={{ background: 'var(--verde)' }}
           >
-            <Camera size={30} aria-hidden />
+            <Camera size={24} aria-hidden />
             TOMAR FOTO
           </button>
         </>
       )}
 
       {revisando && (
-        <p className="text-2xl font-bold py-6" style={{ color: 'var(--tinta-suave)' }} role="status">
+        <p className="text-xl font-bold py-4" style={{ color: 'var(--tinta-suave)' }} role="status">
           Viendo tu foto…
         </p>
       )}
@@ -114,7 +114,7 @@ export function RevisarFoto() {
               href={`/asistente?pregunta=${encodeURIComponent(
                 `En la foto de mi cultivo se ve esto: ${revision.posible}. ¿Qué hago?`
               )}`}
-              className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
+              className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
               style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
             >
               <MessageCircle size={24} aria-hidden />
@@ -128,7 +128,7 @@ export function RevisarFoto() {
               limpiar()
               entrada.current?.click()
             }}
-            className="rounded-2xl py-5 text-xl font-bold border-4"
+            className="rounded-2xl py-4 text-lg font-bold border-4"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
           >
             Tomar otra foto

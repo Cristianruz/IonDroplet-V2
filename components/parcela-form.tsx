@@ -87,11 +87,11 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-8"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-8"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={parcela ? 'Editar la parcela' : 'Registrar la parcela'}
     >
-      <h2 className="text-2xl font-semibold">{parcela ? 'Editar parcela' : 'Registrar parcela'}</h2>
+      <h2 className="text-xl font-semibold">{parcela ? 'Editar parcela' : 'Registrar parcela'}</h2>
 
       <div>
         <label htmlFor="nombre-parcela" className="block text-xl mb-3" style={{ color: 'var(--tinta-suave)' }}>
@@ -107,7 +107,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="Parcela Norte"
           aria-invalid={!!errores.nombre}
-          className="w-full rounded-2xl px-5 py-5 text-2xl border-4 outline-none"
+          className="w-full rounded-2xl px-4 py-4 text-xl border-4 outline-none"
           style={{
             borderColor: errores.nombre ? 'var(--peligro)' : 'var(--borde)',
             background: 'var(--tarjeta)',
@@ -191,7 +191,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="1.2"
           aria-invalid={!!errores.area}
-          className="w-full rounded-2xl px-5 py-5 text-2xl border-4 outline-none"
+          className="w-full rounded-2xl px-4 py-4 text-xl border-4 outline-none"
           style={{
             borderColor: errores.area ? 'var(--peligro)' : 'var(--borde)',
             background: 'var(--tarjeta)',
@@ -212,12 +212,12 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             onClick={() => setUmbral(v => Math.max(UMBRAL_MINIMO, v - 5))}
             disabled={umbral <= UMBRAL_MINIMO}
             className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-            style={{ width: 'clamp(60px, 18vw, 72px)', height: 'clamp(60px, 18vw, 72px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
             aria-label="Bajar el punto de riego"
           >
             <Minus size={34} aria-hidden />
           </button>
-          <p className="font-bold leading-none" style={{ fontSize: 'clamp(2rem, 11vw, 3rem)', color: 'var(--agua)' }} role="status">
+          <p className="font-bold leading-none" style={{ fontSize: 'clamp(1.75rem, 10vw, 2.5rem)', color: 'var(--agua)' }} role="status">
             {umbral}
             <span className="text-3xl">%</span>
           </p>
@@ -226,7 +226,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             onClick={() => setUmbral(v => Math.min(UMBRAL_MAXIMO, v + 5))}
             disabled={umbral >= UMBRAL_MAXIMO}
             className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-            style={{ width: 'clamp(60px, 18vw, 72px)', height: 'clamp(60px, 18vw, 72px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
             aria-label="Subir el punto de riego"
           >
             <Plus size={34} aria-hidden />
@@ -244,7 +244,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         type="button"
         onClick={guardar}
         disabled={guardando}
-        className="rounded-2xl py-7 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform disabled:opacity-60"
+        className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform disabled:opacity-60"
         style={{ background: 'var(--verde)' }}
       >
         {guardando ? 'GUARDANDO…' : 'GUARDAR PARCELA'}
@@ -258,7 +258,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-2xl py-5 text-xl font-bold border-4"
+          className="rounded-2xl py-4 text-lg font-bold border-4"
           style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
         >
           Dejarlo como estaba

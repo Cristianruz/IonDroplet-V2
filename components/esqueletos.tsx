@@ -9,7 +9,7 @@ function Barra({ ancho, alto = 22 }: { ancho: string; alto?: number }) {
 function Tarjeta({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="rounded-3xl p-6 sm:p-8 border border-black/5 flex flex-col gap-4"
+      className="rounded-2xl p-5 sm:p-6 border border-black/5 flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
     >
       {children}
@@ -58,7 +58,7 @@ export function EsqueletoGrafica() {
 
 export function EsqueletoCifras() {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
       {[0, 1, 2].map(i => (
         <Tarjeta key={i}>
           <Barra ancho="50%" alto={44} />

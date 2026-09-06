@@ -30,7 +30,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
   if (estado === 'error') {
     return (
       <section
-        className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
+        className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Clima"
       >
@@ -45,13 +45,13 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
   if (estado === 'sin_ubicacion') {
     return (
       <section
-        className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-4"
+        className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Falta la ubicación de la parcela"
       >
         <div className="flex items-center gap-3">
-          <MapPin size={30} style={{ color: 'var(--verde)' }} aria-hidden />
-          <h2 className="text-2xl font-semibold">¿Dónde está tu parcela?</h2>
+          <MapPin size={24} style={{ color: 'var(--verde)' }} aria-hidden />
+          <h2 className="text-xl font-semibold">¿Dónde está tu parcela?</h2>
         </div>
         <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
           Con eso te puedo avisar si viene agua o si va a helar. No lo adivino: un pueblo y otro
@@ -61,7 +61,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
           type="button"
           onClick={pedirUbicacion}
           disabled={guardandoUbicacion || parcelaId === null}
-          className="rounded-2xl py-6 text-xl font-bold text-white shadow-md disabled:opacity-60"
+          className="rounded-2xl py-4 text-xl font-bold text-white shadow-md disabled:opacity-60"
           style={{ background: 'var(--verde)' }}
         >
           {guardandoUbicacion ? 'Buscando…' : 'Estoy parado en mi parcela, úsala'}
@@ -84,17 +84,17 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Clima y pronóstico"
     >
       <div className="flex items-center gap-3">
-        <Sun size={32} style={{ color: 'var(--alerta)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">El tiempo en tu parcela</h2>
+        <Sun size={26} style={{ color: 'var(--alerta)' }} aria-hidden />
+        <h2 className="text-xl font-semibold">El tiempo en tu parcela</h2>
       </div>
 
       <div className="flex items-baseline gap-4 flex-wrap">
-        <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.5rem, 14vw, 4rem)' }}>
+        <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.25rem, 12vw, 3.25rem)' }}>
           {Math.round(ahora.temperature_2m)}
           <span style={{ fontSize: '0.5em' }}>°</span>
         </p>

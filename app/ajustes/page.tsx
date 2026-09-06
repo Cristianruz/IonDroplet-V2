@@ -13,16 +13,16 @@ export default function PantallaAjustes() {
   const { umbralRiego, guardando, guardarUmbral } = useParcela()
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <h1 className="text-3xl font-bold leading-tight">Ajustes</h1>
 
       {/* Conexión — solo lectura en esta versión */}
       <section
-        className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-4"
+        className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Conexión con la computadora del riego"
       >
-        <h2 className="text-2xl font-semibold">Conexión</h2>
+        <h2 className="text-xl font-semibold">Conexión</h2>
 
         <div className="flex items-center gap-3" role="status">
           <span
@@ -54,11 +54,11 @@ export default function PantallaAjustes() {
 
       {/* Modo de riego — mismo control que la pantalla de inicio */}
       <section
-        className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-4"
+        className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Quién decide cuándo regar"
       >
-        <h2 className="text-2xl font-semibold">¿Quién decide cuándo regar?</h2>
+        <h2 className="text-xl font-semibold">¿Quién decide cuándo regar?</h2>
 
         <div className="grid grid-cols-2 gap-3">
           <button

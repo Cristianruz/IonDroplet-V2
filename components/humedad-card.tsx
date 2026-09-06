@@ -24,17 +24,17 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Humedad de la tierra"
     >
       <div className="flex items-center gap-3 mb-2">
-        <Droplets size={32} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">Humedad de la tierra</h2>
+        <Droplets size={26} style={{ color: 'var(--agua)' }} aria-hidden />
+        <h2 className="text-xl font-semibold">Humedad de la tierra</h2>
       </div>
 
       {sinDato ? (
-        <p className="text-3xl font-bold py-8" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-2xl font-bold py-6" style={{ color: 'var(--tinta-suave)' }}>
           Esperando al sensor…
         </p>
       ) : (
@@ -46,7 +46,7 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
           <p
             className="font-bold leading-none"
             style={{
-              fontSize: 'clamp(3.5rem, 20vw, 6rem)',
+              fontSize: 'clamp(3rem, 17vw, 4.5rem)',
               color: estado!.color,
               opacity: sensorActivo ? 1 : 0.5,
             }}
@@ -57,7 +57,7 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
 
           {sensorActivo ? (
             <>
-              <p className="text-3xl font-bold mt-3" style={{ color: estado!.color }}>
+              <p className="text-2xl font-bold mt-2" style={{ color: estado!.color }}>
                 {estado!.texto}
               </p>
               <p className="text-xl mt-1" style={{ color: 'var(--tinta-suave)' }}>
@@ -65,7 +65,7 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
               </p>
             </>
           ) : (
-            <p className="text-3xl font-bold mt-3" style={{ color: 'var(--tinta-suave)' }}>
+            <p className="text-2xl font-bold mt-2" style={{ color: 'var(--tinta-suave)' }}>
               Esperando al sensor…
             </p>
           )}

@@ -63,7 +63,7 @@ export default function PantallaPlagas() {
   const resto = evaluadas.slice(1)
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/parcela"
@@ -87,7 +87,7 @@ export default function PantallaPlagas() {
         <EsqueletoLista filas={4} />
       ) : parcela === null || !parcela.cultivo ? (
         <section
-          className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
+          className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
           style={{ background: 'var(--tarjeta)' }}
           aria-label="Todavía no hay parcela registrada"
         >
@@ -99,7 +99,7 @@ export default function PantallaPlagas() {
           </p>
           <Link
             href="/parcela"
-            className="w-full rounded-2xl py-7 text-2xl font-bold text-white shadow-md text-center"
+            className="w-full rounded-2xl py-5 text-2xl font-bold text-white shadow-md text-center"
             style={{ background: 'var(--verde)' }}
           >
             Ir a mi parcela
@@ -121,11 +121,11 @@ export default function PantallaPlagas() {
 
           {resto.length > 0 && (
             <section
-              className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
+              className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
               style={{ background: 'var(--tarjeta)' }}
               aria-label="Otras plagas a las que estar atento"
             >
-              <h2 className="text-2xl font-semibold mb-2">Otras a las que estar atento</h2>
+              <h2 className="text-xl font-semibold mb-2">Otras a las que estar atento</h2>
               <div className="flex flex-col">
                 {resto.map(({ plaga, riesgo }) => (
                   <PlagaCard

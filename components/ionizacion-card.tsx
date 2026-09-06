@@ -10,13 +10,13 @@ interface Props {
 export function IonizacionCard({ encendida, cambiar }: Props) {
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Ionización del agua"
     >
       <div className="flex items-center gap-3">
-        <Zap size={32} style={{ color: 'var(--oro)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">Agua ionizada</h2>
+        <Zap size={26} style={{ color: 'var(--oro)' }} aria-hidden />
+        <h2 className="text-xl font-semibold">Agua ionizada</h2>
       </div>
 
       <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
@@ -25,7 +25,7 @@ export function IonizacionCard({ encendida, cambiar }: Props) {
 
       <button
         onClick={cambiar}
-        className="rounded-2xl py-6 text-2xl font-bold border-4 transition-colors"
+        className="rounded-2xl py-4 text-xl font-bold border-4 transition-colors"
         style={
           encendida
             ? { background: 'var(--oro)', borderColor: 'var(--riesgo-medio)', color: 'white' }

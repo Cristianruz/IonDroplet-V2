@@ -18,7 +18,7 @@ export default function PantallaParcela() {
   const [editando, setEditando] = useState(false)
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <h1 className="text-3xl font-bold leading-tight">Mi parcela</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
@@ -43,7 +43,7 @@ export default function PantallaParcela() {
       ) : parcela === null ? (
         // Todavía no hay parcela: tarjeta vacía, no el formulario de golpe.
         <section
-          className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
+          className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
           style={{ background: 'var(--tarjeta)' }}
           aria-label="Todavía no hay parcela registrada"
         >
@@ -55,7 +55,7 @@ export default function PantallaParcela() {
           <button
             type="button"
             onClick={() => setEditando(true)}
-            className="w-full rounded-2xl py-7 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform"
+            className="w-full rounded-2xl py-5 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform"
             style={{ background: 'var(--verde)' }}
           >
             Registrar mi parcela
@@ -65,7 +65,7 @@ export default function PantallaParcela() {
         <>
           <Aparece><ParcelaCard parcela={parcela} onEditar={() => setEditando(true)} /></Aparece>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-4">
             <HumedadCard
               humedad={humedad}
               sensorActivo={sensorActivo}

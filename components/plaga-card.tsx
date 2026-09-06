@@ -54,14 +54,14 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border-4 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border-4 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)', borderColor: COLOR_RIESGO[riesgo] }}
       aria-label={`${plaga.nombre}, riesgo ${riesgo}`}
     >
       <div className="flex items-start gap-4">
         <span className="text-5xl leading-none" aria-hidden>{plaga.icono}</span>
         <div>
-          <h2 className="text-3xl font-bold leading-tight">{plaga.nombre}</h2>
+          <h2 className="text-2xl font-bold leading-tight">{plaga.nombre}</h2>
           <p className="text-xl font-bold" style={{ color: COLOR_RIESGO[riesgo] }} role="status">
             {TEXTO_RIESGO[riesgo]} esta semana
           </p>
@@ -81,7 +81,7 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
       {/* Abre el asistente con la plaga ya escrita, como pide el wireframe. */}
       <Link
         href={`/asistente?pregunta=${encodeURIComponent(`¿Qué hago con ${plaga.nombre.toLowerCase()} en mi cultivo?`)}`}
-        className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
+        className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
       >
         <MessageCircle size={24} aria-hidden />
@@ -97,7 +97,7 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
         <button
           type="button"
           onClick={onRevisar}
-          className="rounded-2xl py-7 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform"
+          className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform"
           style={{ background: 'var(--verde)' }}
         >
           YA REVISÉ

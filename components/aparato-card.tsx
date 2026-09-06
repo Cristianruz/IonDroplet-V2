@@ -31,7 +31,7 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-4"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={nombre}
     >
@@ -45,7 +45,7 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
               style={{ width: 16, height: 16, background: COLOR[estado], flexShrink: 0 }}
               aria-hidden
             />
-            <h2 className="text-2xl font-bold leading-tight">{nombre}</h2>
+            <h2 className="text-xl font-bold leading-tight">{nombre}</h2>
           </div>
           <p className="text-xl mt-1" style={{ color: 'var(--tinta-suave)' }} role="status">
             {detalle}
@@ -68,7 +68,7 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
             type="button"
             onClick={() => setAbierto(a => !a)}
             aria-expanded={abierto}
-            className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
+            className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--alerta)', color: 'var(--alerta)' }}
           >
             CÓMO REVISARLO

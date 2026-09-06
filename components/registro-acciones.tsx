@@ -35,11 +35,11 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Lo que ha pasado"
     >
-      <h2 className="text-2xl font-semibold">Lo que ha pasado</h2>
+      <h2 className="text-xl font-semibold">Lo que ha pasado</h2>
 
       {cargando ? (
         <p className="text-xl py-4" style={{ color: 'var(--tinta-suave)' }}>
@@ -81,7 +81,7 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
             <button
               type="button"
               onClick={onVerMas}
-              className="rounded-2xl py-5 text-xl font-bold border-4"
+              className="rounded-2xl py-4 text-lg font-bold border-4"
               style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
             >
               Ver más

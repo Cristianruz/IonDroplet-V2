@@ -41,11 +41,11 @@ export function SelectorTema() {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 border border-black/5 flex flex-col gap-4"
+      className="rounded-2xl p-5 sm:p-6 border border-black/5 flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
       aria-label="Cómo se ve la pantalla"
     >
-      <h2 className="text-2xl font-semibold">¿Cómo se ve la pantalla?</h2>
+      <h2 className="text-xl font-semibold">¿Cómo se ve la pantalla?</h2>
 
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="group">
         {OPCIONES.map(({ id, etiqueta, Icono }) => {

@@ -20,7 +20,7 @@ export default function PantallaHistorial() {
   const etiquetaRango = RANGOS.find(r => r.id === rango)?.etiqueta ?? 'Hoy'
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <h1 className="text-3xl font-bold leading-tight">Historial</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
@@ -34,7 +34,7 @@ export default function PantallaHistorial() {
               key={id}
               type="button"
               onClick={() => setRango(id)}
-              className="rounded-2xl py-5 text-xl font-bold border-4 transition-colors"
+              className="rounded-2xl py-4 text-lg font-bold border-4 transition-colors"
               style={
                 activo
                   ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
@@ -63,7 +63,7 @@ export default function PantallaHistorial() {
             riegos={registro.riegos}
           /></Aparece>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Cifra
               valor={promedio !== null ? `${Math.round(promedio)}%` : null}
               etiqueta="de humedad en promedio"
@@ -114,7 +114,7 @@ export default function PantallaHistorial() {
 function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: string; nota: string }) {
   return (
     <section
-      className="rounded-3xl p-5 sm:p-6 shadow-sm border border-black/5"
+      className="rounded-2xl p-4 sm:p-5 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={etiqueta}
     >
@@ -122,7 +122,7 @@ function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: stri
         className="font-bold leading-none"
         style={{
           // Un valor largo ("menos de 1 min") no cabe al tamaño de un número.
-          fontSize: valor && valor.length > 7 ? 'clamp(1.5rem, 8vw, 2rem)' : 'clamp(2.25rem, 11vw, 3rem)',
+          fontSize: valor && valor.length > 7 ? 'clamp(1.25rem, 7vw, 1.75rem)' : 'clamp(2rem, 10vw, 2.5rem)',
           color: valor ? 'var(--agua)' : 'var(--apagado)',
         }}
       >

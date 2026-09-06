@@ -26,10 +26,10 @@ export default function Dashboard() {
   } = useIonDroplet()
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-6 flex flex-col gap-6">
+    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
       <header className="hero flex items-center justify-between flex-wrap gap-3">
         <div className="flex items-center gap-3">
-          <Sprout size={40} style={{ color: 'var(--verde)' }} aria-hidden />
+          <Sprout size={32} style={{ color: 'var(--verde)' }} aria-hidden />
           <div>
             <h1 className="text-3xl font-bold leading-tight">IonDroplet</h1>
             <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>Tu riego, vigilado día y noche</p>
@@ -49,12 +49,12 @@ export default function Dashboard() {
       {!conectado && <AvisoSinConexion />}
 
       {cargando && humedad === null ? (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4">
           <EsqueletoHumedad />
           <EsqueletoHumedad />
         </div>
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4">
           <Aparece><HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} /></Aparece>
           <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} /></Aparece>
         </div>

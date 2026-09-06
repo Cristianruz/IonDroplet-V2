@@ -81,13 +81,13 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={encabezado}
     >
       <div className="flex items-center gap-3 mb-4">
-        <TrendingUp size={32} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">{encabezado}</h2>
+        <TrendingUp size={26} style={{ color: 'var(--agua)' }} aria-hidden />
+        <h2 className="text-xl font-semibold">{encabezado}</h2>
       </div>
 
       {marcasRiego.length > 0 && (

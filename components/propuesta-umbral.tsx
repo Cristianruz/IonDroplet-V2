@@ -21,13 +21,13 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Recomendación del asistente sobre el punto de riego"
     >
       <div className="flex items-center gap-3">
-        <Sparkles size={30} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">¿Le pregunto al asistente?</h2>
+        <Sparkles size={24} style={{ color: 'var(--verde)' }} aria-hidden />
+        <h2 className="text-xl font-semibold">¿Le pregunto al asistente?</h2>
       </div>
 
       {propuesta === null ? (
@@ -40,7 +40,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
             type="button"
             onClick={pedirPropuesta}
             disabled={pensando}
-            className="rounded-2xl py-6 text-xl font-bold border-4 disabled:opacity-60"
+            className="rounded-2xl py-4 text-xl font-bold border-4 disabled:opacity-60"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--verde)', color: 'var(--verde)' }}
           >
             {pensando ? 'Pensando…' : 'Que me recomiende un punto de riego'}
@@ -49,7 +49,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
       ) : (
         <>
           <div className="flex items-baseline gap-3">
-            <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.5rem, 13vw, 4rem)', color: 'var(--agua)' }}>
+            <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.25rem, 12vw, 3.25rem)', color: 'var(--agua)' }}>
               {propuesta.sugerido}
               <span style={{ fontSize: '0.6em' }}>%</span>
             </p>
@@ -72,16 +72,16 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
           <button
             type="button"
             onClick={aceptar}
-            className="rounded-2xl py-7 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
+            className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
             style={{ background: 'var(--verde)' }}
           >
-            <Check size={30} aria-hidden />
+            <Check size={24} aria-hidden />
             USAR ESTE PUNTO
           </button>
           <button
             type="button"
             onClick={descartar}
-            className="rounded-2xl py-5 text-xl font-bold border-4"
+            className="rounded-2xl py-4 text-lg font-bold border-4"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
           >
             Dejarlo como está

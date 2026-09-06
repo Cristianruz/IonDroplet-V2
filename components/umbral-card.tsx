@@ -45,18 +45,18 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
 
   return (
     <section
-      className="rounded-3xl p-6 sm:p-8 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Punto de riego"
     >
-      <h2 className="text-2xl font-semibold">¿Cuándo debe regar solo?</h2>
+      <h2 className="text-xl font-semibold">¿Cuándo debe regar solo?</h2>
 
       <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
         Riega solo si la tierra baja de:
       </p>
 
       {valor === null ? (
-        <p className="text-2xl font-bold py-6" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-xl font-bold py-4" style={{ color: 'var(--tinta-suave)' }}>
           Esperando al sistema…
         </p>
       ) : (
@@ -67,13 +67,13 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(-PASO)}
               disabled={valor <= MINIMO}
               className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(56px, 17vw, 68px)', height: 'clamp(56px, 17vw, 68px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               aria-label={`Bajar el punto de riego a ${Math.max(MINIMO, valor - PASO)} por ciento`}
             >
               <Minus size={40} aria-hidden />
             </button>
 
-            <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.5rem, 13vw, 4rem)', color: 'var(--agua)' }} role="status">
+            <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.25rem, 12vw, 3.25rem)', color: 'var(--agua)' }} role="status">
               {valor}
               <span style={{ fontSize: '0.6em' }}>%</span>
             </p>
@@ -83,7 +83,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(PASO)}
               disabled={valor >= MAXIMO}
               className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
-              style={{ width: 'clamp(64px, 20vw, 84px)', height: 'clamp(64px, 20vw, 84px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(56px, 17vw, 68px)', height: 'clamp(56px, 17vw, 68px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               aria-label={`Subir el punto de riego a ${Math.min(MAXIMO, valor + PASO)} por ciento`}
             >
               <Plus size={40} aria-hidden />
@@ -103,7 +103,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               type="button"
               onClick={guardar}
               disabled={guardando}
-              className="rounded-2xl py-6 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3 disabled:opacity-60"
+              className="rounded-2xl py-4 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3 disabled:opacity-60"
               style={{ background: 'var(--verde)' }}
             >
               <Check size={28} aria-hidden />
