@@ -1,6 +1,6 @@
 # Pendientes de IonDroplet V2
 
-Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2, 3 y 4**. Faltan: 5 y 6.
+Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo que sigue es pulido y decisiones abiertas.
 
 ---
 
@@ -43,9 +43,8 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2, 3 y 4**. Faltan:
 
 | # | Dónde | Qué falta |
 |---|---|---|
-| 3.2 | Ajustes | Falta el enlace a **Dispositivos** (Fase 6). Los wireframes dicen que se llega desde ahí, no desde la barra. |
-| 3.3 | Plagas | Falta el botón **"Preguntar"**, que debe abrir el asistente de la Fase 5 con la plaga ya escrita. No se puso un botón que no lleve a ningún lado. |
-| 3.4 | Asistente | No es destino de la barra en los wireframes. Falta decidir desde dónde se llega. (Plagas ya se resolvió: se entra desde la pantalla de Parcela, porque dependen del cultivo.) |
+| 3.3 | ~~Botón "Preguntar" en Plagas~~ | **Hecho** en la Fase 5: abre el asistente con la plaga ya escrita. |
+| 3.4 | ~~Asistente y Plagas sin entrada~~ | **Resuelto.** A Plagas se entra desde Parcela, al Asistente desde Inicio y desde el botón "Preguntar" de cada plaga, y a Dispositivos desde Ajustes. |
 | 3.5 | Plagas | El catálogo es una primera versión escrita a mano. Convendría que un técnico agrónomo lo revise antes de la demo, sobre todo las temporadas por mes. |
 
 ---
@@ -58,7 +57,6 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2, 3 y 4**. Faltan:
 | 4.2 | La ionización se registra por **lo que se pide**, no por lo que el ionizador confirma | El aparato no reporta su estado. Mismo problema que 4.10. |
 | 4.6 | El cultivo se guardará como `id` (`"nogal"`) en vez del nombre (`"Nogal"`) la próxima vez que se guarde la parcela | La lectura acepta las dos formas. Es la normalización que la Fase 4 necesita. |
 | 4.7 | Las gráficas **submuestrean** (240 puntos en Inicio, 720 en Historial) | Lo hace el servidor con el parámetro `max`. Son lecturas reales, una de cada N, nunca promedios. Las cifras exactas salen aparte de `/api/sensors/resumen`, calculadas sobre todas. |
-| 4.15 | La pantalla de Historial pide la bitácora **dos veces** | Una para los puntos verdes de la gráfica y otra para la lista. Son pocos KB, pero se podrían unir en una sola petición. |
 | 4.10 | El estado del ionizador vive en memoria del navegador | Se pierde al recargar. No hay endpoint que devuelva el estado real; `devices` está vacía y solo tiene `id` e `ionization_on`. La Fase 6 va a necesitar campos ahí. |
 
 ### Ya resueltos
@@ -69,6 +67,8 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2, 3 y 4**. Faltan:
 - ~~"Empezó a regar" para un riego en curso~~ → dice **"Regando ahora"** cuando la bomba sigue prendida.
 - ~~`use-parcela` no leía por `id`~~ → ahora lee por `id` en cuanto sabe cuál es, y vuelve a la lista si desaparece.
 - ~~Faltaban los puntos verdes de riego en la gráfica~~ → **hechos**, con su leyenda.
+- ~~Historial pedía la bitácora dos veces~~ → una sola respuesta sirve para la lista y para los puntos.
+- ~~Cada pantalla con su propio temporizador~~ → un solo `<ProveedorDatos>` para toda la app.
 
 ### Sobre las profundidades y el agua subterránea
 
@@ -101,21 +101,30 @@ Para revisar tipos sin apagar nada: `npx tsc --noEmit`.
 
 ---
 
-## 5. Fases que faltan
+## 5. Lo que sigue
 
-**Fase 5 — Asistente.** `POST /api/chat` nuevo (sin tocar `/api/ai/analyze`) y
-`app/asistente/page.tsx`. El contexto lo arma el backend con la última lectura, el estado del
-ESP32 y la parcela; el front solo manda la pregunta. Respuesta en español simple, máximo tres
-frases. Si no hay dato del sensor, la IA debe decirlo en vez de suponer.
+Las seis fases del plan están terminadas. Lo que queda es de tres tipos:
 
-**Fase 5b — La IA propone el punto de riego.** Decidido el 3 de septiembre de 2026. La IA
-analiza cultivo, etapa, la humedad de los últimos días y la temporada, y **sugiere** un punto
-de riego con su razón en una frase. Un botón grande lo aplica; queda registrado con
-`origen: 'ia'`, que en la bitácora se lee "lo recomendó el asistente". **Nunca cambia la bomba
-sin que alguien lo acepte.**
+**Revisión de un experto.** La guía agronómica (`guia-cultivos.js`, en el backend) y el
+catálogo de plagas (`lib/plagas.ts`) los redactó Claude. Antes de la demo los debería revisar
+un agrónomo, sobre todo las temperaturas críticas, los rangos de humedad y los calendarios
+por mes.
 
-**Fase 6 — Dispositivos.** `app/dispositivos/page.tsx`, al que se llega desde Ajustes.
-Verde si respondió hace menos de 2 min, ámbar si más, rojo si nunca, calculado del timestamp
-de la última lectura y no de un campo propio. Un icono por aparato en una constante de la
-pantalla. El botón "CÓMO REVISARLO" abre 3–4 pasos en lenguaje llano, sin códigos de error.
-Puede necesitar campos nuevos en `devices` (cambio aditivo, con permiso).
+**Ubicación de la parcela.** Hasta que alguien toque el botón desde el celular estando en la
+parcela, la tarjeta del clima sigue pidiendo el dato. No se adivina: dos municipios a 100 km
+tienen 6 grados de diferencia en la mínima, y de eso depende un aviso de helada.
+
+**Lo que necesita hardware nuevo.**
+
+| Qué | Qué hace falta |
+|---|---|
+| Ubicación desde el aparato | Un módulo GPS en el ESP32 y cambiar el firmware. El backend ya acepta `lat` y `lon` en `/api/esp/data`: la puerta está abierta. |
+| Temperatura del suelo, pH, conductividad | Sensores nuevos. `sensor_readings` ya tiene las columnas `temperature`, `voltage` y `current` vacías esperando. |
+| Humedad a varias profundidades y nivel freático | Sensores nuevos. Los endpoints ya existen y fueron probados. |
+| Que el ionizador confirme su estado | Hoy solo se sabe lo último que se le pidió, y la pantalla de Aparatos lo dice tal cual. |
+| Varias parcelas con su propia bomba | Antes hay que quitar el `espSettings` global de `server.js`: hoy hay un solo `autoMode` y un solo `pumpState` para todo el sistema, así que dos bombas se pisarían. Eso sí toca la lógica de riego. |
+| Registro automático de aparatos nuevos | La tabla `devices` solo tiene `id` e `ionization_on`: le faltan nombre, tipo, parcela y última respuesta. Cambio aditivo. |
+
+**Huracanes.** Si lo quieres, se conecta el centro de huracanes de NOAA. Con la salvedad de
+siempre: Chihuahua está a 400 km de la costa y a 1,400 m de altura, los huracanes no tocan
+tierra ahí, y el aviso de helada que ya existe salva más cosecha.

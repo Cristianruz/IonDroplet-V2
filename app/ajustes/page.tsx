@@ -1,6 +1,7 @@
 'use client'
 
-import { Hand, Sparkles } from 'lucide-react'
+import Link from 'next/link'
+import { Hand, Sparkles, ChevronRight } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/umbral-card'
@@ -93,6 +94,20 @@ export default function PantallaAjustes() {
             : 'El sistema no riega solo: tú mandas desde la pantalla de inicio.'}
         </p>
       </section>
+
+      {/* Los wireframes dicen que a Dispositivos se llega desde aquí, no
+          desde la barra de abajo. */}
+      <Link
+        href="/dispositivos"
+        className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+        style={{ background: 'var(--tarjeta)', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+      >
+        <span className="flex items-center gap-3">
+          <span className="text-2xl leading-none" aria-hidden>📡</span>
+          Aparatos del campo
+        </span>
+        <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+      </Link>
 
       <UmbralCard
         umbral={umbralRiego}

@@ -197,7 +197,10 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     async function ciclo() {
       if (!vivo) return
       // Con la app en segundo plano no se pide nada: se reanuda al volver.
-      if (typeof document !== 'undefined' && document.hidden) {
+      // Pero la PRIMERA vuelta siempre corre, aunque la pantalla esté oculta:
+      // si no, la app diría "no responde" sin haber preguntado nunca, que es
+      // afirmar algo que no sabe.
+      if (ciclos > 0 && typeof document !== 'undefined' && document.hidden) {
         temporizador = setTimeout(ciclo, INTERVALO_NORMAL)
         return
       }
