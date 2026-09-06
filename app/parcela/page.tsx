@@ -77,10 +77,6 @@ export default function PantallaParcela() {
           </div>
         </>
       )}
-
-      <footer className="text-center text-lg py-4" style={{ color: 'var(--tinta-suave)' }}>
-        IonDroplet · InnovaTecNM 2026
-      </footer>
     </main>
   )
 }
