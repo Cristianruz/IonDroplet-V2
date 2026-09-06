@@ -67,7 +67,7 @@ export function RiegoCard({ estadoEsp, cambiarModo, cambiarBomba }: Props) {
 
       {estadoEsp.autoMode ? (
         <p className="text-xl text-center py-4" style={{ color: 'var(--tinta-suave)' }}>
-          El sistema riega solo cuando la tierra lo necesita. Usted no tiene que hacer nada. 🌱
+          El sistema riega solo cuando la tierra lo necesita. No tienes que hacer nada. 🌱
         </p>
       ) : (
         <button

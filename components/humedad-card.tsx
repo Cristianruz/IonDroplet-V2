@@ -1,16 +1,26 @@
 'use client'
 
 import { Droplets } from 'lucide-react'
+import { haceCuanto } from '@/lib/tiempo'
 
-function estadoHumedad(h: number) {
-  if (h < 40) return { texto: 'TIERRA SECA', detalle: 'Le falta agua a tu tierra', color: 'var(--alerta)' }
+function estadoHumedad(h: number, umbral: number) {
+  if (h < umbral) return { texto: 'TIERRA SECA', detalle: 'Le falta agua a tu tierra', color: 'var(--alerta)' }
   if (h <= 75) return { texto: 'HUMEDAD BIEN', detalle: 'Tu tierra está en buen punto', color: 'var(--verde)' }
   return { texto: 'MUY HÚMEDA', detalle: 'Tu tierra tiene agua de sobra', color: 'var(--agua)' }
 }
 
-export function HumedadCard({ humedad, sensorActivo }: { humedad: number | null; sensorActivo: boolean }) {
+interface Props {
+  humedad: number | null
+  sensorActivo: boolean
+  ultimaLectura?: Date | null
+  /** Debajo de este número la tierra se marca seca. Es el punto de riego. */
+  umbral?: number
+}
+
+export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbral = 40 }: Props) {
   const sinDato = humedad === null
-  const estado = sinDato ? null : estadoHumedad(humedad)
+  const estado = sinDato ? null : estadoHumedad(humedad, umbral)
+  const cuando = haceCuanto(ultimaLectura)
 
   return (
     <section
@@ -29,20 +39,34 @@ export function HumedadCard({ humedad, sensorActivo }: { humedad: number | null;
         </p>
       ) : (
         <>
-          <p className="font-bold leading-none" style={{ fontSize: '6rem', color: estado!.color }}>
+          {/* Si el sensor lleva rato callado, el número se atenúa: sigue siendo
+              el último dato real, pero ya no es de fiar como "ahorita". */}
+          <p
+            className="font-bold leading-none"
+            style={{ fontSize: '6rem', color: estado!.color, opacity: sensorActivo ? 1 : 0.35 }}
+          >
             {Math.round(humedad!)}
             <span className="text-5xl">%</span>
           </p>
-          <p className="text-3xl font-bold mt-3" style={{ color: estado!.color }}>
-            {estado!.texto}
-          </p>
-          <p className="text-xl mt-1" style={{ color: 'var(--tinta-suave)' }}>
-            {estado!.detalle}
-          </p>
+
+          {sensorActivo ? (
+            <>
+              <p className="text-3xl font-bold mt-3" style={{ color: estado!.color }}>
+                {estado!.texto}
+              </p>
+              <p className="text-xl mt-1" style={{ color: 'var(--tinta-suave)' }}>
+                {estado!.detalle}
+              </p>
+            </>
+          ) : (
+            <p className="text-3xl font-bold mt-3" style={{ color: 'var(--tinta-suave)' }}>
+              Esperando al sensor…
+            </p>
+          )}
 
           <div
             className="mt-6 h-6 rounded-full overflow-hidden"
-            style={{ background: '#e5e7e2' }}
+            style={{ background: '#e5e7e2', opacity: sensorActivo ? 1 : 0.35 }}
             role="progressbar"
             aria-valuenow={Math.round(humedad!)}
             aria-valuemin={0}
@@ -53,6 +77,13 @@ export function HumedadCard({ humedad, sensorActivo }: { humedad: number | null;
               style={{ width: `${Math.min(100, Math.max(0, humedad!))}%`, background: estado!.color }}
             />
           </div>
+
+          {/* Cada dato dice cuándo se midió. */}
+          {cuando && (
+            <p className="text-lg mt-3" style={{ color: 'var(--tinta-suave)' }}>
+              {cuando}
+            </p>
+          )}
         </>
       )}
 

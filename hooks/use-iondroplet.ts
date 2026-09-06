@@ -117,9 +117,9 @@ export function useIonDroplet(intervaloMs = 3000) {
     } catch {}
   }, [ionizacion])
 
-  // Sensor "activo" = lectura de hace menos de 2 minutos
+  // Sensor "activo" = lectura de hace menos de 5 minutos
   const sensorActivo =
-    ultimaLectura !== null && Date.now() - ultimaLectura.getTime() < 2 * 60 * 1000
+    ultimaLectura !== null && Date.now() - ultimaLectura.getTime() < 5 * 60 * 1000
 
   return {
     humedad,

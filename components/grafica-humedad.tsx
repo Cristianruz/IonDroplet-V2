@@ -5,14 +5,25 @@ import { TrendingUp } from 'lucide-react'
 import type { PuntoHistorial } from '@/hooks/use-iondroplet'
 
 const ANCHO = 640
-const ALTO = 240
 const MARGEN = { arriba: 16, abajo: 34, izquierda: 44, derecha: 16 }
 
-export function GraficaHumedad({ historial }: { historial: PuntoHistorial[] }) {
-  const [hover, setHover] = useState<number | null>(null)
+interface Props {
+  historial: PuntoHistorial[]
+  /** Título de la tarjeta. Por omisión, el de las últimas 24 horas. */
+  titulo?: string
+  /** Alto del SVG. La pantalla de Historial la usa más grande. */
+  altura?: number
+  /** Cuándo empezó cada riego, para marcarlos abajo de la línea. */
+  riegos?: Date[]
+}
 
-  const { puntos, path, area } = useMemo(() => {
-    if (historial.length < 2) return { puntos: [], path: '', area: '' }
+export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props) {
+  const [hover, setHover] = useState<number | null>(null)
+  const ALTO = altura ?? 240
+  const encabezado = titulo ?? 'Humedad en las últimas 24 horas'
+
+  const { puntos, path, area, tramoLargo } = useMemo(() => {
+    if (historial.length < 2) return { puntos: [], path: '', area: '', tramoLargo: false }
 
     const t0 = historial[0].fecha.getTime()
     const t1 = historial[historial.length - 1].fecha.getTime()
@@ -30,11 +41,30 @@ export function GraficaHumedad({ historial }: { historial: PuntoHistorial[] }) {
     const d = pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ')
     const baseY = MARGEN.arriba + altoUtil
     const a = `${d} L${pts[pts.length - 1].x.toFixed(1)},${baseY} L${pts[0].x.toFixed(1)},${baseY} Z`
-    return { puntos: pts, path: d, area: a }
-  }, [historial])
+    // Más de dos días: en el eje ya no sirve la hora, va la fecha.
+    return { puntos: pts, path: d, area: a, tramoLargo: rangoT > 48 * 60 * 60 * 1000 }
+  }, [historial, ALTO])
 
   const punto = hover !== null && puntos[hover] ? puntos[hover] : null
   const altoUtil = ALTO - MARGEN.arriba - MARGEN.abajo
+
+  // Marcas de riego, solo las que caen dentro de lo que se está viendo.
+  const marcasRiego = useMemo(() => {
+    if (puntos.length < 2 || riegos.length === 0) return []
+    const t0 = historial[0].fecha.getTime()
+    const t1 = historial[historial.length - 1].fecha.getTime()
+    const rangoT = Math.max(1, t1 - t0)
+    const anchoUtil = ANCHO - MARGEN.izquierda - MARGEN.derecha
+    return riegos
+      .filter(f => f.getTime() >= t0 && f.getTime() <= t1)
+      .map(f => MARGEN.izquierda + ((f.getTime() - t0) / rangoT) * anchoUtil)
+  }, [riegos, historial, puntos.length])
+
+  function etiquetaEje(fecha: Date) {
+    return tramoLargo
+      ? fecha.toLocaleDateString('es-MX', { day: '2-digit', month: 'short' })
+      : fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+  }
 
   function onMove(e: React.MouseEvent<SVGSVGElement>) {
     if (puntos.length === 0) return
@@ -53,23 +83,36 @@ export function GraficaHumedad({ historial }: { historial: PuntoHistorial[] }) {
     <section
       className="rounded-3xl p-8 shadow-sm border border-black/5"
       style={{ background: 'var(--tarjeta)' }}
-      aria-label="Historial de humedad de las últimas 24 horas"
+      aria-label={encabezado}
     >
       <div className="flex items-center gap-3 mb-4">
         <TrendingUp size={32} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-2xl font-semibold">Humedad en las últimas 24 horas</h2>
+        <h2 className="text-2xl font-semibold">{encabezado}</h2>
       </div>
+
+      {marcasRiego.length > 0 && (
+        <div className="flex items-center gap-5 mb-4 text-lg" style={{ color: 'var(--tinta-suave)' }}>
+          <span className="flex items-center gap-2">
+            <span className="rounded-full" style={{ width: 14, height: 14, background: 'var(--agua)' }} aria-hidden />
+            humedad
+          </span>
+          <span className="flex items-center gap-2">
+            <span className="rounded-full" style={{ width: 14, height: 14, background: 'var(--verde)' }} aria-hidden />
+            riego
+          </span>
+        </div>
+      )}
 
       {historial.length < 2 ? (
         <p className="text-xl py-8" style={{ color: 'var(--tinta-suave)' }}>
-          Todavía no hay suficientes datos. Aquí verá cómo cambia la humedad durante el día.
+          Todavía no hay suficientes datos. Aquí vas a ver cómo cambia la humedad durante el día.
         </p>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <svg
             viewBox={`0 0 ${ANCHO} ${ALTO}`}
             className="w-full"
-            style={{ minWidth: 420 }}
+            style={{ minWidth: 320 }}
             onMouseMove={onMove}
             onMouseLeave={() => setHover(null)}
             role="img"
@@ -94,6 +137,19 @@ export function GraficaHumedad({ historial }: { historial: PuntoHistorial[] }) {
             {/* Área suave + línea delgada, un solo tono (una sola serie) */}
             <path d={area} fill="var(--agua)" opacity={0.08} />
             <path d={path} fill="none" stroke="var(--agua)" strokeWidth={2.5} strokeLinejoin="round" />
+
+            {/* Cada riego, marcado abajo de la línea */}
+            {marcasRiego.map((x, i) => (
+              <circle
+                key={`riego-${i}`}
+                cx={x}
+                cy={MARGEN.arriba + altoUtil}
+                r={5}
+                fill="var(--verde)"
+                stroke="white"
+                strokeWidth={1.5}
+              />
+            ))}
 
             {/* Etiqueta directa en el último punto */}
             {puntos.length > 0 && (
@@ -120,16 +176,16 @@ export function GraficaHumedad({ historial }: { historial: PuntoHistorial[] }) {
                     {Math.round(punto.humedad)}% humedad
                   </text>
                   <text x={60} y={42} textAnchor="middle" fontSize={14} fill="#c8d4c8">
-                    {punto.fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                    {etiquetaEje(punto.fecha)}
                   </text>
                 </g>
               </g>
             )}
 
-            {/* Horas en el eje X: inicio, medio, fin */}
+            {/* Inicio, medio y fin en el eje X */}
             {puntos.length > 0 && [0, Math.floor(puntos.length / 2), puntos.length - 1].map(i => (
               <text key={i} x={puntos[i].x} y={ALTO - 10} textAnchor="middle" fontSize={15} fill="#5c6b5c">
-                {puntos[i].fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })}
+                {etiquetaEje(puntos[i].fecha)}
               </text>
             ))}
           </svg>

@@ -6,12 +6,14 @@ import { RiegoCard } from '@/components/riego-card'
 import { IonizacionCard } from '@/components/ionizacion-card'
 import { GraficaHumedad } from '@/components/grafica-humedad'
 import { Sprout, Wifi, WifiOff } from 'lucide-react'
+import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function Dashboard() {
   const {
     humedad,
     conectado,
     sensorActivo,
+    ultimaLectura,
     estadoEsp,
     historial,
     ionizacion,
@@ -27,7 +29,7 @@ export default function Dashboard() {
           <Sprout size={40} style={{ color: 'var(--verde)' }} aria-hidden />
           <div>
             <h1 className="text-3xl font-bold leading-tight">IonDroplet</h1>
-            <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>Su riego, vigilado día y noche</p>
+            <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>Tu riego, vigilado día y noche</p>
           </div>
         </div>
 
@@ -41,18 +43,10 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {!conectado && (
-        <div
-          className="rounded-2xl p-5 text-xl font-semibold text-white"
-          style={{ background: 'var(--peligro)' }}
-        >
-          No encuentro el sistema de riego. Revise que la computadora del riego esté prendida
-          (INICIAR_SISTEMA.bat) y vuelva a intentar.
-        </div>
-      )}
+      {!conectado && <AvisoSinConexion />}
 
       <div className="grid md:grid-cols-2 gap-6">
-        <HumedadCard humedad={humedad} sensorActivo={sensorActivo} />
+        <HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} />
         <RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} />
       </div>
 

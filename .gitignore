@@ -22,3 +22,6 @@ Thumbs.db
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+
+# Herramientas locales (Claude Code)
+.claude/
