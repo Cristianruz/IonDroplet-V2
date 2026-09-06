@@ -34,8 +34,6 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo qu
 | # | Decisión | Cómo quedó por lo pronto |
 |---|---|---|
 | 2.6 | "lo decidió el sistema" aparece en el wireframe F3a pero no en su tabla de traducciones | Se siguió la tabla (`usuario` / `ia` / `umbral`), que es la parte normativa. |
-| 4.3 | `action_log` **crece sin límite** | Sin purga. Con años de uso habrá que archivar o borrar lo viejo. |
-| 4.12 | El `package-lock.json` del backend todavía lista `pg` | No se corrió `npm install` a propósito: reinstalar recompilaría `serialport` y `sqlite3`, que son nativos, justo antes de una demo. |
 
 ---
 
@@ -53,11 +51,8 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo qu
 
 | # | Qué | Por qué importa |
 |---|---|---|
-| 4.1 | Un riego que empieza y **no alcanza a cerrarse** (porque se reinicia el backend) se queda sin duración | Es a propósito, y es lo correcto: nunca se le inventa una duración. La cifra "de agua" avisa cuántos riegos quedaron sin cerrar en vez de sumar de menos en silencio. Con el hardware actual el tiempo real es inaverigable. |
 | 4.2 | La ionización se registra por **lo que se pide**, no por lo que el ionizador confirma | El aparato no reporta su estado. Mismo problema que 4.10. |
-| 4.6 | El cultivo se guardará como `id` (`"nogal"`) en vez del nombre (`"Nogal"`) la próxima vez que se guarde la parcela | La lectura acepta las dos formas. Es la normalización que la Fase 4 necesita. |
 | 4.7 | Las gráficas **submuestrean** (240 puntos en Inicio, 720 en Historial) | Lo hace el servidor con el parámetro `max`. Son lecturas reales, una de cada N, nunca promedios. Las cifras exactas salen aparte de `/api/sensors/resumen`, calculadas sobre todas. |
-| 4.10 | El estado del ionizador vive en memoria del navegador | Se pierde al recargar. No hay endpoint que devuelva el estado real; `devices` está vacía y solo tiene `id` e `ionization_on`. La Fase 6 va a necesitar campos ahí. |
 
 ### Ya resueltos
 
@@ -69,6 +64,12 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo qu
 - ~~Faltaban los puntos verdes de riego en la gráfica~~ → **hechos**, con su leyenda.
 - ~~Historial pedía la bitácora dos veces~~ → una sola respuesta sirve para la lista y para los puntos.
 - ~~Cada pantalla con su propio temporizador~~ → un solo `<ProveedorDatos>` para toda la app.
+- ~~Un riego se perdía si se reiniciaba el backend~~ → al arrancar se retoma el riego abierto y se cierra con su duración real. Probado: cerró con 71 s abarcando el reinicio. Si pasaron más de 12 horas no se inventa una duración, se marca como no medido.
+- ~~El estado del ionizador se perdía al recargar~~ → sale de `ionization_log`, que ya guardaba cada cambio. Sigue siendo "lo último que se le pidió", y la pantalla lo dice con esas palabras.
+- ~~`action_log` crecía sin límite~~ → al arrancar se borra lo de más de 2 años, configurable con `BITACORA_DIAS`.
+- ~~El `package-lock.json` listaba `pg`~~ → regenerado con `npm install --package-lock-only`, que no toca `node_modules`. Verificado: 154 carpetas antes y después, cero recompilación de módulos nativos.
+- ~~El cultivo se guardaba por nombre~~ → normalizado a su `id`.
+- ~~La app decía "No responde" sin haber preguntado~~ → la primera vuelta del sondeo siempre corre, aunque la pantalla esté en segundo plano.
 
 ### Sobre las profundidades y el agua subterránea
 

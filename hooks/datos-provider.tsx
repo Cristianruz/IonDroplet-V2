@@ -182,6 +182,16 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
             : UMBRAL_POR_OMISION
         )
       }
+
+      // Lo último que se le pidió al ionizador. Antes esto vivía solo en el
+      // navegador y se perdía al recargar la página.
+      try {
+        const resIon = await fetch(`${API_URL}/api/ionization/estado`, { signal })
+        if (resIon.ok && Date.now() - ultimoComando.current > 2000) {
+          const estado: { encendida: boolean } = await resIon.json()
+          setIonizacion(estado.encendida)
+        }
+      } catch {}
     } catch {
     } finally {
       setCargandoParcela(false)
@@ -283,6 +293,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
 
   const cambiarIonizacion = useCallback(async () => {
     const nuevo = !ionizacion
+    ultimoComando.current = Date.now()
     setIonizacion(nuevo)
     try {
       await fetch(`${API_URL}/api/ionization/toggle`, {
