@@ -7,6 +7,7 @@ import { HumedadCard } from '@/components/humedad-card'
 import { ParcelaCard } from '@/components/parcela-card'
 import { ParcelaForm } from '@/components/parcela-form'
 import { UmbralCard } from '@/components/umbral-card'
+import { PropuestaUmbral } from '@/components/propuesta-umbral'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function PantallaParcela() {
@@ -75,6 +76,8 @@ export default function PantallaParcela() {
               onGuardar={guardarUmbral}
             />
           </div>
+
+          <PropuestaUmbral umbralActual={umbralRiego} onAplicado={() => window.location.reload()} />
         </>
       )}
     </main>

@@ -1,6 +1,7 @@
 'use client'
 
-import { Check } from 'lucide-react'
+import Link from 'next/link'
+import { Check, MessageCircle } from 'lucide-react'
 import type { Plaga, Riesgo } from '@/lib/plagas'
 
 const COLOR_RIESGO: Record<Riesgo, string> = {
@@ -76,6 +77,16 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
         <p className="text-lg font-bold" style={{ color: 'var(--tinta-suave)' }}>Qué hacer</p>
         <p className="text-xl">{plaga.queHacer}</p>
       </div>
+
+      {/* Abre el asistente con la plaga ya escrita, como pide el wireframe. */}
+      <Link
+        href={`/asistente?pregunta=${encodeURIComponent(`¿Qué hago con ${plaga.nombre.toLowerCase()} en mi cultivo?`)}`}
+        className="rounded-2xl py-5 text-xl font-bold border-4 flex items-center justify-center gap-3"
+        style={{ background: 'white', borderColor: '#d6ddd6', color: 'var(--tinta-suave)' }}
+      >
+        <MessageCircle size={24} aria-hidden />
+        Preguntar al asistente
+      </Link>
 
       {revisadaEl ? (
         <p className="text-xl font-bold flex items-center gap-3" style={{ color: 'var(--verde)' }} role="status">

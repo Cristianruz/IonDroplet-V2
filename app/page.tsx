@@ -4,7 +4,8 @@ import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { HumedadCard } from '@/components/humedad-card'
 import { RiegoCard } from '@/components/riego-card'
 import { GraficaHumedad } from '@/components/grafica-humedad'
-import { Sprout, Wifi, WifiOff } from 'lucide-react'
+import Link from 'next/link'
+import { Sprout, Wifi, WifiOff, MessageCircle, ChevronRight } from 'lucide-react'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 
 export default function Dashboard() {
@@ -48,6 +49,18 @@ export default function Dashboard() {
       </div>
 
       <GraficaHumedad historial={historial} />
+
+      <Link
+        href="/asistente"
+        className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+        style={{ background: 'var(--tarjeta)', borderColor: '#d6ddd6', color: 'var(--tinta)' }}
+      >
+        <span className="flex items-center gap-3">
+          <MessageCircle size={28} style={{ color: 'var(--verde)' }} aria-hidden />
+          Preguntarle al asistente
+        </span>
+        <ChevronRight size={28} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+      </Link>
     </main>
   )
 }
