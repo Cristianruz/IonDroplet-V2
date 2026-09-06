@@ -7,8 +7,11 @@ import { GraficaHumedad } from '@/components/grafica-humedad'
 import Link from 'next/link'
 import { Sprout, Wifi, WifiOff, MessageCircle, ChevronRight } from 'lucide-react'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
+import { ClimaCard } from '@/components/clima-card'
+import { useParcela } from '@/hooks/use-parcela'
 
 export default function Dashboard() {
+  const { parcela } = useParcela()
   const {
     humedad,
     conectado,
@@ -47,6 +50,8 @@ export default function Dashboard() {
         <HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} />
         <RiegoCard estadoEsp={estadoEsp} cambiarModo={cambiarModo} cambiarBomba={cambiarBomba} />
       </div>
+
+      <ClimaCard parcelaId={parcela?.id ?? null} />
 
       <GraficaHumedad historial={historial} />
 
