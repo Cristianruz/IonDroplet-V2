@@ -3,7 +3,6 @@
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { HumedadCard } from '@/components/humedad-card'
 import { RiegoCard } from '@/components/riego-card'
-import { IonizacionCard } from '@/components/ionizacion-card'
 import { GraficaHumedad } from '@/components/grafica-humedad'
 import { Sprout, Wifi, WifiOff } from 'lucide-react'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
@@ -16,10 +15,8 @@ export default function Dashboard() {
     ultimaLectura,
     estadoEsp,
     historial,
-    ionizacion,
     cambiarModo,
     cambiarBomba,
-    cambiarIonizacion,
   } = useIonDroplet()
 
   return (
@@ -52,7 +49,6 @@ export default function Dashboard() {
 
       <GraficaHumedad historial={historial} />
 
-      <IonizacionCard encendida={ionizacion} cambiar={cambiarIonizacion} />
 
       <footer className="text-center text-lg py-4" style={{ color: 'var(--tinta-suave)' }}>
         IonDroplet · InnovaTecNM 2026

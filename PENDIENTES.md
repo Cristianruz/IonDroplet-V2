@@ -24,18 +24,17 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2 y 3**. Faltan: 4,
 | 4.11 | Control de versiones del backend | **Hecho**, `git init` local en `iondroplet-backend`. Sin remoto: ese `.env` tiene llaves de verdad. |
 | 4.13 | Nada commiteado | **Hecho.** Repositorio privado `Cristianruz/IonDroplet-V2` en GitHub, con las fases 0 a 3. |
 | 4.14 | Runner de pruebas para la Fase 4 | **El de Node**, `node --test`, que corre TypeScript directo en Node 24. Cero dependencias nuevas. |
+| 2.2 y 2.3 | Etapa como desplegable y punto de riego con botón "Cambiar", como el wireframe | **Se quedan como están**: botones grandes para la etapa y − / + para el punto de riego. Menos toques con guantes, que es el criterio que el propio documento usa. |
+| 2.4 | La ionización aparecía en Inicio y en su pestaña | **Quitada de Inicio.** Un control en un solo lugar. Inicio se queda con lo urgente: humedad y riego. |
+| 4.8 | `num_hileras` y `tipo_sistema` sin usar | **Se quedan dormidos.** Intactos en la base, fuera de la pantalla. |
+| 4.9 | Tablas `sensor_readings_multinivel` y `agua_subterranea` sin usar | **Unidas al sistema.** Se declaran en `server.js` y tienen cuatro endpoints nuevos para recibir y leer. Ver la advertencia de abajo. |
 
 ## 2b. Decisiones — todavía abiertas
 
 | # | Decisión | Cómo quedó por lo pronto |
 |---|---|---|
-| 2.2 | La etapa del cultivo: el wireframe la dibuja como desplegable | Quedó como botones grandes, con la explicación de cada etapa. |
-| 2.3 | El punto de riego: el wireframe muestra el valor con un botón "Cambiar" | Quedó con − / + siempre visibles. Misma copy, menos toques con guantes. |
-| 2.4 | La tarjeta de ionización aparece **dos veces**: en Inicio y en su propia pantalla | Se dejaron las dos. |
 | 2.6 | "lo decidió el sistema" aparece en el wireframe F3a pero no en su tabla de traducciones | Se siguió la tabla (`usuario` / `ia` / `umbral`), que es la parte normativa. |
 | 4.3 | `action_log` **crece sin límite** | Sin purga. Con años de uso habrá que archivar o borrar lo viejo. |
-| 4.8 | `parcelas.hum_max`, `num_hileras` y `tipo_sistema` existen pero ninguna pantalla los usa | Se conservan intactos al guardar. Decidir si se muestran o se dejan dormidos. |
-| 4.9 | `sensor_readings.parcela_id` y las tablas `sensor_readings_multinivel` y `agua_subterranea` | Quedaron de una versión anterior. Vacías, sin código que las use. Decidir si se borran. |
 | 4.12 | El `package-lock.json` del backend todavía lista `pg` | No se corrió `npm install` a propósito: reinstalar recompilaría `serialport` y `sqlite3`, que son nativos, justo antes de una demo. |
 
 ---
@@ -68,6 +67,15 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **0, 1, 2 y 3**. Faltan: 4,
 - ~~"Empezó a regar" para un riego en curso~~ → dice **"Regando ahora"** cuando la bomba sigue prendida.
 - ~~`use-parcela` no leía por `id`~~ → ahora lee por `id` en cuanto sabe cuál es, y vuelve a la lista si desaparece.
 - ~~Faltaban los puntos verdes de riego en la gráfica~~ → **hechos**, con su leyenda.
+
+### Sobre las profundidades y el agua subterránea
+
+Los endpoints ya están (`POST` y `GET` de `/api/sensors/multinivel` y `/api/agua-subterranea`)
+y fueron probados guardando y leyendo. **Pero nada los alimenta todavía**: el ESP32 manda solo
+`{ humedad }`. Para que lleguen datos hay que cambiar el firmware, y eso está fuera de lo que
+se puede tocar. Mientras no haya mediciones reales **no se hace pantalla para ellos**: no se
+enseña un número que nadie midió. Falta también decidir de qué aparato salen (sensores a
+varias profundidades, sonda de nivel freático) y con qué `device_id`.
 
 ### Trampa de operación
 
