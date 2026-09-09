@@ -250,3 +250,60 @@ instrumentado de todo el sistema.** Cinco hechos verificados:
 **Recomendación:** si algún día se compra un solo sensor, discutir seriamente si va antes el
 **ORP** que el caudalímetro. El caudalímetro da litros y pesos; el ORP defiende el nombre del
 producto. La pregunta *"¿cómo saben que la ionización sirve?"* hoy no tiene respuesta.
+
+---
+
+## 8. B1 — Fertirriego, entregado el 9 de septiembre de 2026
+
+El requerimiento del jurado que menos dependía de hardware. Sirve desde el primer día con
+captura a mano.
+
+### Backend, todo aditivo
+
+Tres tablas nuevas y sus cuatro índices. **Nada existente se tocó.**
+
+- `eventos_fertirriego` — fecha, duración, volumen, CE, pH, **etapa**, operador, notas
+- `nutrientes_aplicados` — una fila por nutriente del evento
+- `lecturas_solucion` — **vacía a propósito**, lista para el día que haya sonda de CE y pH en
+  línea. Nadie la escribe y ninguna pantalla la enseña: no se inventa una medición.
+
+Cuatro endpoints nuevos bajo `/api/fertirriego`: `POST` para capturar, `GET` para el historial,
+`GET /resumen` para los acumulados, y `DELETE /:id` para corregir una captura equivocada.
+
+**Los nutrientes y las unidades se validan contra una lista.** Sin eso, el mismo nutriente entra
+como `N`, `n`, `nitrogeno` y `Nitrógeno`, y ningún resumen cuadra nunca. Probado: rechaza
+nutriente inventado, unidad inventada, pH fuera de 0-14 y captura sin nutrientes.
+
+### La decisión de diseño que da el valor
+
+**Cada evento congela la etapa del cultivo en el momento de aplicar.** Dentro de tres meses la
+parcela va a estar en otra etapa y el registro va a seguir diciendo en cuál se aplicó. Eso es lo
+que un cuaderno no hace, y es lo que permite cruzar dosis contra fenología.
+
+### Frontend
+
+- `lib/nutrientes.ts` — catálogo con nombre completo primero ("Nitrógeno", no "N")
+- `hooks/use-fertirriego.ts`
+- `components/fertirriego-form.tsx` — los tres de siempre a la vista, los otros nueve detrás de
+  un botón. **CE y pH escondidos tras "Tengo medidor de agua"**: hacen falta un aparato que casi
+  nadie tiene, y a quien no lo tiene no le estorban ni lo hacen sentir que le falta llenar algo.
+- `app/fertirriego/page.tsx` — se entra desde Parcela, como a Plagas
+- Sección nueva en el panel de operación, con tabla de eventos y acumulados por nutriente
+
+### Honestidad, como siempre
+
+Si no se capturó el volumen, **no se calcula la concentración**. La pantalla dice "no puedo
+decirte en qué concentración quedó" en vez de estimarla a partir de los eventos que sí lo tienen.
+
+### Verificado
+
+Captura hecha **desde la interfaz**, no por API: 15 kg de nitrógeno y 9 kg de potasio en 1,200 L.
+Apareció en el resumen, en el historial y en el panel de operación. Validación probada en
+pantalla. Cero errores de consola. Móvil a 375 px sin desbordamiento. Los datos de prueba se
+borraron: las tres tablas quedaron en 0 y `action_log` con la única fila real que había.
+
+### Corrección sobre los índices de A1
+
+Te dije que el costo era 7% más lento al escribir. **También cuestan disco:** la base pasó de
+1.5 MB a 4.9 MB con las mismas 36,307 lecturas. Los 3.3 MB son los seis índices. En una laptop
+da igual; a escala de municipio hay que tenerlo en la cuenta.

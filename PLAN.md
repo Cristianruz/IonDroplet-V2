@@ -12,7 +12,8 @@ Escrito el 6 de septiembre de 2026, sobre el diagnóstico de [ANALISIS.md](ANALI
 | **A1** Índices | ✅ Aplicado y medido |
 | **A2** ET₀ y balance hídrico | ✅ Backend y pantalla, funcionando con datos reales |
 | **A3** Modo Operación | ✅ Ruta `/operacion`, verificada en claro, oscuro y celular |
-| B, C, D, E | Sin empezar |
+| **B1** Fertirriego | ✅ Tres tablas, cuatro endpoints, pantalla de captura y sección en el panel |
+| B2, C, D, E | Sin empezar |
 
 ## Decisiones tomadas
 

@@ -1,11 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Activity, Database, Gauge, TriangleAlert, CircleCheck, CircleSlash } from 'lucide-react'
+import { ArrowLeft, Activity, Database, Gauge, TriangleAlert, CircleCheck, CircleSlash, FlaskConical } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { useBalance } from '@/hooks/use-balance'
 import { useRegistro } from '@/hooks/use-registro'
+import { useFertirriego } from '@/hooks/use-fertirriego'
 import { SerieDensa } from '@/components/serie-densa'
 import { haceCuanto, fechaCorta, duracionLarga } from '@/lib/tiempo'
 import { CULTIVOS } from '@/lib/cultivos'
@@ -80,6 +81,7 @@ export default function PanelOperacion() {
   const { humedad, ultimaLectura, conectado, sensorActivo, estadoEsp, historial } = useIonDroplet()
   const { balance, estado: estadoBalance } = useBalance(7)
   const { acciones, cargando: cargandoRegistro } = useRegistro(24 * 7)
+  const { eventos: eventosFert, resumen: resumenFert } = useFertirriego(90)
 
   const riegos7d = acciones.filter(a => a.tipo === 'riego')
   const segundosRiego = riegos7d.reduce((s, a) => s + (a.duracion_seg ?? 0), 0)
@@ -383,6 +385,89 @@ export default function PanelOperacion() {
         </p>
       </section>
 
+      {/* --- FERTIRRIEGO --- */}
+      <section className="op-seccion">
+        <h2 className="op-h2">
+          <FlaskConical size={15} aria-hidden /> Fertirriego · 90 días
+        </h2>
+
+        {resumenFert && resumenFert.totales.eventos > 0 ? (
+          <>
+            <div className="op-tabla-envoltura">
+              <table className="op-tabla">
+                <thead>
+                  <tr>
+                    <th>Fecha</th>
+                    <th>Etapa fenológica</th>
+                    <th>Nutrientes aplicados</th>
+                    <th className="num">Volumen (L)</th>
+                    <th className="num">CE (dS/m)</th>
+                    <th className="num">pH</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {eventosFert.slice(0, 12).map(e => (
+                    <tr key={e.id}>
+                      <td className="mono">{e.aplicado.toISOString().slice(0, 10)}</td>
+                      <td>{e.etapa ? (ETAPAS[e.etapa] ?? e.etapa) : '—'}</td>
+                      <td>
+                        {e.nutrientes
+                          .map(n => `${n.nutriente}${n.cantidad !== null ? ` ${n.cantidad}${n.unidad ?? ''}` : ''}`)
+                          .join(' · ')}
+                      </td>
+                      <td className="num mono">{e.volumen_litros ?? '—'}</td>
+                      <td className="num mono">{e.ec_ds_m ?? '—'}</td>
+                      <td className="num mono">{e.ph ?? '—'}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <div className="op-tabla-envoltura">
+              <table className="op-tabla">
+                <thead>
+                  <tr>
+                    <th>Nutriente</th>
+                    <th className="num">Acumulado 90 d</th>
+                    <th className="num">Aplicaciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {resumenFert.porNutriente.map(n => (
+                    <tr key={n.nutriente + n.unidad}>
+                      <td>{n.nutriente}</td>
+                      <td className="num mono">
+                        {n.total === null ? '—' : n.total.toLocaleString('es-MX')} {n.unidad}
+                      </td>
+                      <td className="num mono">{n.eventos}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <p className="op-pie">
+              Captura manual. Cada evento congela la <strong>etapa fenológica</strong> vigente al
+              aplicar, de modo que el registro conserva el contexto agronómico aunque el cultivo
+              avance.{' '}
+              {resumenFert.totales.sin_volumen > 0 && (
+                <>
+                  {resumenFert.totales.sin_volumen} de {resumenFert.totales.eventos} eventos carecen
+                  de volumen, por lo que <strong>no se calcula concentración</strong>: no se estima
+                  a partir de los que sí lo tienen.
+                </>
+              )}
+            </p>
+          </>
+        ) : (
+          <p className="op-vacio">
+            Sin aplicaciones registradas. La captura es manual desde Modo campo → Parcela → Lo que
+            le he puesto. No hay sonda de CE ni de pH en línea que la alimente automáticamente.
+          </p>
+        )}
+      </section>
+
       {/* --- PROCEDENCIA --- */}
       <section className="op-seccion">
         <h2 className="op-h2">
@@ -444,6 +529,21 @@ export default function PanelOperacion() {
                 <td>Solicitada</td>
                 <td>Orden registrada en <code>ionization_log</code>; el aparato no reporta</td>
                 <td><Estado ok={null} texto="Sin confirmación" /></td>
+              </tr>
+              <tr>
+                <td>Nutrientes aplicados</td>
+                <td>Capturada</td>
+                <td>Registro manual del operador, con etapa fenológica</td>
+                <td>
+                  <Estado
+                    ok={resumenFert && resumenFert.totales.eventos > 0 ? true : null}
+                    texto={
+                      resumenFert && resumenFert.totales.eventos > 0
+                        ? `${resumenFert.totales.eventos} ${resumenFert.totales.eventos === 1 ? 'evento' : 'eventos'}`
+                        : 'Sin registros'
+                    }
+                  />
+                </td>
               </tr>
               <tr>
                 <td>Potencial redox del agua (ORP)</td>

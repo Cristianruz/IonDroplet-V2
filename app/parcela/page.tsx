@@ -1,6 +1,8 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
+import { ChevronRight, FlaskConical } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { HumedadCard } from '@/components/humedad-card'
@@ -84,6 +86,25 @@ export default function PantallaParcela() {
           </div>
 
           <Aparece><PropuestaUmbral umbralActual={umbralRiego} onAplicado={() => window.location.reload()} /></Aparece>
+
+          {/* Se entra desde aquí, como a Plagas: es cosa de la parcela, y la
+              barra de abajo ya tiene cinco destinos. */}
+          <Aparece><Link
+            href="/fertirriego"
+            className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+            style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+          >
+            <span className="flex items-center gap-3">
+              <FlaskConical size={28} style={{ color: 'var(--verde)' }} aria-hidden />
+              <span className="flex flex-col">
+                Lo que le he puesto
+                <span className="text-base font-normal" style={{ color: 'var(--tinta-suave)' }}>
+                  Anota lo que le echas y en qué etapa
+                </span>
+              </span>
+            </span>
+            <ChevronRight size={28} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+          </Link></Aparece>
         </>
       )}
     </main>
