@@ -27,7 +27,7 @@ export function BalanceCard() {
   if (estado === 'cargando') {
     return (
       <div
-        className="rounded-2xl p-5 sm:p-6 flex flex-col gap-3"
+        className="rounded-lg p-4 sm:p-5 flex flex-col gap-3"
         style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
       >
         <div className="esqueleto" style={{ width: '55%', height: 22 }} aria-hidden />
@@ -48,13 +48,13 @@ export function BalanceCard() {
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 flex flex-col gap-4"
+      className="rounded-lg p-4 sm:p-5 flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
       aria-label="Agua que va a pedir el cultivo"
     >
       <div className="flex items-center gap-2">
-        <Droplets size={22} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-lg font-bold">Lo que va a pedir esta semana</h2>
+        <Droplets size={16} style={{ color: 'var(--agua)' }} aria-hidden />
+        <h2 className="text-sm font-bold">Lo que va a pedir esta semana</h2>
       </div>
 
       {sinCultivo ? (
@@ -67,7 +67,7 @@ export function BalanceCard() {
           {/* Redondeado a propósito: los dos decimales son precisión de
               ingeniero y aquí estorban. El detalle exacto está en el panel
               de operación. */}
-          <p className="text-xl leading-snug">
+          <p className="text-base leading-snug">
             Tu cultivo va a pedir{' '}
             <strong style={{ color: 'var(--agua)' }}>{Math.round(totales.etc_mm!)} mm</strong> en
             los próximos 7 días.{' '}
@@ -79,13 +79,13 @@ export function BalanceCard() {
           </p>
 
           <div
-            className="rounded-xl px-4 py-3 flex items-baseline gap-2 flex-wrap"
+            className="rounded-md px-4 py-3 flex items-baseline gap-2 flex-wrap"
             style={{ background: 'var(--fondo-alerta)' }}
           >
             <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
               Le vas a tener que reponer
             </span>
-            <strong className="text-3xl" style={{ color: 'var(--alerta)' }}>
+            <strong className="text-xl" style={{ color: 'var(--alerta)' }}>
               {Math.round(totales.deficit_mm!)} mm
             </strong>
           </div>

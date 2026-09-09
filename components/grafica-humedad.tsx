@@ -81,17 +81,17 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
+      className="rounded-lg p-4 sm:p-5 border"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={encabezado}
     >
       <div className="flex items-center gap-3 mb-4">
-        <TrendingUp size={26} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-xl font-semibold">{encabezado}</h2>
+        <TrendingUp size={18} style={{ color: 'var(--agua)' }} aria-hidden />
+        <h2 className="text-base font-semibold">{encabezado}</h2>
       </div>
 
       {marcasRiego.length > 0 && (
-        <div className="flex items-center gap-5 mb-4 text-lg" style={{ color: 'var(--tinta-suave)' }}>
+        <div className="flex items-center gap-4 mb-4 text-sm" style={{ color: 'var(--tinta-suave)' }}>
           <span className="flex items-center gap-2">
             <span className="rounded-full" style={{ width: 14, height: 14, background: 'var(--agua)' }} aria-hidden />
             humedad
@@ -104,7 +104,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
       )}
 
       {historial.length < 2 ? (
-        <p className="text-xl py-8" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-base py-8" style={{ color: 'var(--tinta-suave)' }}>
           Todavía no hay suficientes datos. Aquí vas a ver cómo cambia la humedad durante el día.
         </p>
       ) : (

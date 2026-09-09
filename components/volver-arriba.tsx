@@ -60,7 +60,7 @@ export function VolverArriba() {
         transition: 'opacity var(--normal) var(--curva), transform var(--normal) var(--curva)',
       }}
     >
-      <ArrowUp size={28} aria-hidden />
+      <ArrowUp size={18} aria-hidden />
     </button>
   )
 }

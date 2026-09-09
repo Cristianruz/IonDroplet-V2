@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronRight, Gauge } from 'lucide-react'
+import { ChevronRight, Gauge, RadioTower } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/umbral-card'
@@ -13,16 +13,16 @@ export default function PantallaAjustes() {
   const { umbralRiego, guardando, guardarUmbral } = useParcela()
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <h1 className="text-3xl font-bold leading-tight">Ajustes</h1>
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+      <h1 className="text-xl font-bold leading-tight">Ajustes</h1>
 
       {/* Conexión — solo lectura en esta versión */}
       <section
-        className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
+        className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
         style={{ background: 'var(--tarjeta)' }}
         aria-label="Conexión con la computadora del riego"
       >
-        <h2 className="text-xl font-semibold">Conexión</h2>
+        <h2 className="text-base font-semibold">Conexión</h2>
 
         <div className="flex items-center gap-3" role="status">
           <span
@@ -35,18 +35,18 @@ export default function PantallaAjustes() {
             }}
             aria-hidden
           />
-          <p className="text-xl font-semibold" style={{ color: conectado ? 'var(--verde)' : 'var(--peligro)' }}>
+          <p className="text-base font-semibold" style={{ color: conectado ? 'var(--verde)' : 'var(--peligro)' }}>
             {conectado ? 'Conectado a la computadora del riego' : 'Sin conexión con la computadora del riego'}
           </p>
         </div>
 
         <p
-          className="text-xl rounded-2xl px-5 py-4 break-all"
+          className="text-base rounded-lg px-3.5 py-2.5 break-all"
           style={{ background: 'var(--pista)', color: 'var(--tinta)' }}
         >
           {API_URL}
         </p>
-        <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
           Esta dirección se cambia en el archivo <code>.env.local</code> de la aplicación. Aquí solo
           se muestra.
         </p>
@@ -56,14 +56,14 @@ export default function PantallaAjustes() {
           desde la barra de abajo. */}
       <Link
         href="/dispositivos"
-        className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+        className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
-          <span className="text-2xl leading-none" aria-hidden>📡</span>
+          <RadioTower size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
           Aparatos del campo
         </span>
-        <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+        <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>
 
       {/* La vista técnica vive aparte a propósito: esta pantalla y las demás
@@ -71,11 +71,11 @@ export default function PantallaAjustes() {
           quien tiene que auditar de dónde salió cada número. */}
       <Link
         href="/operacion"
-        className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+        className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
-          <Gauge size={26} style={{ color: 'var(--agua)' }} aria-hidden />
+          <Gauge size={18} style={{ color: 'var(--agua)' }} aria-hidden />
           <span className="flex flex-col">
             Panel de operación
             <span className="text-base font-normal" style={{ color: 'var(--tinta-suave)' }}>
@@ -83,7 +83,7 @@ export default function PantallaAjustes() {
             </span>
           </span>
         </span>
-        <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+        <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>
 
       <SelectorTema />

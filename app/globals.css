@@ -1,98 +1,121 @@
 @import "tailwindcss";
 
-/* ------------------------------------------------------------------
-   TEMA CLARO — el de siempre, y el que se usa bajo el sol.
-   ------------------------------------------------------------------ */
+/* ==================================================================
+   SISTEMA VISUAL
+   ------------------------------------------------------------------
+   Referencia: aplicaciones de uso diario (Facebook, Instagram). Lo que
+   las hace ver serias no es que sean bonitas, es que son CONTENIDAS:
+
+   - Un solo color de acento, usado poco.
+   - Bordes de 1 px, no de 4.
+   - Esquinas de 8 px, no de 16 ni 24.
+   - Tipografía de 15 px con jerarquía por peso, no por tamaño gigante.
+   - Nada se levanta ni flota al pasar el ratón.
+
+   Lo que había antes hacía justo lo contrario y por eso se veía a
+   medio hacer: todo era grande, redondo, verde y con sombra.
+   ================================================================== */
+
 :root {
-  --fondo: #f6f7f4;
+  /* Superficies */
+  --fondo: #f7f8f9;
   --tarjeta: #ffffff;
-  --tinta: #1a2e1a;
-  --tinta-suave: #5c6b5c;
-  --verde: #2e7d32;
-  --verde-fuerte: #1b5e20;
-  --agua: #0277bd;
-  --alerta: #b45309;
-  --peligro: #b91c1c;
+  --elevado: #ffffff;
 
-  /* Grises que ya se usaban, ahora como tokens para que el modo oscuro
-     los pueda cambiar sin ir archivo por archivo. */
-  --pista: #e5e7e2;
-  --borde: #d6ddd6;
-  --apagado: #8a978a;
-  --riesgo-medio: #8a6508;
-  --oro: #b8860b;
+  /* Texto */
+  --tinta: #111418;
+  --tinta-suave: #5b6470;
+  --apagado: #8d949e;
 
-  /* Fondos suaves de los avisos */
-  --fondo-alerta: #fdf3e3;
-  --fondo-peligro: #fdeaea;
+  /* Líneas */
+  --borde: #e2e5e9;
+  --pista: #eef0f2;
 
-  --sombra-tarjeta: 0 1px 2px rgba(26, 46, 26, .06);
-  --sombra-elevada: 0 6px 20px rgba(26, 46, 26, .12);
+  /* Acento. Uno solo, y se usa poco: botón principal, valor que importa,
+     pestaña activa. Todo lo demás es neutro. */
+  --verde: #1f7a3d;
+  --verde-fuerte: #17632f;
+  --verde-suave: #eaf4ed;
 
-  /* Una sola curva para toda la app: nada rebota ni se pasa de listo. */
-  --curva: cubic-bezier(.22, .61, .36, 1);
-  --rapido: 140ms;
-  --normal: 240ms;
-  --lento: 420ms;
+  /* Estados. Mismo criterio: color en el texto y en un filo, no en
+     bloques grandes de fondo. */
+  --agua: #1a6fd4;
+  --alerta: #9a6206;
+  --peligro: #c02626;
+  --riesgo-medio: #9a6206;
+  --oro: #9a6206;
+  --fondo-alerta: #fdf6e8;
+  --fondo-peligro: #fdeeee;
+
+  /* Elevación: casi nada. Una tarjeta se distingue por su borde. */
+  --sombra-tarjeta: none;
+  --sombra-elevada: 0 4px 16px rgba(17, 20, 24, .10);
+
+  /* Geometría */
+  --radio: 8px;
+  --radio-sm: 6px;
+  --radio-pill: 999px;
+
+  --curva: cubic-bezier(.2, .6, .35, 1);
+  --rapido: 120ms;
+  --normal: 200ms;
+  --lento: 340ms;
 }
 
-/* ------------------------------------------------------------------
-   TEMA OSCURO — para la noche y el galerón. Bajo el sol se lee peor,
-   por eso nunca se fuerza: sigue al sistema salvo que el agricultor
-   escoja otra cosa en Ajustes.
-   ------------------------------------------------------------------ */
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
-    --fondo: #10160f;
-    --tarjeta: #1a221a;
-    --tinta: #eaf1e8;
-    --tinta-suave: #a3b3a1;
-    /* Los colores del semáforo se aclaran para que contrasten con el
-       fondo oscuro. Siguen significando lo mismo. */
-    --verde: #5cbf62;
-    --verde-fuerte: #7dd382;
-    --agua: #4fb3e8;
-    --alerta: #e0a44b;
-    --peligro: #f0736b;
-    --pista: #2b352a;
-    --borde: #3a463a;
-    --apagado: #6f7d6e;
-    --riesgo-medio: #d9a441;
-    --oro: #e0b341;
-    --fondo-alerta: #2e2415;
-    --fondo-peligro: #33191a;
-    --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .4);
-    --sombra-elevada: 0 6px 20px rgba(0, 0, 0, .5);
+    --fondo: #0b0d0f;
+    --tarjeta: #16181c;
+    --elevado: #1d2025;
+    --tinta: #e7e9ea;
+    --tinta-suave: #9aa3ad;
+    --apagado: #6e7781;
+    --borde: #262b31;
+    --pista: #1d2126;
+    --verde: #4ec26f;
+    --verde-fuerte: #6ed08a;
+    --verde-suave: #14251a;
+    --agua: #4aa3f0;
+    --alerta: #d9a13f;
+    --peligro: #e5645c;
+    --riesgo-medio: #d9a13f;
+    --oro: #d9a13f;
+    --fondo-alerta: #241d10;
+    --fondo-peligro: #2a1516;
+    --sombra-tarjeta: none;
+    --sombra-elevada: 0 4px 16px rgba(0, 0, 0, .5);
   }
 }
 
 :root[data-tema="oscuro"] {
-  --fondo: #10160f;
-  --tarjeta: #1a221a;
-  --tinta: #eaf1e8;
-  --tinta-suave: #a3b3a1;
-  --verde: #5cbf62;
-  --verde-fuerte: #7dd382;
-  --agua: #4fb3e8;
-  --alerta: #e0a44b;
-  --peligro: #f0736b;
-  --pista: #2b352a;
-  --borde: #3a463a;
-  --apagado: #6f7d6e;
-  --riesgo-medio: #d9a441;
-  --oro: #e0b341;
-  --fondo-alerta: #2e2415;
-  --fondo-peligro: #33191a;
-  --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .4);
-  --sombra-elevada: 0 6px 20px rgba(0, 0, 0, .5);
+  --fondo: #0b0d0f;
+  --tarjeta: #16181c;
+  --elevado: #1d2025;
+  --tinta: #e7e9ea;
+  --tinta-suave: #9aa3ad;
+  --apagado: #6e7781;
+  --borde: #262b31;
+  --pista: #1d2126;
+  --verde: #4ec26f;
+  --verde-fuerte: #6ed08a;
+  --verde-suave: #14251a;
+  --agua: #4aa3f0;
+  --alerta: #d9a13f;
+  --peligro: #e5645c;
+  --riesgo-medio: #d9a13f;
+  --oro: #d9a13f;
+  --fondo-alerta: #241d10;
+  --fondo-peligro: #2a1516;
+  --sombra-tarjeta: none;
+  --sombra-elevada: 0 4px 16px rgba(0, 0, 0, .5);
 }
 
 html {
-  /* 16 px de base. Antes eran 18 y todo salía enorme: una tarjeta ocupaba
-     media pantalla y la de Inicio medía tres pantallas de alto. Sigue siendo
-     grande para lo que se estila, que era el punto para un agricultor de 50
-     años, pero ahora caben dos tarjetas de un vistazo. */
-  font-size: 16px;
+  /* 15 px, que es lo que usan las aplicaciones de uso diario. Antes eran
+     16 sobre una escala inflada, y una sola tarjeta ocupaba media
+     pantalla. La legibilidad para el agricultor no se pierde: se
+     sostiene con peso y contraste, no con tamaño. */
+  font-size: 15px;
   scroll-behavior: smooth;
   color-scheme: light;
 }
@@ -105,99 +128,256 @@ html[data-tema="oscuro"] { color-scheme: dark; }
 body {
   background: var(--fondo);
   color: var(--tinta);
-  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  transition: background var(--normal) var(--curva), color var(--normal) var(--curva);
+  letter-spacing: -0.005em;
 }
 
-/* ------------------------------------------------------------------
-   MICROINTERACCIONES
-   Todo con transform y opacity, que son las dos cosas que el navegador
-   anima sin repintar. En un celular de gama baja se nota.
-   ------------------------------------------------------------------ */
-
-/* Cualquier cosa en la que se pueda tocar o hacer clic */
-button,
-a,
-input,
-select,
-textarea {
-  transition:
-    transform var(--rapido) var(--curva),
-    background-color var(--normal) var(--curva),
-    border-color var(--normal) var(--curva),
-    box-shadow var(--normal) var(--curva),
-    color var(--normal) var(--curva),
-    opacity var(--normal) var(--curva);
+/* Cualquier borde que no diga de qué color es, usa el del tema. Así una
+   clase suelta de Tailwind no se pinta del color del texto ni hay que ir
+   componente por componente poniéndole el color a mano. */
+*,
+*::before,
+*::after {
+  border-color: var(--borde);
 }
 
-/* El hover solo en aparatos con puntero de verdad: en un celular el
-   hover se queda "pegado" después de tocar y se ve mal. */
+/* ==================================================================
+   COMPONENTES
+   Clases con nombre, para que las pantallas digan qué es cada cosa en
+   vez de repetir diez utilidades sueltas.
+   ================================================================== */
+
+.tarjeta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  padding: 16px;
+}
+
+@media (min-width: 640px) {
+  .tarjeta { padding: 20px; }
+}
+
+/* Título de pantalla. Uno por pantalla. */
+.titulo-pantalla {
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+}
+
+/* Encabezado de tarjeta o de bloque. */
+.titulo-bloque {
+  font-size: 0.95rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+/* La etiqueta chiquita arriba de un dato. */
+.etiqueta {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+}
+
+/* El número protagonista. Antes era de 72 px; 34 se lee igual de bien
+   y deja lugar para lo demás. */
+.dato {
+  font-size: 2.1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+
+.dato-unidad {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--tinta-suave);
+  margin-left: 2px;
+}
+
+.texto-suave { color: var(--tinta-suave); }
+.texto-apagado { color: var(--apagado); }
+
+/* --- Botones --- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  border-radius: var(--radio-sm);
+  border: 1px solid transparent;
+  font-size: 0.95rem;
+  font-weight: 650;
+  cursor: pointer;
+  transition: background-color var(--rapido) var(--curva),
+              border-color var(--rapido) var(--curva),
+              opacity var(--rapido) var(--curva);
+}
+
+.boton:disabled { opacity: .5; cursor: default; }
+
+.boton-primario {
+  background: var(--verde);
+  color: #fff;
+}
 @media (hover: hover) and (pointer: fine) {
-  button:not(:disabled):hover,
-  a:hover {
-    transform: translateY(-2px);
-  }
-  section:hover {
-    box-shadow: var(--sombra-elevada);
-  }
+  .boton-primario:not(:disabled):hover { background: var(--verde-fuerte); }
 }
+
+.boton-secundario {
+  background: var(--tarjeta);
+  border-color: var(--borde);
+  color: var(--tinta);
+}
+@media (hover: hover) and (pointer: fine) {
+  .boton-secundario:not(:disabled):hover { background: var(--pista); }
+}
+
+.boton-sutil {
+  background: transparent;
+  color: var(--tinta-suave);
+  min-height: 36px;
+  padding: 0 10px;
+  font-weight: 600;
+}
+@media (hover: hover) and (pointer: fine) {
+  .boton-sutil:not(:disabled):hover { background: var(--pista); color: var(--tinta); }
+}
+
+/* Botón que ocupa el ancho: el de la acción principal de la pantalla. */
+.boton-ancho { width: 100%; }
+
+/* --- Campos --- */
+.campo {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 12px;
+  background: var(--tarjeta);
+  color: var(--tinta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-size: 0.95rem;
+  transition: border-color var(--rapido) var(--curva);
+}
+.campo::placeholder { color: var(--apagado); }
+.campo:focus { border-color: var(--verde); }
+
+/* --- Pastillas de selección --- */
+.pastilla {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 38px;
+  padding: 0 14px;
+  border-radius: var(--radio-pill);
+  border: 1px solid var(--borde);
+  background: var(--tarjeta);
+  color: var(--tinta);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--rapido) var(--curva),
+              border-color var(--rapido) var(--curva);
+}
+.pastilla[aria-pressed="true"],
+.pastilla.activa {
+  background: var(--verde);
+  border-color: var(--verde);
+  color: #fff;
+}
+@media (hover: hover) and (pointer: fine) {
+  .pastilla:not([aria-pressed="true"]):not(.activa):hover { background: var(--pista); }
+}
+
+/* Etiqueta de solo lectura, para listar lo aplicado o lo medido. */
+.marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: var(--radio-pill);
+  background: var(--pista);
+  color: var(--tinta);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* Punto de estado: color en un punto, no en un bloque. */
+.punto {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.divisor {
+  height: 1px;
+  background: var(--borde);
+  border: 0;
+}
+
+/* Avisos. Filo de color a la izquierda en vez de fondo saturado. */
+.aviso {
+  border-radius: var(--radio-sm);
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--alerta);
+  background: var(--tarjeta);
+  padding: 12px 14px;
+  font-size: 0.9rem;
+}
+.aviso-peligro { border-left-color: var(--peligro); }
+.aviso-ok { border-left-color: var(--verde); }
+
+/* ==================================================================
+   INTERACCIÓN
+   Nada se levanta, nada flota. El cambio es de color, que es lo que
+   hace una aplicación seria.
+   ================================================================== */
 
 button:not(:disabled):active,
 a:active {
-  transform: scale(.97);
+  opacity: .7;
 }
 
-/* Foco visible para quien navega con teclado, sin ensuciar el clic. */
 :focus-visible {
-  outline: 3px solid var(--agua);
-  outline-offset: 3px;
-  border-radius: 6px;
+  outline: 2px solid var(--agua);
+  outline-offset: 2px;
+  border-radius: var(--radio-sm);
 }
 
-section {
-  transition: box-shadow var(--normal) var(--curva),
-              background var(--normal) var(--curva);
-}
-
-/* ------------------------------------------------------------------
-   ANIMACIONES
-   ------------------------------------------------------------------ */
+/* ==================================================================
+   ANIMACIONES — discretas
+   ================================================================== */
 
 @keyframes pulso-riego {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.55; }
+  50% { opacity: .6; }
 }
+.regando { animation: pulso-riego 1.6s ease-in-out infinite; }
 
-.regando {
-  animation: pulso-riego 1.4s ease-in-out infinite;
-}
-
-/* Aparecer desde abajo: la usan el encabezado y las tarjetas al entrar
-   en pantalla. */
 @keyframes aparecer {
-  from { opacity: 0; transform: translateY(14px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: none; }
 }
 
-.aparece {
-  opacity: 0;
-}
+.aparece { opacity: 0; }
+.aparece.visible { animation: aparecer var(--lento) var(--curva) forwards; }
 
-.aparece.visible {
-  animation: aparecer var(--lento) var(--curva) forwards;
-}
-
-/* El encabezado de la pantalla de inicio, que entra solo al cargar. */
 .hero > * {
   opacity: 0;
   animation: aparecer var(--lento) var(--curva) forwards;
 }
-.hero > *:nth-child(1) { animation-delay: 40ms; }
-.hero > *:nth-child(2) { animation-delay: 120ms; }
-.hero > *:nth-child(3) { animation-delay: 200ms; }
+.hero > *:nth-child(1) { animation-delay: 30ms; }
+.hero > *:nth-child(2) { animation-delay: 90ms; }
+.hero > *:nth-child(3) { animation-delay: 150ms; }
 
-/* Brillo que recorre los esqueletos de carga */
 @keyframes destello {
   from { background-position: -220% 0; }
   to   { background-position: 220% 0; }
@@ -208,12 +388,12 @@ section {
   background-image: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, .55) 50%,
+    rgba(255, 255, 255, .5) 50%,
     transparent 100%
   );
   background-size: 220% 100%;
   animation: destello 1.5s ease-in-out infinite;
-  border-radius: 12px;
+  border-radius: var(--radio-sm);
 }
 
 :root[data-tema="oscuro"] .esqueleto,
@@ -221,30 +401,20 @@ html:not([data-tema="claro"]) .esqueleto {
   background-image: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, .08) 50%,
+    rgba(255, 255, 255, .06) 50%,
     transparent 100%
   );
 }
 
-/* Entrada de cada pantalla al navegar */
 @keyframes entrar-pantalla {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(4px); }
   to   { opacity: 1; transform: none; }
 }
+.pantalla { animation: entrar-pantalla var(--normal) var(--curva); }
 
-.pantalla {
-  animation: entrar-pantalla var(--normal) var(--curva);
-}
-
-/* ------------------------------------------------------------------
-   QUIEN PIDE MENOS MOVIMIENTO, RECIBE MENOS MOVIMIENTO.
-   No es un detalle: hay gente a la que el movimiento le marea de verdad.
-   ------------------------------------------------------------------ */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  *,
-  *::before,
-  *::after {
+  *, *::before, *::after {
     animation-duration: .01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: .01ms !important;
@@ -254,14 +424,12 @@ html:not([data-tema="claro"]) .esqueleto {
   .hero > * { opacity: 1; }
 }
 
-/* ------------------------------------------------------------------
+/* ==================================================================
    MODO OPERACIÓN
-   Todo va bajo .op para que nada de esto se filtre al Modo Campo, que
-   está calibrado para un agricultor con guantes bajo el sol y no se
-   toca. Aquí manda la densidad: base 14 px, esquinas de 6 px, tablas.
-   ------------------------------------------------------------------ */
+   Aparte y más denso todavía. Va bajo .op para que no se filtre.
+   ================================================================== */
 .op {
-  font-size: 14px;
+  font-size: 13.5px;
   line-height: 1.45;
   max-width: 1400px;
   margin: 0 auto;
@@ -291,8 +459,8 @@ html:not([data-tema="claro"]) .esqueleto {
 }
 .op-volver:hover { color: var(--verde); }
 
-.op-titulo { font-size: 22px; font-weight: 700; letter-spacing: -.01em; }
-.op-sub { font-size: 13px; color: var(--tinta-suave); max-width: 62ch; }
+.op-titulo { font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.op-sub { font-size: 12.5px; color: var(--tinta-suave); max-width: 62ch; }
 
 .op-sello { font-size: 12px; color: var(--apagado); font-variant-numeric: tabular-nums; }
 
@@ -303,34 +471,32 @@ html:not([data-tema="claro"]) .esqueleto {
 
 .op-h2 {
   display: flex; align-items: center; gap: 7px;
-  font-size: 12px; font-weight: 700; text-transform: uppercase;
+  font-size: 11.5px; font-weight: 700; text-transform: uppercase;
   letter-spacing: .06em; color: var(--tinta-suave);
 }
 
-/* --- Cifras del resumen --- */
 .op-kpis {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(158px, 1fr));
   gap: 1px;
   background: var(--borde);
   border: 1px solid var(--borde);
-  border-radius: 6px;
+  border-radius: var(--radio-sm);
   overflow: hidden;
 }
 .op-kpi { background: var(--tarjeta); padding: 11px 13px; display: flex; flex-direction: column; gap: 2px; }
 .op-kpi-etiqueta { font-size: 11px; text-transform: uppercase; letter-spacing: .045em; color: var(--tinta-suave); }
-.op-kpi-valor { font-size: 25px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
-.op-kpi-unidad { font-size: 14px; font-weight: 600; margin-left: 2px; }
+.op-kpi-valor { font-size: 23px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
+.op-kpi-unidad { font-size: 13px; font-weight: 600; margin-left: 2px; }
 .op-kpi-nota { font-size: 11px; color: var(--apagado); }
 
-/* --- Tablas --- */
 .op-tabla-envoltura {
   overflow-x: auto;
   border: 1px solid var(--borde);
-  border-radius: 6px;
+  border-radius: var(--radio-sm);
   background: var(--tarjeta);
 }
-.op-tabla { width: 100%; border-collapse: collapse; font-size: 13px; }
+.op-tabla { width: 100%; border-collapse: collapse; font-size: 12.5px; }
 .op-tabla th {
   text-align: left; font-size: 11px; font-weight: 700;
   text-transform: uppercase; letter-spacing: .045em;
@@ -346,7 +512,7 @@ html:not([data-tema="claro"]) .esqueleto {
   font-weight: 700; background: var(--fondo);
 }
 .op-tabla .num { text-align: right; }
-.op-tabla .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; font-variant-numeric: tabular-nums; }
+.op-tabla .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 11.5px; font-variant-numeric: tabular-nums; }
 .op-detalle { color: var(--tinta-suave); max-width: 46ch; }
 .op-vacio-celda { color: var(--apagado); text-align: center; padding: 18px 11px; }
 
@@ -358,12 +524,11 @@ html:not([data-tema="claro"]) .esqueleto {
   font-size: 11.5px; background: var(--pista); padding: 1px 4px; border-radius: 3px;
 }
 
-.op-vacio { font-size: 13px; color: var(--apagado); padding: 14px; border: 1px dashed var(--borde); border-radius: 6px; }
+.op-vacio { font-size: 12.5px; color: var(--apagado); padding: 14px; border: 1px dashed var(--borde); border-radius: var(--radio-sm); }
 
-/* --- Lo que falta, dicho de frente --- */
 .op-faltantes {
   border: 1px solid var(--borde); border-left: 3px solid var(--alerta);
-  border-radius: 6px; padding: 10px 13px; background: var(--tarjeta);
+  border-radius: var(--radio-sm); padding: 10px 13px; background: var(--tarjeta);
   display: flex; flex-direction: column; gap: 6px;
 }
 .op-faltantes-titulo {
@@ -372,21 +537,20 @@ html:not([data-tema="claro"]) .esqueleto {
   letter-spacing: .045em; color: var(--alerta);
 }
 .op-faltantes ul { display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 0; list-style: none; }
-.op-faltantes li { font-size: 12.5px; color: var(--tinta-suave); }
+.op-faltantes li { font-size: 12px; color: var(--tinta-suave); }
 
-/* --- Ficha técnica --- */
 .op-ficha {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
   gap: 1px; background: var(--borde);
-  border: 1px solid var(--borde); border-radius: 6px; overflow: hidden;
+  border: 1px solid var(--borde); border-radius: var(--radio-sm); overflow: hidden;
 }
 .op-ficha > div { background: var(--tarjeta); padding: 9px 13px; display: flex; flex-direction: column; gap: 2px; }
 .op-ficha dt { font-size: 11px; text-transform: uppercase; letter-spacing: .045em; color: var(--tinta-suave); }
-.op-ficha dd { font-size: 13px; margin: 0; }
+.op-ficha dd { font-size: 12.5px; margin: 0; }
 
 @media (max-width: 640px) {
   .op { padding: 14px 10px 32px; }
   .op-header-der { align-items: flex-start; }
-  .op-kpi-valor { font-size: 21px; }
+  .op-kpi-valor { font-size: 20px; }
 }

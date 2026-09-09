@@ -23,8 +23,8 @@ export default function PantallaFertirriego() {
   const [borrandoId, setBorrandoId] = useState<number | null>(null)
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <h1 className="text-3xl font-bold leading-tight">Lo que le he puesto</h1>
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+      <h1 className="text-xl font-bold leading-tight">Lo que le he puesto</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
 
@@ -32,10 +32,10 @@ export default function PantallaFertirriego() {
         <button
           type="button"
           onClick={() => setAnotando(true)}
-          className="w-full rounded-2xl py-5 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
+          className="w-full rounded-lg py-3 text-lg font-bold text-white transition-transform flex items-center justify-center gap-3"
           style={{ background: 'var(--verde)' }}
         >
-          <Plus size={28} aria-hidden />
+          <Plus size={18} aria-hidden />
           Anotar una aplicación
         </button>
       )}
@@ -45,10 +45,10 @@ export default function PantallaFertirriego() {
           <button
             type="button"
             onClick={() => setAnotando(false)}
-            className="self-end text-lg font-semibold flex items-center gap-1.5"
+            className="self-end text-sm font-semibold flex items-center gap-1.5"
             style={{ color: 'var(--tinta-suave)' }}
           >
-            <X size={20} aria-hidden />
+            <X size={16} aria-hidden />
             Cancelar
           </button>
           <FertirriegoForm guardando={guardando} onGuardar={guardar} onListo={() => setAnotando(false)} />
@@ -60,12 +60,12 @@ export default function PantallaFertirriego() {
       {resumen && resumen.totales.eventos > 0 && (
         <Aparece>
           <section
-            className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
+            className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
             style={{ background: 'var(--tarjeta)' }}
             aria-label="Resumen de los últimos 90 días"
           >
-            <h2 className="text-xl font-semibold flex items-center gap-2">
-              <FlaskConical size={22} style={{ color: 'var(--verde)' }} aria-hidden />
+            <h2 className="text-base font-semibold flex items-center gap-2">
+              <FlaskConical size={16} style={{ color: 'var(--verde)' }} aria-hidden />
               En los últimos 3 meses
             </h2>
 
@@ -73,15 +73,15 @@ export default function PantallaFertirriego() {
               {resumen.porNutriente.map(n => (
                 <div
                   key={n.nutriente + n.unidad}
-                  className="rounded-2xl px-5 py-4 flex flex-col"
+                  className="rounded-lg px-3.5 py-2.5 flex flex-col"
                   style={{ background: 'var(--fondo)', minWidth: 140 }}
                 >
                   <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
                     {nombreNutriente(n.nutriente)}
                   </span>
-                  <span className="text-3xl font-bold" style={{ color: 'var(--verde)' }}>
+                  <span className="text-xl font-bold" style={{ color: 'var(--verde)' }}>
                     {n.total === null ? '—' : n.total.toLocaleString('es-MX')}
-                    <span className="text-lg font-semibold ml-1">{n.unidad}</span>
+                    <span className="text-sm font-semibold ml-1">{n.unidad}</span>
                   </span>
                   <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
                     en {n.eventos} {n.eventos === 1 ? 'vez' : 'veces'}
@@ -105,17 +105,17 @@ export default function PantallaFertirriego() {
 
       {/* Historial */}
       <section className="flex flex-col gap-3" aria-label="Historial de aplicaciones">
-        <h2 className="text-xl font-semibold">Historial</h2>
+        <h2 className="text-base font-semibold">Historial</h2>
 
         {cargando ? (
           <div className="esqueleto" style={{ width: '100%', height: 90 }} aria-hidden />
         ) : eventos.length === 0 ? (
           <div
-            className="rounded-2xl p-6 text-center flex flex-col gap-2"
+            className="rounded-lg p-4 text-center flex flex-col gap-2"
             style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
           >
-            <p className="text-xl font-semibold">Todavía no has anotado nada</p>
-            <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+            <p className="text-base font-semibold">Todavía no has anotado nada</p>
+            <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
               Cada vez que le eches algo a la parcela, anótalo aquí. Con el tiempo vas a poder ver
               qué le diste en cada etapa del cultivo.
             </p>
@@ -124,12 +124,12 @@ export default function PantallaFertirriego() {
           eventos.map((e, i) => (
             <Aparece key={e.id} retraso={Math.min(i * 40, 200)}>
               <article
-                className="rounded-2xl p-5 shadow-sm border border-black/5 flex flex-col gap-2"
+                className="rounded-lg p-4 border flex flex-col gap-2"
                 style={{ background: 'var(--tarjeta)' }}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex flex-col">
-                    <span className="text-xl font-bold">{fechaCorta(e.aplicado)}</span>
+                    <span className="text-base font-bold">{fechaCorta(e.aplicado)}</span>
                     {e.etapa && (
                       <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
                         El cultivo iba en {etapaPorId(e.etapa)?.nombre.toLowerCase() ?? e.etapa}
@@ -145,10 +145,10 @@ export default function PantallaFertirriego() {
                     }}
                     disabled={borrandoId === e.id}
                     aria-label={`Borrar la aplicación del ${fechaCorta(e.aplicado)}`}
-                    className="rounded-xl p-3 active:scale-90 transition-transform disabled:opacity-50"
+                    className="rounded-md p-3 transition-transform disabled:opacity-50"
                     style={{ background: 'var(--fondo)', color: 'var(--tinta-suave)' }}
                   >
-                    <Trash2 size={22} aria-hidden />
+                    <Trash2 size={16} aria-hidden />
                   </button>
                 </div>
 
@@ -156,7 +156,7 @@ export default function PantallaFertirriego() {
                   {e.nutrientes.map(n => (
                     <span
                       key={n.nutriente}
-                      className="rounded-xl px-3 py-2 text-lg font-semibold"
+                      className="rounded-md px-3 py-2 text-sm font-semibold"
                       style={{ background: 'var(--pista)', color: 'var(--tinta)' }}
                     >
                       {nombreNutriente(n.nutriente)}
@@ -172,7 +172,7 @@ export default function PantallaFertirriego() {
                   {e.ph !== null && <span>pH {e.ph}</span>}
                 </div>
 
-                {e.notas && <p className="text-lg">{e.notas}</p>}
+                {e.notas && <p className="text-sm">{e.notas}</p>}
               </article>
             </Aparece>
           ))

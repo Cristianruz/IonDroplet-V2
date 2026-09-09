@@ -48,10 +48,7 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
 
   if (pensando) {
     return destacado ? (
-      <div
-        className="rounded-2xl p-5 sm:p-6 border border-black/5 flex flex-col gap-3"
-        style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
-      >
+      <div className="tarjeta flex flex-col gap-3">
         <div className="esqueleto" style={{ width: '40%', height: 20 }} aria-hidden />
         <div className="esqueleto" style={{ width: '100%', height: 18 }} aria-hidden />
         <div className="esqueleto" style={{ width: '75%', height: 18 }} aria-hidden />
@@ -65,36 +62,20 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
 
   if (!destacado) {
     return (
-      <p
-        className="text-base flex items-start gap-2"
-        style={{ color: 'var(--tinta-suave)' }}
-        role="status"
-      >
-        <Sparkles size={18} style={{ color: 'var(--verde)', flexShrink: 0, marginTop: 3 }} aria-hidden />
+      <p className="text-sm flex items-start gap-2 texto-suave" role="status">
+        <Sparkles size={15} style={{ color: 'var(--verde)', flexShrink: 0, marginTop: 2 }} aria-hidden />
         {consejo}
       </p>
     )
   }
 
   return (
-    <section
-      className="rounded-2xl p-5 sm:p-6 flex flex-col gap-2"
-      style={{
-        background: 'var(--tarjeta)',
-        boxShadow: 'var(--sombra-tarjeta)',
-        // Un filo verde a la izquierda: se distingue de las tarjetas de datos
-        // sin necesidad de un color de fondo distinto.
-        borderLeft: '5px solid var(--verde)',
-      }}
-      aria-label="Lo que ve el sistema"
-    >
-      <div className="flex items-center gap-2">
-        <Sparkles size={20} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-base font-bold uppercase tracking-wide" style={{ color: 'var(--verde)' }}>
-          Lo que veo hoy
-        </h2>
-      </div>
-      <p className="text-xl leading-snug" role="status">
+    <section className="tarjeta flex flex-col gap-2" aria-label="Lo que ve el sistema">
+      <span className="etiqueta flex items-center gap-1.5" style={{ color: 'var(--verde)' }}>
+        <Sparkles size={13} aria-hidden />
+        Lo que veo hoy
+      </span>
+      <p className="text-sm leading-relaxed" role="status">
         {consejo}
       </p>
     </section>

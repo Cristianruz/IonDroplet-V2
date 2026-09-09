@@ -22,7 +22,7 @@ function ErrorCampo({ texto }: { texto?: string }) {
   if (!texto) return null
   return (
     <p
-      className="text-lg font-semibold mt-2 aparece visible"
+      className="text-sm font-semibold mt-2 aparece visible"
       style={{ color: 'var(--peligro)' }}
       role="alert"
     >
@@ -87,14 +87,14 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-8"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-8"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={parcela ? 'Editar la parcela' : 'Registrar la parcela'}
     >
-      <h2 className="text-xl font-semibold">{parcela ? 'Editar parcela' : 'Registrar parcela'}</h2>
+      <h2 className="text-base font-semibold">{parcela ? 'Editar parcela' : 'Registrar parcela'}</h2>
 
       <div>
-        <label htmlFor="nombre-parcela" className="block text-xl mb-3" style={{ color: 'var(--tinta-suave)' }}>
+        <label htmlFor="nombre-parcela" className="block text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>
           ¿Cómo le llamas?
         </label>
         <input
@@ -107,7 +107,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="Parcela Norte"
           aria-invalid={!!errores.nombre}
-          className="w-full rounded-2xl px-4 py-4 text-xl border-4 outline-none"
+          className="w-full rounded-lg px-4 py-2.5 text-base border outline-none"
           style={{
             borderColor: errores.nombre ? 'var(--peligro)' : 'var(--borde)',
             background: 'var(--tarjeta)',
@@ -119,9 +119,9 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
       {/* Botones grandes, no un desplegable: esto se usa con guantes. */}
       <div>
-        <p className="text-xl mb-3" style={{ color: 'var(--tinta-suave)' }}>¿Qué tienes sembrado?</p>
+        <p className="text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>¿Qué tienes sembrado?</p>
         <div id="grupo-cultivo" className="grid grid-cols-2 md:grid-cols-3 gap-3">
-          {CULTIVOS.map(({ id, nombre: etiqueta, icono }) => {
+          {CULTIVOS.map(({ id, nombre: etiqueta }) => {
             const activo = cultivo === id
             return (
               <button
@@ -131,7 +131,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                   setCultivo(id)
                   if (errores.cultivo) setErrores(p => ({ ...p, cultivo: undefined }))
                 }}
-                className="rounded-2xl py-5 px-3 text-xl font-bold border-4 transition-colors flex flex-col items-center gap-2"
+                className="rounded-lg py-3 px-3 text-base font-bold border transition-colors flex flex-col items-center gap-2"
                 style={
                   activo
                     ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
@@ -139,7 +139,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                 }
                 aria-pressed={activo}
               >
-                <span className="text-3xl leading-none" aria-hidden>{icono}</span>
+                
                 {etiqueta}
               </button>
             )
@@ -149,7 +149,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       </div>
 
       <div>
-        <p className="text-xl mb-3" style={{ color: 'var(--tinta-suave)' }}>¿En qué etapa va?</p>
+        <p className="text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>¿En qué etapa va?</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           {ETAPAS.map(({ id, nombre: etiqueta, explicacion }) => {
             const activo = etapa === id
@@ -158,7 +158,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                 key={id}
                 type="button"
                 onClick={() => setEtapa(activo ? '' : id)}
-                className="rounded-2xl py-4 px-4 border-4 transition-colors text-left"
+                className="rounded-lg py-2.5 px-4 border transition-colors text-left"
                 style={
                   activo
                     ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
@@ -166,8 +166,8 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                 }
                 aria-pressed={activo}
               >
-                <span className="text-xl font-bold block">{etiqueta}</span>
-                <span className="text-lg block leading-snug" style={{ opacity: 0.85 }}>{explicacion}</span>
+                <span className="text-base font-bold block">{etiqueta}</span>
+                <span className="text-sm block leading-snug" style={{ opacity: 0.85 }}>{explicacion}</span>
               </button>
             )
           })}
@@ -175,7 +175,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       </div>
 
       <div>
-        <label htmlFor="area-parcela" className="block text-xl mb-3" style={{ color: 'var(--tinta-suave)' }}>
+        <label htmlFor="area-parcela" className="block text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>
           ¿Cuántas hectáreas son?
         </label>
         <input
@@ -191,7 +191,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="1.2"
           aria-invalid={!!errores.area}
-          className="w-full rounded-2xl px-4 py-4 text-xl border-4 outline-none"
+          className="w-full rounded-lg px-4 py-2.5 text-base border outline-none"
           style={{
             borderColor: errores.area ? 'var(--peligro)' : 'var(--borde)',
             background: 'var(--tarjeta)',
@@ -199,19 +199,19 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
         />
         <ErrorCampo texto={errores.area} />
-        <p className="text-lg mt-2" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-sm mt-2" style={{ color: 'var(--tinta-suave)' }}>
           Si no lo sabes de memoria, déjalo vacío y lo pones después.
         </p>
       </div>
 
       <div>
-        <p className="text-xl mb-3" style={{ color: 'var(--tinta-suave)' }}>Riega solo si baja de</p>
+        <p className="text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>Riega solo si baja de</p>
         <div className="flex items-center justify-between gap-4">
           <button
             type="button"
             onClick={() => setUmbral(v => Math.max(UMBRAL_MINIMO, v - 5))}
             disabled={umbral <= UMBRAL_MINIMO}
-            className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
+            className="rounded-lg border flex items-center justify-center disabled:opacity-40"
             style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
             aria-label="Bajar el punto de riego"
           >
@@ -219,13 +219,13 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           </button>
           <p className="font-bold leading-none" style={{ fontSize: 'clamp(1.75rem, 10vw, 2.5rem)', color: 'var(--agua)' }} role="status">
             {umbral}
-            <span className="text-3xl">%</span>
+            <span className="text-xl">%</span>
           </p>
           <button
             type="button"
             onClick={() => setUmbral(v => Math.min(UMBRAL_MAXIMO, v + 5))}
             disabled={umbral >= UMBRAL_MAXIMO}
-            className="rounded-2xl border-4 flex items-center justify-center disabled:opacity-40"
+            className="rounded-lg border flex items-center justify-center disabled:opacity-40"
             style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
             aria-label="Subir el punto de riego"
           >
@@ -235,7 +235,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       </div>
 
       {aviso && (
-        <p className="text-xl font-semibold rounded-2xl p-4 text-white" style={{ background: 'var(--peligro)' }} role="alert">
+        <p className="text-base font-semibold rounded-lg p-4 text-white" style={{ background: 'var(--peligro)' }} role="alert">
           {aviso}
         </p>
       )}
@@ -244,13 +244,13 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         type="button"
         onClick={guardar}
         disabled={guardando}
-        className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform disabled:opacity-60"
+        className="rounded-lg py-3 text-base font-bold text-white transition-transform disabled:opacity-60"
         style={{ background: 'var(--verde)' }}
       >
         {guardando ? 'GUARDANDO…' : 'GUARDAR PARCELA'}
       </button>
 
-      <p className="text-lg text-center" style={{ color: 'var(--tinta-suave)' }}>
+      <p className="text-sm text-center" style={{ color: 'var(--tinta-suave)' }}>
         El sensor se asocia solo, por el aparato que ya está midiendo.
       </p>
 
@@ -258,7 +258,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-2xl py-4 text-lg font-bold border-4"
+          className="rounded-lg py-2.5 text-sm font-bold border"
           style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
         >
           Dejarlo como estaba

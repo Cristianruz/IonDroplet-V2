@@ -44,69 +44,66 @@ export function RiegoCard({
   }
 
   return (
-    <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
-      aria-label="Riego"
-    >
-      <div className="flex items-center gap-3">
-        <Waves size={26} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-xl font-semibold">Riego</h2>
-      </div>
-
-      <div
-        className={`rounded-2xl py-4 text-center text-2xl font-bold text-white ${regando ? 'regando' : ''}`}
-        style={{ background: regando ? 'var(--agua)' : 'var(--apagado)' }}
-        role="status"
-      >
-        {regando ? '💧 REGANDO AHORA' : 'SIN REGAR'}
+    <section className="tarjeta flex flex-col gap-3" aria-label="Riego">
+      {/* El estado va como punto y palabra, no como un banner de color a
+          todo lo ancho. Cuando está regando el punto late; con eso basta. */}
+      <div className="flex items-center justify-between gap-2">
+        <span className="etiqueta flex items-center gap-1.5">
+          <Waves size={13} aria-hidden />
+          Riego
+        </span>
+        <span
+          className={`flex items-center gap-1.5 text-sm font-semibold ${regando ? 'regando' : ''}`}
+          style={{ color: regando ? 'var(--agua)' : 'var(--tinta-suave)' }}
+          role="status"
+        >
+          <span
+            className="punto"
+            style={{ background: regando ? 'var(--agua)' : 'var(--apagado)' }}
+            aria-hidden
+          />
+          {regando ? 'Regando ahora' : 'Sin regar'}
+        </span>
       </div>
 
       {/* La razón, siempre. Es lo que convierte un tablero en un sistema que
           decide y te explica. */}
-      <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
-        {razon()}
-      </p>
+      <p className="text-sm texto-suave">{razon()}</p>
 
       {regando && aMano ? (
         <button
           type="button"
           onClick={terminarRiegoManual}
-          className="rounded-2xl py-4 text-xl font-bold text-white shadow-md flex items-center justify-center gap-3"
+          className="boton boton-ancho text-white"
           style={{ background: 'var(--peligro)' }}
         >
-          <Square size={22} aria-hidden />
-          DETENER RIEGO
+          <Square size={15} aria-hidden />
+          Detener riego
         </button>
       ) : regando ? (
         // Regando por decisión del sistema: no se ofrece detener desde aquí,
         // se detiene solo cuando la tierra llegue a su punto.
-        <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
           Se detiene solo cuando la tierra llegue a su punto.
         </p>
       ) : confirmando ? (
         <div className="flex flex-col gap-3">
-          <p className="text-lg font-semibold">
+          <p className="text-sm font-semibold">
             ¿Riego ahora aunque el sistema no lo pida?
           </p>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               onClick={() => {
                 setConfirmando(false)
                 regarAhora()
               }}
-              className="rounded-2xl py-4 text-lg font-bold text-white"
+              className="boton text-white"
               style={{ background: 'var(--agua)' }}
             >
               Sí, riega
             </button>
-            <button
-              type="button"
-              onClick={() => setConfirmando(false)}
-              className="rounded-2xl py-4 text-lg font-bold border-4"
-              style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
-            >
+            <button type="button" onClick={() => setConfirmando(false)} className="boton boton-secundario">
               Mejor no
             </button>
           </div>
@@ -115,11 +112,10 @@ export function RiegoCard({
         <button
           type="button"
           onClick={() => setConfirmando(true)}
-          className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
-          style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
+          className="boton boton-secundario boton-ancho"
         >
-          <Droplet size={22} aria-hidden />
-          Regar ahora de todos modos
+          <Droplet size={15} aria-hidden />
+          Regar ahora
         </button>
       )}
     </section>

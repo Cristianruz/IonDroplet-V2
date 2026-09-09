@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Pencil, ChevronRight } from 'lucide-react'
+import { Pencil, ChevronRight, Bug } from 'lucide-react'
 import { cultivoPorId, etapaPorId } from '@/lib/cultivos'
 import type { Parcela } from '@/hooks/use-parcela'
 
@@ -26,29 +26,23 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-6"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Datos de la parcela"
     >
-      <div className="flex items-center gap-4">
-        <span className="leading-none" style={{ fontSize: 'clamp(2.5rem, 11vw, 3rem)' }} aria-hidden>
-          {cultivo?.icono ?? '🌱'}
-        </span>
+      <div className="flex items-center gap-3">
         <div className="min-w-0">
-          <h2
-            className="font-bold leading-tight"
-            style={{ fontSize: 'clamp(1.5rem, 7vw, 2rem)' }}
-          >
+          <h2 className="titulo-pantalla">
             {vacio(parcela.nombre) ? 'Parcela sin nombre' : parcela.nombre}
           </h2>
-          <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
+          <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             {partes.length > 0 ? partes.join(' · ') : 'Falta decir qué tienes sembrado'}
           </p>
         </div>
       </div>
 
       {/* La etapa nunca va sola: siempre con lo que significa para el riego. */}
-      <p className="text-xl" style={{ color: etapa ? 'var(--tinta)' : 'var(--apagado)' }}>
+      <p className="text-base" style={{ color: etapa ? 'var(--tinta)' : 'var(--apagado)' }}>
         {etapa ? (
           <>
             <span className="font-bold">Etapa: {etapa.nombre.toLowerCase()}</span>
@@ -61,7 +55,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
       </p>
 
       {!vacio(parcela.device_id) && (
-        <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
           El aparato que la mide es {parcela.device_id}
         </p>
       )}
@@ -70,23 +64,23 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
           desde la barra de abajo. */}
       <Link
         href="/plagas"
-        className="rounded-2xl py-5 px-6 text-xl font-bold border-4 flex items-center justify-between"
+        className="rounded-lg py-3 px-4 text-base font-bold border flex items-center justify-between"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
-          <span className="text-2xl leading-none" aria-hidden>🐛</span>
+          <Bug size={16} aria-hidden />
           Plagas del cultivo
         </span>
-        <ChevronRight size={26} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+        <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>
 
       <button
         type="button"
         onClick={onEditar}
-        className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
+        className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
       >
-        <Pencil size={24} aria-hidden />
+        <Pencil size={18} aria-hidden />
         Editar parcela
       </button>
     </section>

@@ -1,12 +1,16 @@
 'use client'
 
-import { Droplets } from 'lucide-react'
+import { Droplets, TriangleAlert } from 'lucide-react'
 import { haceCuanto } from '@/lib/tiempo'
 
+// Antes esta tarjeta era un número de 72 px en mayúsculas gritando
+// "TIERRA SECA". Se lee igual de bien a 34 px y en minúsculas, y deja
+// que la pantalla enseñe algo más que un solo dato.
+
 function estadoHumedad(h: number, umbral: number) {
-  if (h < umbral) return { texto: 'TIERRA SECA', detalle: 'Le falta agua a tu tierra', color: 'var(--alerta)' }
-  if (h <= 75) return { texto: 'HUMEDAD BIEN', detalle: 'Tu tierra está en buen punto', color: 'var(--verde)' }
-  return { texto: 'MUY HÚMEDA', detalle: 'Tu tierra tiene agua de sobra', color: 'var(--agua)' }
+  if (h < umbral) return { texto: 'Seca', detalle: 'Le falta agua', color: 'var(--alerta)' }
+  if (h <= 75) return { texto: 'En buen punto', detalle: 'No necesita agua ahora', color: 'var(--verde)' }
+  return { texto: 'Muy húmeda', detalle: 'Tiene agua de sobra', color: 'var(--agua)' }
 }
 
 interface Props {
@@ -23,79 +27,62 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
   const cuando = haceCuanto(ultimaLectura)
 
   return (
-    <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
-      style={{ background: 'var(--tarjeta)' }}
-      aria-label="Humedad de la tierra"
-    >
-      <div className="flex items-center gap-3 mb-2">
-        <Droplets size={26} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-xl font-semibold">Humedad de la tierra</h2>
+    <section className="tarjeta flex flex-col gap-3" aria-label="Humedad de la tierra">
+      <div className="flex items-center justify-between gap-2">
+        <span className="etiqueta flex items-center gap-1.5">
+          <Droplets size={13} aria-hidden />
+          Humedad del suelo
+        </span>
+        {cuando && <span className="text-xs texto-apagado">{cuando}</span>}
       </div>
 
       {sinDato ? (
-        <p className="text-2xl font-bold py-6" style={{ color: 'var(--tinta-suave)' }}>
-          Esperando al sensor…
-        </p>
+        <p className="text-sm texto-suave py-3">Esperando al sensor…</p>
       ) : (
         <>
-          {/* Si el sensor lleva rato callado, el número se atenúa: sigue siendo
-              el último dato real, pero ya no es de fiar como "ahorita". */}
-          {/* Enorme a propósito, pero sin desbordar un teléfono angosto:
-              crece con la pantalla y se topa en 6rem. */}
-          <p
-            className="font-bold leading-none"
-            style={{
-              fontSize: 'clamp(3rem, 17vw, 4.5rem)',
-              color: estado!.color,
-              opacity: sensorActivo ? 1 : 0.5,
-            }}
-          >
-            {Math.round(humedad!)}
-            <span style={{ fontSize: '0.5em' }}>%</span>
-          </p>
+          <div className="flex items-baseline justify-between gap-3 flex-wrap">
+            {/* Si el sensor lleva rato callado, el número se atenúa: sigue
+                siendo el último dato real, pero ya no vale como "ahorita". */}
+            <span
+              className="dato"
+              style={{ color: estado!.color, opacity: sensorActivo ? 1 : 0.45 }}
+            >
+              {Math.round(humedad!)}
+              <span className="dato-unidad">%</span>
+            </span>
 
-          {sensorActivo ? (
-            <>
-              <p className="text-2xl font-bold mt-2" style={{ color: estado!.color }}>
+            {sensorActivo ? (
+              <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: estado!.color }}>
+                <span className="punto" style={{ background: estado!.color }} aria-hidden />
                 {estado!.texto}
-              </p>
-              <p className="text-xl mt-1" style={{ color: 'var(--tinta-suave)' }}>
-                {estado!.detalle}
-              </p>
-            </>
-          ) : (
-            <p className="text-2xl font-bold mt-2" style={{ color: 'var(--tinta-suave)' }}>
-              Esperando al sensor…
-            </p>
-          )}
+              </span>
+            ) : (
+              <span className="text-sm texto-suave">Esperando al sensor…</span>
+            )}
+          </div>
 
           <div
-            className="mt-6 h-6 rounded-full overflow-hidden"
-            style={{ background: 'var(--pista)', opacity: sensorActivo ? 1 : 0.5 }}
+            className="h-1.5 rounded-full overflow-hidden"
+            style={{ background: 'var(--pista)', opacity: sensorActivo ? 1 : 0.45 }}
             role="progressbar"
             aria-valuenow={Math.round(humedad!)}
             aria-valuemin={0}
             aria-valuemax={100}
           >
             <div
-              className="h-full rounded-full transition-all duration-700"
+              className="h-full rounded-full transition-all duration-500"
               style={{ width: `${Math.min(100, Math.max(0, humedad!))}%`, background: estado!.color }}
             />
           </div>
 
-          {/* Cada dato dice cuándo se midió. */}
-          {cuando && (
-            <p className="text-lg mt-3" style={{ color: 'var(--tinta-suave)' }}>
-              {cuando}
-            </p>
-          )}
+          {sensorActivo && <p className="text-sm texto-suave">{estado!.detalle}</p>}
         </>
       )}
 
       {!sensorActivo && !sinDato && (
-        <p className="mt-4 text-lg font-semibold" style={{ color: 'var(--alerta)' }}>
-          ⚠️ El sensor lleva rato sin mandar datos. Revisa que el aparato esté conectado.
+        <p className="text-sm flex items-start gap-2" style={{ color: 'var(--alerta)' }}>
+          <TriangleAlert size={15} style={{ flexShrink: 0, marginTop: 2 }} aria-hidden />
+          El sensor lleva rato sin mandar datos. Revisa que el aparato esté conectado.
         </p>
       )}
     </section>

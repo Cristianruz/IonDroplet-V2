@@ -1,5 +1,6 @@
 'use client'
 
+import { Droplet, Zap, SlidersHorizontal, FlaskConical, Circle, type LucideIcon } from 'lucide-react'
 import { fechaCorta } from '@/lib/tiempo'
 import type { Accion } from '@/hooks/use-registro'
 
@@ -13,10 +14,11 @@ interface Props {
 }
 
 // Iconos de catálogo, definidos aquí y no sueltos en el JSX.
-const ICONOS: Record<string, string> = {
-  riego: '💧',
-  ionizacion: '⚡',
-  modo: '🌱',
+const ICONOS: Record<string, LucideIcon> = {
+  riego: Droplet,
+  ionizacion: Zap,
+  modo: SlidersHorizontal,
+  fertirriego: FlaskConical,
 }
 
 // Quién lo mandó hacer, en lenguaje de rancho.
@@ -35,18 +37,18 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Lo que ha pasado"
     >
-      <h2 className="text-xl font-semibold">Lo que ha pasado</h2>
+      <h2 className="text-base font-semibold">Lo que ha pasado</h2>
 
       {cargando ? (
-        <p className="text-xl py-4" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-base py-2.5" style={{ color: 'var(--tinta-suave)' }}>
           Buscando…
         </p>
       ) : acciones.length === 0 ? (
-        <p className="text-xl py-4" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-base py-2.5" style={{ color: 'var(--tinta-suave)' }}>
           Todavía no hay nada registrado. Aquí van a salir los riegos y los cambios que se hagan.
         </p>
       ) : (
@@ -55,20 +57,18 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
             {acciones.map((a, i) => (
               <li
                 key={a.id}
-                className="flex items-start gap-4 py-4"
+                className="flex items-start gap-4 py-2.5"
                 style={{ borderTop: i === 0 ? 'none' : '1px solid var(--pista)' }}
               >
-                <span className="text-3xl leading-none" aria-hidden>
-                  {ICONOS[a.tipo] ?? '🌱'}
-                </span>
+                {(() => { const Icono = ICONOS[a.tipo] ?? Circle; return <Icono size={16} aria-hidden style={{ color: 'var(--tinta-suave)', flexShrink: 0, marginTop: 2 }} /> })()}
                 <div>
                   <p
-                    className="text-xl font-bold"
+                    className="text-base font-bold"
                     style={a.id === idRiegoEnCurso ? { color: 'var(--agua)' } : undefined}
                   >
                     {a.id === idRiegoEnCurso ? 'Regando ahora' : (a.detalle ?? 'Sin detalle')}
                   </p>
-                  <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+                  <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
                     {a.id === idRiegoEnCurso ? `Empezó ${fechaCorta(a.fecha)}` : fechaCorta(a.fecha)}
                     {a.origen && ORIGENES[a.origen] ? ` · ${ORIGENES[a.origen]}` : ''}
                   </p>
@@ -81,7 +81,7 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
             <button
               type="button"
               onClick={onVerMas}
-              className="rounded-2xl py-4 text-lg font-bold border-4"
+              className="rounded-lg py-2.5 text-sm font-bold border"
               style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
             >
               Ver más

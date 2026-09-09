@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ChevronDown } from 'lucide-react'
+import { ChevronDown, type LucideIcon } from 'lucide-react'
 
 export type EstadoAparato = 'bien' | 'tarde' | 'nunca' | 'apagado' | 'activo'
 
@@ -14,7 +14,7 @@ const COLOR: Record<EstadoAparato, string> = {
 }
 
 interface Props {
-  icono: string
+  icono: LucideIcon
   nombre: string
   /** Lo que el aparato está diciendo ahorita, en lenguaje llano. */
   detalle: string
@@ -25,18 +25,18 @@ interface Props {
   pasos?: string[]
 }
 
-export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }: Props) {
+export function AparatoCard({ icono: Icono, nombre, detalle, estado, etiqueta, pasos }: Props) {
   const [abierto, setAbierto] = useState(false)
   const necesitaRevision = estado === 'tarde' || estado === 'nunca'
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-4"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={nombre}
     >
       <div className="flex items-start gap-4">
-        <span className="text-4xl leading-none" aria-hidden>{icono}</span>
+        <Icono size={18} aria-hidden style={{ color: 'var(--tinta-suave)', flexShrink: 0 }} />
 
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-3">
@@ -45,16 +45,16 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
               style={{ width: 16, height: 16, background: COLOR[estado], flexShrink: 0 }}
               aria-hidden
             />
-            <h2 className="text-xl font-bold leading-tight">{nombre}</h2>
+            <h2 className="text-base font-bold leading-tight">{nombre}</h2>
           </div>
-          <p className="text-xl mt-1" style={{ color: 'var(--tinta-suave)' }} role="status">
+          <p className="text-base mt-1" style={{ color: 'var(--tinta-suave)' }} role="status">
             {detalle}
           </p>
         </div>
 
         {etiqueta && (
           <span
-            className="text-lg font-bold rounded-full px-3 py-1 whitespace-nowrap"
+            className="text-sm font-bold rounded-full px-3 py-1 whitespace-nowrap"
             style={{ background: 'var(--pista)', color: COLOR[estado] }}
           >
             {etiqueta}
@@ -68,12 +68,12 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
             type="button"
             onClick={() => setAbierto(a => !a)}
             aria-expanded={abierto}
-            className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
+            className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--alerta)', color: 'var(--alerta)' }}
           >
             CÓMO REVISARLO
             <ChevronDown
-              size={24}
+              size={18}
               aria-hidden
               style={{
                 transform: abierto ? 'rotate(180deg)' : 'none',
@@ -88,7 +88,7 @@ export function AparatoCard({ icono, nombre, detalle, estado, etiqueta, pasos }:
           {abierto && (
             <ol className="flex flex-col gap-3">
               {pasos.map((paso, i) => (
-                <li key={i} className="flex gap-4 text-xl">
+                <li key={i} className="flex gap-4 text-base">
                   <span
                     className="rounded-full flex items-center justify-center font-bold text-white"
                     style={{ width: 34, height: 34, background: 'var(--tinta-suave)', flexShrink: 0 }}

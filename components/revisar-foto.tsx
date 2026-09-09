@@ -25,13 +25,13 @@ export function RevisarFoto() {
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Revisar una foto de la planta"
     >
       <div className="flex items-center gap-3">
-        <Camera size={24} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-xl font-semibold">¿Ves algo raro en la planta?</h2>
+        <Camera size={18} style={{ color: 'var(--verde)' }} aria-hidden />
+        <h2 className="text-base font-semibold">¿Ves algo raro en la planta?</h2>
       </div>
 
       {/* La cámara del celular, sin librerías: es HTML de toda la vida. */}
@@ -50,24 +50,24 @@ export function RevisarFoto() {
 
       {revision === null && !revisando && (
         <>
-          <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
+          <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             Tómale una foto de cerca a la hoja o al fruto, con luz de día. Te digo a qué se parece
             y cómo salir de dudas.
           </p>
           <button
             type="button"
             onClick={() => entrada.current?.click()}
-            className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
+            className="rounded-lg py-3 text-base font-bold text-white transition-transform flex items-center justify-center gap-3"
             style={{ background: 'var(--verde)' }}
           >
-            <Camera size={24} aria-hidden />
+            <Camera size={18} aria-hidden />
             TOMAR FOTO
           </button>
         </>
       )}
 
       {revisando && (
-        <p className="text-xl font-bold py-4" style={{ color: 'var(--tinta-suave)' }} role="status">
+        <p className="text-base font-bold py-2.5" style={{ color: 'var(--tinta-suave)' }} role="status">
           Viendo tu foto…
         </p>
       )}
@@ -77,35 +77,35 @@ export function RevisarFoto() {
         <img
           src={vistaPrevia}
           alt="La foto que tomaste"
-          className="rounded-2xl w-full"
+          className="rounded-lg w-full"
           style={{ maxHeight: 260, objectFit: 'cover' }}
         />
       )}
 
       {revision && (
         <>
-          <p className="text-xl">{revision.resumen}</p>
+          <p className="text-base">{revision.resumen}</p>
 
           {/* Sin planta en la foto no hay diagnóstico que dar. */}
           {revision.esPlanta && revision.posible !== '' && (
             <div>
               <p
-                className="text-lg font-bold"
+                className="text-sm font-bold"
                 style={{ color: COLOR_URGENCIA[revision.urgencia] }}
                 role="status"
               >
                 {TEXTO_URGENCIA[revision.urgencia]}
               </p>
-              <p className="text-xl mt-1">{revision.posible}</p>
+              <p className="text-base mt-1">{revision.posible}</p>
             </div>
           )}
 
           {revision.comoConfirmarlo && (
             <div>
-              <p className="text-lg font-bold" style={{ color: 'var(--tinta-suave)' }}>
+              <p className="text-sm font-bold" style={{ color: 'var(--tinta-suave)' }}>
                 Cómo salir de dudas
               </p>
-              <p className="text-xl">{revision.comoConfirmarlo}</p>
+              <p className="text-base">{revision.comoConfirmarlo}</p>
             </div>
           )}
 
@@ -114,10 +114,10 @@ export function RevisarFoto() {
               href={`/asistente?pregunta=${encodeURIComponent(
                 `En la foto de mi cultivo se ve esto: ${revision.posible}. ¿Qué hago?`
               )}`}
-              className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
+              className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
               style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
             >
-              <MessageCircle size={24} aria-hidden />
+              <MessageCircle size={18} aria-hidden />
               Preguntar más sobre esto
             </Link>
           )}
@@ -128,13 +128,13 @@ export function RevisarFoto() {
               limpiar()
               entrada.current?.click()
             }}
-            className="rounded-2xl py-4 text-lg font-bold border-4"
+            className="rounded-lg py-2.5 text-sm font-bold border"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
           >
             Tomar otra foto
           </button>
 
-          <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+          <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
             Una foto no basta para estar seguro. Esto es una pista para que revises la planta, no
             un diagnóstico.
           </p>
@@ -143,7 +143,7 @@ export function RevisarFoto() {
 
       {aviso && (
         <p
-          className="text-xl font-semibold rounded-2xl p-4"
+          className="text-base font-semibold rounded-lg p-4"
           style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
           role="alert"
         >

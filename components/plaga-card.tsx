@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Check, MessageCircle } from 'lucide-react'
+import { Check, MessageCircle, Bug } from 'lucide-react'
 import type { Plaga, Riesgo } from '@/lib/plagas'
 
 const COLOR_RIESGO: Record<Riesgo, string> = {
@@ -37,13 +37,13 @@ interface Props {
 export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevisar }: Props) {
   if (!destacada) {
     return (
-      <div className="flex items-center justify-between gap-3 py-4" style={{ borderTop: '1px solid var(--pista)' }}>
+      <div className="flex items-center justify-between gap-3 py-2.5" style={{ borderTop: '1px solid var(--pista)' }}>
         <div className="flex items-center gap-3 min-w-0">
-          <span className="text-3xl leading-none" aria-hidden>{plaga.icono}</span>
-          <p className="text-xl font-bold">{plaga.nombre}</p>
+          <Bug size={16} aria-hidden style={{ flexShrink: 0 }} />
+          <p className="text-base font-bold">{plaga.nombre}</p>
         </div>
         <span
-          className="text-lg font-bold rounded-full px-3 py-1 whitespace-nowrap"
+          className="text-sm font-bold rounded-full px-3 py-1 whitespace-nowrap"
           style={{ background: 'var(--pista)', color: COLOR_RIESGO[riesgo] }}
         >
           {TEXTO_CORTO[riesgo]}
@@ -54,50 +54,50 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border-4 flex flex-col gap-5"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)', borderColor: COLOR_RIESGO[riesgo] }}
       aria-label={`${plaga.nombre}, riesgo ${riesgo}`}
     >
       <div className="flex items-start gap-4">
-        <span className="text-5xl leading-none" aria-hidden>{plaga.icono}</span>
+        <Bug size={20} aria-hidden style={{ flexShrink: 0 }} />
         <div>
-          <h2 className="text-2xl font-bold leading-tight">{plaga.nombre}</h2>
-          <p className="text-xl font-bold" style={{ color: COLOR_RIESGO[riesgo] }} role="status">
+          <h2 className="text-lg font-bold leading-tight">{plaga.nombre}</h2>
+          <p className="text-base font-bold" style={{ color: COLOR_RIESGO[riesgo] }} role="status">
             {TEXTO_RIESGO[riesgo]} esta semana
           </p>
         </div>
       </div>
 
       <div>
-        <p className="text-lg font-bold" style={{ color: 'var(--tinta-suave)' }}>Cómo la reconoces</p>
-        <p className="text-xl">{plaga.comoReconocerla}</p>
+        <p className="text-sm font-bold" style={{ color: 'var(--tinta-suave)' }}>Cómo la reconoces</p>
+        <p className="text-base">{plaga.comoReconocerla}</p>
       </div>
 
       <div>
-        <p className="text-lg font-bold" style={{ color: 'var(--tinta-suave)' }}>Qué hacer</p>
-        <p className="text-xl">{plaga.queHacer}</p>
+        <p className="text-sm font-bold" style={{ color: 'var(--tinta-suave)' }}>Qué hacer</p>
+        <p className="text-base">{plaga.queHacer}</p>
       </div>
 
       {/* Abre el asistente con la plaga ya escrita, como pide el wireframe. */}
       <Link
         href={`/asistente?pregunta=${encodeURIComponent(`¿Qué hago con ${plaga.nombre.toLowerCase()} en mi cultivo?`)}`}
-        className="rounded-2xl py-4 text-lg font-bold border-4 flex items-center justify-center gap-3"
+        className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
       >
-        <MessageCircle size={24} aria-hidden />
+        <MessageCircle size={18} aria-hidden />
         Preguntar al asistente
       </Link>
 
       {revisadaEl ? (
-        <p className="text-xl font-bold flex items-center gap-3" style={{ color: 'var(--verde)' }} role="status">
-          <Check size={28} aria-hidden />
+        <p className="text-base font-bold flex items-center gap-3" style={{ color: 'var(--verde)' }} role="status">
+          <Check size={18} aria-hidden />
           La revisaste el {revisadaEl.toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })}
         </p>
       ) : (
         <button
           type="button"
           onClick={onRevisar}
-          className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform"
+          className="rounded-lg py-3 text-base font-bold text-white transition-transform"
           style={{ background: 'var(--verde)' }}
         >
           YA REVISÉ

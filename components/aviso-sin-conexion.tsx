@@ -3,7 +3,7 @@
 export function AvisoSinConexion() {
   return (
     <div
-      className="rounded-2xl p-5 text-xl font-semibold text-white"
+      className="rounded-lg p-4 text-base font-semibold text-white"
       style={{ background: 'var(--peligro)' }}
       role="alert"
     >

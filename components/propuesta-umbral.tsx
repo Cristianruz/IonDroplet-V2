@@ -21,18 +21,18 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Recomendación del asistente sobre el punto de riego"
     >
       <div className="flex items-center gap-3">
-        <Sparkles size={24} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-xl font-semibold">¿Le pregunto al asistente?</h2>
+        <Sparkles size={18} style={{ color: 'var(--verde)' }} aria-hidden />
+        <h2 className="text-base font-semibold">¿Le pregunto al asistente?</h2>
       </div>
 
       {propuesta === null ? (
         <>
-          <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
+          <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             Puede revisar tu cultivo, la humedad de los últimos días y la temporada, y decirte en
             qué punto conviene que riegue solo.
           </p>
@@ -40,7 +40,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
             type="button"
             onClick={pedirPropuesta}
             disabled={pensando}
-            className="rounded-2xl py-4 text-xl font-bold border-4 disabled:opacity-60"
+            className="rounded-lg py-2.5 text-base font-bold border disabled:opacity-60"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--verde)', color: 'var(--verde)' }}
           >
             {pensando ? 'Pensando…' : 'Que me recomiende un punto de riego'}
@@ -54,17 +54,17 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
               <span style={{ fontSize: '0.6em' }}>%</span>
             </p>
             {umbralActual !== null && (
-              <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+              <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
                 ahorita está en {umbralActual}%
               </p>
             )}
           </div>
 
-          <p className="text-xl">{propuesta.razon}</p>
+          <p className="text-base">{propuesta.razon}</p>
 
           {propuesta.confianza !== null && propuesta.confianza < 50 && (
-            <p className="text-lg font-semibold" style={{ color: 'var(--alerta)' }}>
-              ⚠️ Va con poca seguridad: le faltan datos frescos del sensor. Tómalo como una idea,
+            <p className="text-sm font-semibold" style={{ color: 'var(--alerta)' }}>
+              Va con poca seguridad: le faltan datos frescos del sensor. Tómalo como una idea,
               no como una orden.
             </p>
           )}
@@ -72,16 +72,16 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
           <button
             type="button"
             onClick={aceptar}
-            className="rounded-2xl py-5 text-xl font-bold text-white shadow-md active:scale-95 transition-transform flex items-center justify-center gap-3"
+            className="rounded-lg py-3 text-base font-bold text-white transition-transform flex items-center justify-center gap-3"
             style={{ background: 'var(--verde)' }}
           >
-            <Check size={24} aria-hidden />
+            <Check size={18} aria-hidden />
             USAR ESTE PUNTO
           </button>
           <button
             type="button"
             onClick={descartar}
-            className="rounded-2xl py-4 text-lg font-bold border-4"
+            className="rounded-lg py-2.5 text-sm font-bold border"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
           >
             Dejarlo como está
@@ -91,7 +91,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
 
       {aviso && (
         <p
-          className="text-xl font-semibold rounded-2xl p-4"
+          className="text-base font-semibold rounded-lg p-4"
           style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
           role="alert"
         >

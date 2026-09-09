@@ -31,7 +31,7 @@ interface Renglon {
 function ErrorCampo({ texto }: { texto?: string }) {
   if (!texto) return null
   return (
-    <p className="text-lg font-semibold mt-2 aparece visible" style={{ color: 'var(--peligro)' }} role="alert">
+    <p className="text-sm font-semibold mt-2 aparece visible" style={{ color: 'var(--peligro)' }} role="alert">
       {texto}
     </p>
   )
@@ -122,13 +122,13 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
 
   return (
     <section
-      className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-5"
+      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
       style={{ background: 'var(--tarjeta)' }}
       aria-label="Anotar lo que le pusiste a la parcela"
     >
       <div id="campo-nutrientes">
-        <h2 className="text-xl font-semibold mb-1">¿Qué le pusiste?</h2>
-        <p className="text-lg mb-3" style={{ color: 'var(--tinta-suave)' }}>
+        <h2 className="text-base font-semibold mb-1">¿Qué le pusiste?</h2>
+        <p className="text-sm mb-3" style={{ color: 'var(--tinta-suave)' }}>
           Puedes marcar varios.
         </p>
 
@@ -139,10 +139,10 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
               type="button"
               onClick={() => alternar(n.id)}
               aria-pressed={elegidos.has(n.id)}
-              className="rounded-2xl border-4 px-5 py-4 text-xl font-bold flex items-center gap-2 active:scale-95 transition-transform"
+              className="rounded-lg border px-3.5 py-2.5 text-base font-bold flex items-center gap-2 transition-transform"
               style={estiloChip(elegidos.has(n.id))}
             >
-              {elegidos.has(n.id) && <Check size={22} aria-hidden />}
+              {elegidos.has(n.id) && <Check size={16} aria-hidden />}
               {n.nombre}
             </button>
           ))}
@@ -156,7 +156,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 type="button"
                 onClick={() => alternar(n.id)}
                 aria-pressed={elegidos.has(n.id)}
-                className="rounded-2xl border-4 px-4 py-3 text-lg font-bold flex items-center gap-2 active:scale-95 transition-transform"
+                className="rounded-lg border px-4 py-3 text-sm font-bold flex items-center gap-2 transition-transform"
                 style={estiloChip(elegidos.has(n.id))}
               >
                 {elegidos.has(n.id) && <Check size={18} aria-hidden />}
@@ -170,10 +170,10 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           <button
             type="button"
             onClick={() => setVerTodos(true)}
-            className="mt-3 text-lg font-semibold flex items-center gap-1.5"
+            className="mt-3 text-sm font-semibold flex items-center gap-1.5"
             style={{ color: 'var(--verde)' }}
           >
-            <Plus size={20} aria-hidden />
+            <Plus size={16} aria-hidden />
             Ver los demás
           </button>
         )}
@@ -183,13 +183,13 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
 
       {renglones.length > 0 && (
         <div className="flex flex-col gap-3">
-          <h3 className="text-lg font-semibold">¿Cuánto de cada uno?</h3>
+          <h3 className="text-sm font-semibold">¿Cuánto de cada uno?</h3>
           <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             Si no te acuerdas de la cantidad, déjala en blanco: se guarda igual que lo pusiste.
           </p>
           {renglones.map(r => (
             <div key={r.nutriente} className="flex items-center gap-2 flex-wrap">
-              <span className="text-xl font-semibold" style={{ minWidth: 130 }}>
+              <span className="text-base font-semibold" style={{ minWidth: 130 }}>
                 {nombreNutriente(r.nutriente)}
               </span>
               <input
@@ -201,14 +201,14 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 onChange={e => cambiar(r.nutriente, 'cantidad', e.target.value)}
                 placeholder="cuánto"
                 aria-label={`Cantidad de ${nombreNutriente(r.nutriente)}`}
-                className="rounded-2xl border-4 px-4 py-3 text-xl"
+                className="rounded-lg border px-4 py-3 text-base"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 130 }}
               />
               <select
                 value={r.unidad}
                 onChange={e => cambiar(r.nutriente, 'unidad', e.target.value)}
                 aria-label={`Unidad de ${nombreNutriente(r.nutriente)}`}
-                className="rounded-2xl border-4 px-4 py-3 text-xl font-semibold"
+                className="rounded-lg border px-4 py-3 text-base font-semibold"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               >
                 {UNIDADES.map(u => (
@@ -223,7 +223,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
       )}
 
       <div className="flex flex-col gap-3">
-        <label className="text-lg font-semibold" htmlFor="campo-litros">
+        <label className="text-sm font-semibold" htmlFor="campo-litros">
           ¿Cuánta agua llevó? <span style={{ color: 'var(--tinta-suave)' }}>(si lo sabes)</span>
         </label>
         <input
@@ -235,7 +235,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           value={litros}
           onChange={e => setLitros(e.target.value)}
           placeholder="litros"
-          className="rounded-2xl border-4 px-4 py-3 text-xl"
+          className="rounded-lg border px-4 py-3 text-base"
           style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
         />
       </div>
@@ -244,10 +244,10 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
         <button
           type="button"
           onClick={() => setVerMasDatos(true)}
-          className="text-lg font-semibold flex items-center gap-1.5 self-start"
+          className="text-sm font-semibold flex items-center gap-1.5 self-start"
           style={{ color: 'var(--verde)' }}
         >
-          <ChevronDown size={20} aria-hidden />
+          <ChevronDown size={16} aria-hidden />
           Tengo medidor de agua
         </button>
       ) : (
@@ -257,7 +257,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           </p>
           <div className="flex gap-3 flex-wrap">
             <div className="flex flex-col gap-2">
-              <label className="text-lg font-semibold" htmlFor="campo-ec">
+              <label className="text-sm font-semibold" htmlFor="campo-ec">
                 Sales en el agua (EC)
               </label>
               <input
@@ -269,12 +269,12 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 value={ec}
                 onChange={e => setEc(e.target.value)}
                 placeholder="dS/m"
-                className="rounded-2xl border-4 px-4 py-3 text-xl"
+                className="rounded-lg border px-4 py-3 text-base"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
               />
             </div>
             <div className="flex flex-col gap-2" id="campo-ph">
-              <label className="text-lg font-semibold" htmlFor="campo-ph-input">
+              <label className="text-sm font-semibold" htmlFor="campo-ph-input">
                 Qué tan ácida (pH)
               </label>
               <input
@@ -290,12 +290,12 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                   setErrores(x => ({ ...x, ph: undefined }))
                 }}
                 placeholder="0 a 14"
-                className="rounded-2xl border-4 px-4 py-3 text-xl"
+                className="rounded-lg border px-4 py-3 text-base"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="text-lg font-semibold" htmlFor="campo-minutos">
+              <label className="text-sm font-semibold" htmlFor="campo-minutos">
                 Cuánto duró
               </label>
               <input
@@ -307,7 +307,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 value={minutos}
                 onChange={e => setMinutos(e.target.value)}
                 placeholder="minutos"
-                className="rounded-2xl border-4 px-4 py-3 text-xl"
+                className="rounded-lg border px-4 py-3 text-base"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
               />
             </div>
@@ -317,7 +317,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
       )}
 
       <div className="flex flex-col gap-2">
-        <label className="text-lg font-semibold" htmlFor="campo-notas">
+        <label className="text-sm font-semibold" htmlFor="campo-notas">
           Notas <span style={{ color: 'var(--tinta-suave)' }}>(opcional)</span>
         </label>
         <textarea
@@ -326,13 +326,13 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           onChange={e => setNotas(e.target.value)}
           rows={2}
           placeholder="Lo que quieras acordarte después"
-          className="rounded-2xl border-4 px-4 py-3 text-xl"
+          className="rounded-lg border px-4 py-3 text-base"
           style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
         />
       </div>
 
       {aviso && (
-        <p className="text-lg font-semibold aparece visible" style={{ color: 'var(--peligro)' }} role="alert">
+        <p className="text-sm font-semibold aparece visible" style={{ color: 'var(--peligro)' }} role="alert">
           {aviso}
         </p>
       )}
@@ -341,7 +341,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
         type="button"
         onClick={enviar}
         disabled={guardando}
-        className="w-full rounded-2xl py-5 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform disabled:opacity-60"
+        className="w-full rounded-lg py-3 text-lg font-bold text-white transition-transform disabled:opacity-60"
         style={{ background: 'var(--verde)' }}
       >
         {guardando ? 'Guardando…' : 'Anotar lo que le puse'}

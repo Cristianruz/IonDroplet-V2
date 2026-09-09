@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { ChevronRight, FlaskConical } from 'lucide-react'
+import { ChevronRight, FlaskConical, Sprout } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { HumedadCard } from '@/components/humedad-card'
@@ -21,8 +21,8 @@ export default function PantallaParcela() {
   const [editando, setEditando] = useState(false)
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <h1 className="text-3xl font-bold leading-tight">Mi parcela</h1>
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+      <h1 className="text-xl font-bold leading-tight">Mi parcela</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
 
@@ -48,19 +48,19 @@ export default function PantallaParcela() {
       ) : parcela === null ? (
         // Todavía no hay parcela: tarjeta vacía, no el formulario de golpe.
         <section
-          className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5 flex flex-col gap-6 items-center text-center"
+          className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4 items-center text-center"
           style={{ background: 'var(--tarjeta)' }}
           aria-label="Todavía no hay parcela registrada"
         >
-          <span className="text-6xl leading-none" aria-hidden>🌱</span>
-          <p className="text-2xl font-bold">Todavía no me has dicho qué siembras</p>
-          <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
+          <Sprout size={28} style={{ color: 'var(--verde)' }} aria-hidden />
+          <p className="text-lg font-bold">Todavía no me has dicho qué siembras</p>
+          <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             Con eso puedo avisarte mejor cuándo le toca agua a tu tierra.
           </p>
           <button
             type="button"
             onClick={() => setEditando(true)}
-            className="w-full rounded-2xl py-5 text-2xl font-bold text-white shadow-md active:scale-95 transition-transform"
+            className="w-full rounded-lg py-3 text-lg font-bold text-white transition-transform"
             style={{ background: 'var(--verde)' }}
           >
             Registrar mi parcela
@@ -91,11 +91,11 @@ export default function PantallaParcela() {
               barra de abajo ya tiene cinco destinos. */}
           <Aparece><Link
             href="/fertirriego"
-            className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+            className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
             style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
           >
             <span className="flex items-center gap-3">
-              <FlaskConical size={28} style={{ color: 'var(--verde)' }} aria-hidden />
+              <FlaskConical size={18} style={{ color: 'var(--verde)' }} aria-hidden />
               <span className="flex flex-col">
                 Lo que le he puesto
                 <span className="text-base font-normal" style={{ color: 'var(--tinta-suave)' }}>
@@ -103,7 +103,7 @@ export default function PantallaParcela() {
                 </span>
               </span>
             </span>
-            <ChevronRight size={28} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+            <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
           </Link></Aparece>
         </>
       )}

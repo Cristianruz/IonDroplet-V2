@@ -35,25 +35,25 @@ function Asistente() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/"
-          className="flex items-center gap-2 text-xl font-semibold w-fit"
+          className="flex items-center gap-2 text-base font-semibold w-fit"
           style={{ color: 'var(--verde)' }}
         >
-          <ArrowLeft size={26} aria-hidden />
+          <ArrowLeft size={18} aria-hidden />
           Inicio
         </Link>
-        <h1 className="text-3xl font-bold leading-tight">Asistente</h1>
-        <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
+        <h1 className="text-xl font-bold leading-tight">Asistente</h1>
+        <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
           Ve lo que miden tus aparatos. Pregúntale lo que necesites de tu riego.
         </p>
       </header>
 
       {!conectado && (
         <div
-          className="rounded-2xl p-5 text-xl font-semibold"
+          className="rounded-lg p-4 text-base font-semibold"
           style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
           role="status"
         >
@@ -65,10 +65,10 @@ function Asistente() {
       <section className="flex flex-col gap-4" aria-label="Conversación con el asistente">
         {burbujas.length === 0 && !enviando && (
           <div
-            className="rounded-2xl p-5 sm:p-6 shadow-sm border border-black/5"
+            className="rounded-lg p-4 sm:p-5 border"
             style={{ background: 'var(--tarjeta)' }}
           >
-            <p className="text-xl" style={{ color: 'var(--tinta-suave)' }}>
+            <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
               Buenos días. Pregúntame lo que necesites de tu riego — por ejemplo, si conviene regar
               hoy o si aguanta hasta mañana.
             </p>
@@ -81,7 +81,7 @@ function Asistente() {
             className={b.de === 'agricultor' ? 'flex justify-end' : 'flex justify-start'}
           >
             <p
-              className="rounded-3xl px-6 py-4 text-xl max-w-[85%] whitespace-pre-line"
+              className="rounded-lg px-4 py-2.5 text-base max-w-[85%] whitespace-pre-line"
               style={
                 b.de === 'agricultor'
                   ? { background: 'var(--verde)', color: 'white' }
@@ -96,7 +96,7 @@ function Asistente() {
         {enviando && (
           <div className="flex justify-start">
             <p
-              className="rounded-3xl px-6 py-4 text-xl"
+              className="rounded-lg px-4 py-2.5 text-base"
               style={{ background: 'var(--tarjeta)', color: 'var(--tinta-suave)', border: '1px solid rgba(0,0,0,.06)' }}
               role="status"
             >
@@ -107,7 +107,7 @@ function Asistente() {
 
         {aviso && (
           <div
-            className="rounded-2xl p-5 text-xl font-semibold"
+            className="rounded-lg p-4 text-base font-semibold"
             style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
             role="alert"
           >
@@ -137,18 +137,18 @@ function Asistente() {
           disabled={enviando}
           placeholder="Escribe tu pregunta…"
           maxLength={500}
-          className="flex-1 min-w-0 rounded-2xl px-5 py-4 text-xl border-4 outline-none disabled:opacity-60"
+          className="flex-1 min-w-0 rounded-lg px-3.5 py-2.5 text-base border outline-none disabled:opacity-60"
           style={{ borderColor: 'var(--borde)', background: 'var(--tarjeta)', color: 'var(--tinta)' }}
         />
         <button
           type="button"
           onClick={enviar}
           disabled={enviando || texto.trim() === ''}
-          className="rounded-2xl flex items-center justify-center text-white disabled:opacity-40"
+          className="rounded-lg flex items-center justify-center text-white disabled:opacity-40"
           style={{ width: 64, height: 60, flexShrink: 0, background: 'var(--verde)' }}
           aria-label="Enviar la pregunta"
         >
-          <Send size={28} aria-hidden />
+          <Send size={18} aria-hidden />
         </button>
       </div>
 

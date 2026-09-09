@@ -21,8 +21,8 @@ export default function PantallaHistorial() {
   const etiquetaRango = RANGOS.find(r => r.id === rango)?.etiqueta ?? 'Hoy'
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <h1 className="text-3xl font-bold leading-tight">Historial</h1>
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+      <h1 className="text-xl font-bold leading-tight">Historial</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
 
@@ -37,7 +37,7 @@ export default function PantallaHistorial() {
               key={id}
               type="button"
               onClick={() => setRango(id)}
-              className="rounded-2xl py-4 text-lg font-bold border-4 transition-colors"
+              className="rounded-lg py-2.5 text-sm font-bold border transition-colors"
               style={
                 activo
                   ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
@@ -117,7 +117,7 @@ export default function PantallaHistorial() {
 function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: string; nota: string }) {
   return (
     <section
-      className="rounded-2xl p-4 sm:p-5 shadow-sm border border-black/5"
+      className="rounded-lg p-4 sm:p-5 border"
       style={{ background: 'var(--tarjeta)' }}
       aria-label={etiqueta}
     >
@@ -131,8 +131,8 @@ function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: stri
       >
         {valor ?? '—'}
       </p>
-      <p className="text-xl font-semibold mt-2">{etiqueta}</p>
-      <p className="text-lg mt-1" style={{ color: 'var(--tinta-suave)' }}>{nota}</p>
+      <p className="text-base font-semibold mt-2">{etiqueta}</p>
+      <p className="text-sm mt-1" style={{ color: 'var(--tinta-suave)' }}>{nota}</p>
     </section>
   )
 }

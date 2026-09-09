@@ -8,13 +8,13 @@ export default function PantallaIonizacion() {
   const { conectado, ionizacion, cambiarIonizacion } = useIonDroplet({ conHistorial: false })
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       {/* El título lo pone la propia tarjeta, con su icono. */}
       {!conectado && <AvisoSinConexion />}
 
       <IonizacionCard encendida={ionizacion} cambiar={cambiarIonizacion} />
 
-      <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+      <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
         El ionizador no reporta su estado por sí solo: aquí se ve lo último que se le pidió desde
         esta aplicación.
       </p>

@@ -28,24 +28,25 @@ export default function Dashboard() {
   } = useIonDroplet()
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
-      <header className="hero flex items-center justify-between flex-wrap gap-3">
-        <div className="flex items-center gap-3">
-          <Sprout size={32} style={{ color: 'var(--verde)' }} aria-hidden />
-          <div>
-            <h1 className="text-3xl font-bold leading-tight">IonDroplet</h1>
-            <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>Tu riego, vigilado día y noche</p>
-          </div>
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+      {/* Barra superior. El estado del sistema va como un punto y una
+          palabra, no como un bloque de color: cuando todo está bien no
+          tiene por qué llamar la atención. */}
+      <header className="hero flex items-center justify-between gap-3 py-1">
+        <div className="flex items-center gap-2">
+          <Sprout size={20} style={{ color: 'var(--verde)' }} aria-hidden />
+          <h1 className="titulo-pantalla">IonDroplet</h1>
         </div>
 
-        <div
-          className="flex items-center gap-2 rounded-full px-5 py-2.5 text-lg font-semibold text-white"
-          style={{ background: conectado ? 'var(--verde)' : 'var(--peligro)' }}
-          role="status"
-        >
-          {conectado ? <Wifi size={22} aria-hidden /> : <WifiOff size={22} aria-hidden />}
-          {conectado ? 'Sistema conectado' : 'Sin conexión'}
-        </div>
+        <span className="flex items-center gap-1.5 text-sm texto-suave" role="status">
+          {conectado ? <Wifi size={15} aria-hidden /> : <WifiOff size={15} aria-hidden />}
+          <span
+            className="punto"
+            style={{ background: conectado ? 'var(--verde)' : 'var(--peligro)' }}
+            aria-hidden
+          />
+          {conectado ? 'Conectado' : 'Sin conexión'}
+        </span>
       </header>
 
       {!conectado && <AvisoSinConexion />}
@@ -76,14 +77,14 @@ export default function Dashboard() {
 
       <Aparece><Link
         href="/asistente"
-        className="rounded-2xl px-6 py-5 text-xl font-bold border-4 flex items-center justify-between"
+        className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
         style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
       >
         <span className="flex items-center gap-3">
-          <MessageCircle size={28} style={{ color: 'var(--verde)' }} aria-hidden />
+          <MessageCircle size={18} style={{ color: 'var(--verde)' }} aria-hidden />
           Preguntarle al asistente
         </span>
-        <ChevronRight size={28} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+        <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link></Aparece>
     </main>
   )

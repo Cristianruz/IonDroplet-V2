@@ -1,18 +1,18 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeft, RadioTower, Sprout, Waves, Zap, type LucideIcon } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { AparatoCard, type EstadoAparato } from '@/components/aparato-card'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { haceCuanto } from '@/lib/tiempo'
 
 // Un icono por aparato, aquí y no suelto en el JSX.
-const ICONOS = {
-  central: '📡',
-  sensorTierra: '🌱',
-  bomba: '🚰',
-  ionizador: '⚡',
+const ICONOS: Record<string, LucideIcon> = {
+  central: RadioTower,
+  sensorTierra: Sprout,
+  bomba: Waves,
+  ionizador: Zap,
 }
 
 // Verde si respondió hace menos de 2 minutos, ámbar si más, rojo si nunca.
@@ -48,17 +48,17 @@ export default function PantallaDispositivos() {
       : `Midió ${Math.round(humedad ?? 0)}% ${haceCuanto(ultimaLectura)}`
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-5 flex flex-col gap-4">
+    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/ajustes"
-          className="flex items-center gap-2 text-xl font-semibold w-fit"
+          className="flex items-center gap-2 text-base font-semibold w-fit"
           style={{ color: 'var(--verde)' }}
         >
-          <ArrowLeft size={26} aria-hidden />
+          <ArrowLeft size={18} aria-hidden />
           Ajustes
         </Link>
-        <h1 className="text-3xl font-bold leading-tight">Aparatos del campo</h1>
+        <h1 className="text-xl font-bold leading-tight">Aparatos del campo</h1>
       </header>
 
       {!conectado && <AvisoSinConexion />}
@@ -101,7 +101,7 @@ export default function PantallaDispositivos() {
         etiqueta={ionizacion ? 'ENCENDIDO' : 'APAGADO'}
       />
 
-      <p className="text-lg" style={{ color: 'var(--tinta-suave)' }}>
+      <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
         Solo salen los aparatos que de verdad existen en tu sistema. El clima no aparece aquí
         porque no lo mide un aparato tuyo: viene de internet.
       </p>
