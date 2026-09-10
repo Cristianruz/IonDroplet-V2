@@ -307,3 +307,77 @@ borraron: las tres tablas quedaron en 0 y `action_log` con la única fila real q
 Te dije que el costo era 7% más lento al escribir. **También cuestan disco:** la base pasó de
 1.5 MB a 4.9 MB con las mismas 36,307 lecturas. Los 3.3 MB son los seis índices. En una laptop
 da igual; a escala de municipio hay que tenerlo en la cuenta.
+
+---
+
+## 9. Análisis con IA, ionización mudada y burbuja del asistente — 10 de septiembre de 2026
+
+### El análisis de la ionización que pediste
+
+**La pantalla estaba vacía porque no había nada que enseñar.** Un solo booleano que además no
+está confirmado, ocupando una de las cinco pestañas. Se veía como un interruptor de lámpara
+cuando es lo que le da nombre al producto.
+
+**Se sacó de la barra.** La ionización ahora vive dentro de Análisis, junto al riego, que es
+donde pertenece. La ruta `/ionizacion` se queda redirigiendo para no romper un enlace guardado.
+
+### Pantalla nueva: Análisis
+
+Ocupa el lugar que tenía Ionización. Endpoint nuevo `GET /api/ai/analisis`.
+
+**Cómo está repartido el trabajo, que es lo que hace que se pueda confiar:**
+
+- **Los indicadores los calcula el código** con datos reales: mínima pronosticada contra la
+  temperatura crítica del cultivo, ETc contra lluvia, antigüedad de la lectura, máxima contra el
+  umbral de estrés, y el porcentaje de riego con ionización.
+- **La IA los interpreta, los ordena y los explica.** No inventa un porcentaje.
+
+Pediste probabilidades. Un "68% de riesgo de helada" salido del modelo es un número fabricado
+con aspecto de medición. En su lugar cada riesgo lleva **un nivel respaldado por el número que
+lo sostiene**, y ese número se enseña en pantalla. La única probabilidad en porcentaje es la de
+lluvia, porque ésa sí la publica el servicio meteorológico.
+
+**Regla dura en el prompt:** sólo se puede listar un riesgo si hay un indicador calculado que lo
+respalde. Las plagas no tienen indicador todavía, así que el consejo sobre plagas sale en
+"acciones", no como riesgo con nivel inventado. Probado: la primera versión sí coló una plaga
+con "nivel medio" sin base; con la regla, ya no.
+
+La pantalla enseña: resumen con nivel de confianza, riesgos con su dato, qué esperar los
+próximos 7 días, acciones priorizadas, la ionización con su recomendación, y **con qué mejoraría
+el análisis**.
+
+### El asistente es una burbuja
+
+Antes vivía al fondo de Inicio: para preguntarle algo había que estar en Inicio y bajar hasta
+abajo. Ahora flota sobre cualquier pantalla y se abre encima sin perder dónde estabas. La
+pantalla `/asistente` sigue existiendo: a ella se llega desde Plagas con la pregunta ya escrita.
+
+El botón de volver arriba se pasó a la izquierda para no encimarse.
+
+### EL HALLAZGO GORDO: esta red corta las conexiones a los 5 segundos
+
+Buscando por qué fallaba el análisis, salió algo que llevaba tiempo rompiendo cosas sin que se
+notara.
+
+**Medido, cuatro intentos de cada uno:**
+
+| | Sin streaming | Con streaming |
+|---|---|---|
+| Respuesta larga (~900 palabras) | **0 de 4** — todas `ECONNRESET` a los 5.1 s | **4 de 4** |
+| Respuesta corta (300 tokens) | 6 de 6 | — |
+
+No es la API ni el tamaño de la petición: es que **algo en esta red mata cualquier conexión que
+lleve ~5 segundos sin recibir un byte**. Sin streaming la API no manda nada hasta terminar de
+generar, así que toda respuesta que tarde más de 5 s muere.
+
+**El chat llevaba tiempo fallando 1 de cada 3 veces por esto.** Nadie lo había notado porque las
+respuestas cortas alcanzaban a llegar.
+
+**Arreglo:** todas las llamadas a la API pasan por `pedirAClaude()`, que va en streaming, más un
+reintento para los cortes sueltos. Verificado después del cambio: **chat 6 de 6, consejos 3 de
+3.** Cubre el chat, los consejos de cada pantalla, la propuesta de umbral, la foto y el análisis.
+
+### Pendiente conocido
+
+El análisis tarda ~30 s la primera vez porque genera bastante texto. Queda guardado 20 minutos,
+así que sólo el primero espera. La pantalla lo dice en vez de parecer colgada.

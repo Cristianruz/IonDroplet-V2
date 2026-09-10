@@ -2,12 +2,12 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { House, Sprout, Zap, TrendingUp, Settings } from 'lucide-react'
+import { House, Sprout, Brain, TrendingUp, Settings } from 'lucide-react'
 
 const DESTINOS = [
   { href: '/', etiqueta: 'Inicio', Icono: House },
   { href: '/parcela', etiqueta: 'Parcela', Icono: Sprout },
-  { href: '/ionizacion', etiqueta: 'Ioniz.', Icono: Zap },
+  { href: '/analisis', etiqueta: 'Análisis', Icono: Brain },
   { href: '/historial', etiqueta: 'Historial', Icono: TrendingUp },
   { href: '/ajustes', etiqueta: 'Ajustes', Icono: Settings },
 ]

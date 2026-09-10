@@ -1,23 +1,11 @@
-'use client'
+import { redirect } from 'next/navigation'
 
-import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { IonizacionCard } from '@/components/ionizacion-card'
-import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
-
-export default function PantallaIonizacion() {
-  const { conectado, ionizacion, cambiarIonizacion } = useIonDroplet({ conHistorial: false })
-
-  return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      {/* El título lo pone la propia tarjeta, con su icono. */}
-      {!conectado && <AvisoSinConexion />}
-
-      <IonizacionCard encendida={ionizacion} cambiar={cambiarIonizacion} />
-
-      <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-        El ionizador no reporta su estado por sí solo: aquí se ve lo último que se le pidió desde
-        esta aplicación.
-      </p>
-    </main>
-  )
+// La ionización dejó de tener pantalla propia: era una pestaña entera para un
+// solo botón que además no confirma nada. Ahora vive dentro de Análisis, que
+// es donde el sistema dice si conviene encenderla y por qué.
+//
+// La ruta se queda redirigiendo para no romper un enlace guardado ni el
+// historial del navegador de quien ya la tenía a la mano.
+export default function IonizacionMudada() {
+  redirect('/analisis')
 }

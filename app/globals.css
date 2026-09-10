@@ -356,6 +356,10 @@ a:active {
    ANIMACIONES — discretas
    ================================================================== */
 
+@keyframes girar {
+  to { transform: rotate(360deg); }
+}
+
 @keyframes pulso-riego {
   0%, 100% { opacity: 1; }
   50% { opacity: .6; }

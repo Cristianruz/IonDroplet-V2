@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { NavInferior } from '@/components/nav-inferior'
 import { VolverArriba } from '@/components/volver-arriba'
+import { BurbujaAsistente } from '@/components/burbuja-asistente'
 import { ProveedorDatos } from '@/hooks/datos-provider'
 
 export const metadata: Metadata = {
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div style={{ paddingBottom: 'calc(84px + env(safe-area-inset-bottom))' }}>
             {children}
           </div>
+          <BurbujaAsistente />
           <VolverArriba />
           <NavInferior />
         </ProveedorDatos>

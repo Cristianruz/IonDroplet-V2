@@ -46,8 +46,8 @@ export function VolverArriba() {
       tabIndex={visible ? 0 : -1}
       className="fixed z-40 rounded-full flex items-center justify-center"
       style={{
-        right: 16,
-        bottom: 'calc(84px + env(safe-area-inset-bottom))',
+        left: 16,
+        bottom: 'calc(76px + env(safe-area-inset-bottom))',
         width: 56,
         height: 56,
         background: 'var(--tarjeta)',
