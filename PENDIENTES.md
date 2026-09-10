@@ -381,3 +381,56 @@ reintento para los cortes sueltos. Verificado después del cambio: **chat 6 de 6
 
 El análisis tarda ~30 s la primera vez porque genera bastante texto. Queda guardado 20 minutos,
 así que sólo el primero espera. La pantalla lo dice en vez de parecer colgada.
+
+---
+
+## 10. B2 — Motor de alertas, 10 de septiembre de 2026
+
+### Las reglas son de código, no de IA
+
+**A propósito.** Un aviso de helada no puede depender de que el modelo esté disponible ni de que
+conteste bien. Cada regla mira un número y dice sí o no. La IA no interviene en el camino
+crítico.
+
+Seis reglas implementadas: sensor mudo, helada, riego demasiado largo, humedad por debajo de lo
+que pide el cultivo **en su etapa**, calor que estresa, lluvia próxima y déficit de agua semanal.
+
+**Dos del plan quedaron declaradas y sin implementar, y se dice en el panel:**
+`desviacion_entre_parcelas` (hay una sola parcela) y `eficiencia_de_riego` (falta el caudal).
+
+**El riego largo se compara contra la mediana de esta parcela**, no contra un número fijo: una
+parcela de nogal y una de chile riegan distinto. Sin al menos 3 riegos registrados no se inventa
+una mediana — se usa un tope de 3 horas y la alerta lo dice.
+
+### Cada alerta enseña el número que la disparó
+
+Igual que el análisis. Sin el número sería una opinión del sistema.
+
+### Trazabilidad
+
+Al atender una alerta se guarda **quién y cuándo**. Eso es lo que un municipio necesita para
+rendir cuentas: no basta con que el sistema avise, hay que poder decir quién hizo caso.
+
+### Dos defectos que salieron al probar, y cómo quedaron
+
+**1. Una alerta atendida volvía a saltar a los 10 minutos** si la condición seguía. Atender "el
+sensor lleva rato sin reportar" con el sensor todavía caído la reponía enseguida, y así hasta
+cansar al agricultor. **El riesgo número uno de un sistema de avisos no es avisar de menos: es
+que lo silencien.** Ahora hay 6 horas de silencio tras atender; si a las 6 h sigue, vuelve a
+avisar.
+
+**2. El grave: un aviso real se apagaba solo por un tropiezo de red.** El código trataba "la
+regla no disparó" y "la regla no se pudo evaluar" como lo mismo. Si fallaba la consulta del
+clima —y en esta red eso pasa— las reglas que dependen de él no disparaban, y sus alertas se
+marcaban `resuelta`. Se detectó con una alerta de déficit marcada como resuelta mientras la
+condición seguía siendo cierta (0.904 contra el 0.7 que pide la regla).
+
+Ahora `calcularReglas()` devuelve también **qué reglas se pudieron evaluar**, y sólo se apaga una
+alerta si su regla sí se evaluó y aun así no disparó. Verificado con un testigo: los dos avisos
+reales sobrevivieron a la reevaluación y el testigo caduco se apagó solo.
+
+### Verificado
+
+Dedup (dos corridas, sigue habiendo 2), estados, contador de la campanita, silencio de 6 h,
+apagado automático, `400` con estado inválido y `404` con alerta inexistente. Se borró la traza
+de mis pruebas: decía "Atendido por Cruz" y nadie había atendido nada.

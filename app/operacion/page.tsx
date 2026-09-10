@@ -1,12 +1,13 @@
 'use client'
 
 import Link from 'next/link'
-import { ArrowLeft, Activity, Database, Gauge, TriangleAlert, CircleCheck, CircleSlash, FlaskConical } from 'lucide-react'
+import { ArrowLeft, Activity, Database, Gauge, TriangleAlert, CircleCheck, CircleSlash, FlaskConical, Bell } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { useBalance } from '@/hooks/use-balance'
 import { useRegistro } from '@/hooks/use-registro'
 import { useFertirriego } from '@/hooks/use-fertirriego'
+import { useAlertas } from '@/hooks/use-alertas'
 import { SerieDensa } from '@/components/serie-densa'
 import { haceCuanto, fechaCorta, duracionLarga } from '@/lib/tiempo'
 import { CULTIVOS } from '@/lib/cultivos'
@@ -82,6 +83,7 @@ export default function PanelOperacion() {
   const { balance, estado: estadoBalance } = useBalance(7)
   const { acciones, cargando: cargandoRegistro } = useRegistro(24 * 7)
   const { eventos: eventosFert, resumen: resumenFert } = useFertirriego(90)
+  const { alertas } = useAlertas()
 
   const riegos7d = acciones.filter(a => a.tipo === 'riego')
   const segundosRiego = riegos7d.reduce((s, a) => s + (a.duracion_seg ?? 0), 0)
@@ -383,6 +385,78 @@ export default function PanelOperacion() {
           único estado global de bomba en el backend, de modo que dos unidades con bomba propia se
           interferirían. Es el trabajo previo a la vista comparativa.
         </p>
+      </section>
+
+      {/* --- ALERTAS --- */}
+      <section className="op-seccion">
+        <h2 className="op-h2">
+          <Bell size={15} aria-hidden /> Alertas · motor de reglas
+        </h2>
+
+        {alertas.length === 0 ? (
+          <p className="op-vacio">
+            Sin alertas registradas. El motor evalúa las reglas cada 10 minutos.
+          </p>
+        ) : (
+          <div className="op-tabla-envoltura">
+            <table className="op-tabla">
+              <thead>
+                <tr>
+                  <th>Emitida</th>
+                  <th>Regla</th>
+                  <th>Severidad</th>
+                  <th>Condición que la disparó</th>
+                  <th>Estado</th>
+                  <th>Atendida</th>
+                </tr>
+              </thead>
+              <tbody>
+                {alertas.slice(0, 15).map(a => (
+                  <tr key={a.id}>
+                    <td className="mono">{fechaCorta(a.creada)}</td>
+                    <td className="mono">{a.regla}</td>
+                    <td>
+                      <Estado
+                        ok={a.severidad === 'critica' ? false : a.severidad === 'atencion' ? null : true}
+                        texto={a.severidad}
+                      />
+                    </td>
+                    <td className="op-detalle">{a.dato ?? '—'}</td>
+                    <td className="mono">{a.estado}</td>
+                    <td className="mono">
+                      {a.atendida_por ? `${a.atendida_por} · ${a.atendida_en ? fechaCorta(a.atendida_en) : ''}` : '—'}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <p className="op-pie">
+          Las reglas son deterministas y viven en el servidor: <strong>no interviene el modelo de
+          lenguaje</strong>, de modo que una alerta de helada se emite aunque la capa de inferencia
+          no esté disponible. Cada alerta persiste la condición numérica que la disparó y, al ser
+          atendida, el operador y la marca de tiempo — la traza exigible para rendición de cuentas.
+          Una alerta atendida se silencia 6 h antes de poder reemitirse; si la condición
+          desaparece, pasa a <code>resuelta</code> automáticamente.
+        </p>
+
+        <div className="op-faltantes">
+          <span className="op-faltantes-titulo">
+            <TriangleAlert size={14} aria-hidden /> Reglas definidas y no implementadas
+          </span>
+          <ul>
+            <li>
+              <code>desviacion_entre_parcelas</code> — requiere más de una unidad de manejo; el
+              control mantiene un estado de bomba global.
+            </li>
+            <li>
+              <code>eficiencia_de_riego</code> — requiere el caudal de la bomba para convertir
+              minutos a volumen.
+            </li>
+          </ul>
+        </div>
       </section>
 
       {/* --- FERTIRRIEGO --- */}
