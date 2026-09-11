@@ -8,6 +8,8 @@ import { useBalance } from '@/hooks/use-balance'
 import { useRegistro } from '@/hooks/use-registro'
 import { useFertirriego } from '@/hooks/use-fertirriego'
 import { useAlertas } from '@/hooks/use-alertas'
+import { useComparar } from '@/hooks/use-comparar'
+import { SerieComparada } from '@/components/serie-comparada'
 import { SerieDensa } from '@/components/serie-densa'
 import { haceCuanto, fechaCorta, duracionLarga } from '@/lib/tiempo'
 import { CULTIVOS } from '@/lib/cultivos'
@@ -84,6 +86,7 @@ export default function PanelOperacion() {
   const { acciones, cargando: cargandoRegistro } = useRegistro(24 * 7)
   const { eventos: eventosFert, resumen: resumenFert } = useFertirriego(90)
   const { alertas } = useAlertas()
+  const { series: comparadas, cargando: cargandoComparar } = useComparar(24 * 365, 200)
 
   const riegos7d = acciones.filter(a => a.tipo === 'riego')
   const segundosRiego = riegos7d.reduce((s, a) => s + (a.duracion_seg ?? 0), 0)
@@ -384,6 +387,64 @@ export default function PanelOperacion() {
           La tabla está construida para N unidades. Hoy existe una: el control de riego mantiene un
           único estado global de bomba en el backend, de modo que dos unidades con bomba propia se
           interferirían. Es el trabajo previo a la vista comparativa.
+        </p>
+      </section>
+
+      {/* --- COMPARATIVA ENTRE UNIDADES --- */}
+      <section className="op-seccion">
+        <h2 className="op-h2">
+          <Activity size={15} aria-hidden /> Comparativa entre unidades de manejo
+        </h2>
+
+        {cargandoComparar ? (
+          <div className="esqueleto" style={{ width: '100%', height: 220 }} aria-hidden />
+        ) : (
+          <SerieComparada series={comparadas} umbral={umbralRiego ?? null} />
+        )}
+
+        <div className="op-tabla-envoltura">
+          <table className="op-tabla">
+            <thead>
+              <tr>
+                <th>Unidad</th>
+                <th>Cultivo</th>
+                <th>Etapa</th>
+                <th className="num">Lecturas</th>
+                <th className="num">Eventos de riego</th>
+                <th className="num">Minutos de bomba</th>
+              </tr>
+            </thead>
+            <tbody>
+              {comparadas.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="op-vacio-celda">Sin unidades registradas.</td>
+                </tr>
+              ) : (
+                comparadas.map(s => (
+                  <tr key={s.parcela_id}>
+                    <td>{s.nombre ?? `Unidad ${s.parcela_id}`}</td>
+                    <td>{nombreCultivo(s.cultivo)}</td>
+                    <td>{s.etapa ? (ETAPAS[s.etapa] ?? s.etapa) : '—'}</td>
+                    <td className="num mono">{s.lecturas_en_ventana.toLocaleString('es-MX')}</td>
+                    <td className="num mono">{s.riego.eventos}</td>
+                    <td className="num mono">{s.riego.minutos}</td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        <p className="op-pie">
+          Ventana de 365 días, submuestreada en servidor a 200 puntos por unidad. El eje temporal
+          es común a todas las series: si dos unidades tienen datos de periodos distintos, las
+          líneas no se solapan y las fechas de los extremos lo indican.{' '}
+          {comparadas.length === 1 && (
+            <>
+              <strong>Hoy existe una sola unidad</strong>, de modo que la vista no compara todavía:
+              queda operativa para cuando se registre la segunda.
+            </>
+          )}
         </p>
       </section>
 
