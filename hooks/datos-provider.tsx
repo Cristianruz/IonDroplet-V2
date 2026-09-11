@@ -111,24 +111,35 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
 
   // --- Lectura de sensores y estado del ESP32 ---
   const leerSensores = useCallback(async (signal?: AbortSignal) => {
-    try {
-      const [resLatest, resStatus] = await Promise.all([
-        fetch(`${API_URL}/api/sensors/latest`, { signal }),
-        fetch(`${API_URL}/api/esp/status`, { signal }),
-      ])
-      if (!resLatest.ok || !resStatus.ok) throw new Error()
+    // Van por separado a propósito. Sin señal, el service worker puede
+    // devolver la ÚLTIMA LECTURA guardada (que trae su propia fecha, así que
+    // la pantalla la enseña con su antigüedad y no engaña a nadie), pero el
+    // estado de la bomba NO se guarda nunca: servirlo viejo haría creer que
+    // está regando cuando no. Si fueran juntas en un Promise.all, la caída de
+    // una tiraría a la otra y se perdería el último dato conocido.
+    const lectura = fetch(`${API_URL}/api/sensors/latest`, { signal })
+      .then(r => (r.ok ? r.json() : null))
+      .catch(() => null)
 
-      const latest = await resLatest.json()
-      const status: EstadoEsp = await resStatus.json()
+    const estado = fetch(`${API_URL}/api/esp/status`, { signal })
+      .then(r => (r.ok ? r.json() : Promise.reject(new Error())))
+      .catch(() => null)
 
-      if (latest && latest.humidity !== undefined && latest.humidity !== null) {
-        setHumedad(Number(latest.humidity))
-        if (latest.timestamp) setUltimaLectura(parseTimestampUTC(latest.timestamp))
-      }
-      if (Date.now() - ultimoComando.current > 2000) setEstadoEsp(status)
+    const [latest, status] = await Promise.all([lectura, estado])
+
+    if (signal?.aborted) return
+
+    if (latest && latest.humidity !== undefined && latest.humidity !== null) {
+      setHumedad(Number(latest.humidity))
+      if (latest.timestamp) setUltimaLectura(parseTimestampUTC(latest.timestamp))
+    }
+
+    // La conexión la manda el estado del ESP, que nunca sale del caché. Si no
+    // llegó, estamos sin señal aunque se haya podido pintar la última lectura.
+    if (status) {
+      if (Date.now() - ultimoComando.current > 2000) setEstadoEsp(status as EstadoEsp)
       setConectado(true)
-    } catch (e) {
-      if ((e as Error)?.name === 'AbortError') return
+    } else {
       setConectado(false)
     }
   }, [])

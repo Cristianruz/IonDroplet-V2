@@ -3,6 +3,7 @@ import './globals.css'
 import { NavInferior } from '@/components/nav-inferior'
 import { VolverArriba } from '@/components/volver-arriba'
 import { BurbujaAsistente } from '@/components/burbuja-asistente'
+import { RegistrarSW } from '@/components/registrar-sw'
 import { ProveedorDatos } from '@/hooks/datos-provider'
 
 export const metadata: Metadata = {
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </div>
           <BurbujaAsistente />
+          <RegistrarSW />
           <VolverArriba />
           <NavInferior />
         </ProveedorDatos>

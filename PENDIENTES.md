@@ -434,3 +434,52 @@ reales sobrevivieron a la reevaluación y el testigo caduco se apagó solo.
 Dedup (dos corridas, sigue habiendo 2), estados, contador de la campanita, silencio de 6 h,
 apagado automático, `400` con estado inválido y `404` con alerta inexistente. Se borró la traza
 de mis pruebas: decía "Atendido por Cruz" y nadie había atendido nada.
+
+---
+
+## 11. C2 — PWA, 11 de septiembre de 2026
+
+Corrige la discrepancia que el diagnóstico señaló: se decía que era PWA y no lo era. Sin señal
+la app no abría — pantalla en blanco.
+
+### Qué se hizo
+
+- `app/manifest.ts` — manifest con nombre, colores del tema, `display: standalone`.
+- `public/sw.js` — service worker con tres estrategias: caché primero para los estáticos de
+  Next (llevan hash, nunca quedan viejos), red primero con respaldo de caché para las páginas,
+  y red primero con respaldo para una lista **corta y elegida a mano** de endpoints.
+- `components/registrar-sw.tsx` — registro después de `load`, sin bloquear el pintado.
+
+### La regla que mandó el diseño
+
+**Servir un dato viejo está bien; servirlo como si fuera de ahorita, no.**
+
+- `/api/esp/status` y `/api/alertas/resumen` **NO se guardan nunca**. Servirlos viejos haría
+  creer que la bomba está regando cuando no, y eso es peor que no enseñar nada.
+- Lo que sí se guarda trae su propia fecha (la lectura, el clima, el balance), así que la
+  pantalla lo enseña con su antigüedad.
+- Toda respuesta que sale del caché lleva la cabecera `X-IonDroplet-Cache`.
+
+Además se separó la lectura del sensor de la del estado del ESP en `datos-provider`. Antes iban
+en un `Promise.all`: sin señal, la caída del estado tiraba también la lectura y se perdía el
+último dato conocido. Ahora la lectura puede venir del caché **y aun así la app dice "sin
+conexión"**, porque la conexión la manda el estado del ESP, que nunca sale del caché.
+
+### NO VERIFICADO — y es importante
+
+**No pude probar el service worker.** El navegador de la vista previa rechaza registrarlo
+(`Failed to register a ServiceWorker... unknown error when fetching the script`) y no hay un
+Chrome real conectado a esta sesión.
+
+Lo que sí quedó verificado: el manifest se sirve y es JSON válido, `sw.js` se sirve con
+`Content-Type: application/javascript` y pasa `node --check`, y tiene los tres manejadores.
+**Nada de eso demuestra que funcione sin señal.**
+
+Hay que probarlo en un teléfono: abrir la app, esperar unos segundos, poner el teléfono en modo
+avión y recargar. Si abre, funciona.
+
+### Limitación asumida del icono
+
+El manifest usa el **SVG** que ya existe, para no meter binarios al repositorio ni una librería
+que rasterice. Chrome lo acepta. **iOS prefiere PNG**, así que en iPhone el icono de pantalla de
+inicio puede salir genérico. En Android, que es lo del campo, sale bien.
