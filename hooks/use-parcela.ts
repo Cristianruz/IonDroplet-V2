@@ -11,6 +11,8 @@ export interface Parcela {
   cultivo: string | null
   etapa: string | null
   area_ha: number | null
+  /** Litros por minuto de la bomba. null mientras el agricultor no lo mida. */
+  caudal_lpm: number | null
   num_hileras: number | null
   tipo_sistema: string | null
   hum_min: number | null
@@ -26,6 +28,7 @@ export interface DatosParcela {
   cultivo: string
   etapa: string | null
   area_ha: number | null
+  caudal_lpm: number | null
   hum_min: number
 }
 

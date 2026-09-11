@@ -483,3 +483,60 @@ avión y recargar. Si abre, funciona.
 El manifest usa el **SVG** que ya existe, para no meter binarios al repositorio ni una librería
 que rasterice. Chrome lo acepta. **iOS prefiere PNG**, así que en iPhone el icono de pantalla de
 inicio puede salir genérico. En Android, que es lo del campo, sale bien.
+
+---
+
+## 12. D y B3 — 11 de septiembre de 2026
+
+### D1 y D2 — estado de riego por parcela
+
+El cambio más delicado del plan: toca la lógica de la bomba. Se hizo **contra mi
+recomendación**, por decisión del usuario, y con red.
+
+Antes había **un** `autoMode` y **un** `pumpState` para todo el sistema, y encima vivían sólo en
+memoria. Dos parcelas con dos bombas se pisaban. Y al reiniciar, una parcela en manual amanecía
+en automático sin que nadie lo pidiera.
+
+Ahora cada parcela tiene el suyo, guardado en `estado_riego`. Al arrancar se recupera **el modo,
+no el estado de la bomba**: el aparato pudo quedarse sin luz mientras el servidor estaba caído,
+así que arranca apagada y la primera lectura decide. Lo único que sí la pone en encendida es un
+riego que quedó abierto, que ya se retomaba antes y ahora se retoma por parcela.
+
+`riegoEnCurso` y `ultimoEstadoBomba` también pasaron a ser por parcela.
+
+**D1:** `sensor_readings.parcela_id` ya se llena, y las 36,307 filas históricas se rellenaron
+hacia atrás con la parcela 1 — ha habido una sola parcela y un solo aparato en toda la vida del
+sistema, así que es un hecho, no un supuesto. Se respaldó la base antes.
+
+**Cómo se verificó.** Se grabó una línea base con un riego real ANTES de tocar nada y se repitió
+el mismo guion DESPUÉS: **8 de 9 pasos idénticos**, y el noveno era acumulación de la bitácora.
+Con dos parcelas, las siete comprobaciones pasan. El modo sobrevive un reinicio.
+
+### D3 — comparación entre parcelas
+
+`GET /api/parcelas/comparar`, con submuestreo en servidor y los riegos de la ventana. Gráfica de
+series múltiples en SVG a mano. El eje temporal es común: si dos unidades tienen datos de
+periodos distintos, las fechas de los extremos lo dicen en vez de hacer creer que se midieron a
+la vez.
+
+**Trampa que costó un rato:** la ruta tenía que ir ANTES de `/api/parcelas/:id`. Puesta después,
+el `:id` se tragaba `comparar` y devolvía 404.
+
+### B3 — eficiencia de riego y caudal
+
+**La mitad que funciona hoy:** minutos por punto de humedad. Se mide con la duración del riego y
+las lecturas de antes y después, con ventana de 30 minutos a cada lado. Cada riego se contrasta
+contra **la mediana de su propia parcela**, no contra un número fijo.
+
+**La mitad que espera un dato:** litros por punto. Necesita el caudal. Se agregó la columna
+`parcelas.caudal_lpm` y el campo de captura en la ficha, con la explicación de cómo medirlo
+(taza y cronómetro). Mientras esté vacío va en `null` y se dice qué falta.
+
+**Verificado con un caso construido:** tres riegos, dos de 20 min y uno de 40, todos subiendo 10
+puntos. Dio referencia 2 min/pt, último 4 y desviación **+100 %**, que es exactamente lo
+esperado. La captura desde la interfaz también: rechaza un valor negativo, guarda 2.4 y el
+endpoint lo recoge.
+
+**Todos los datos de prueba se borraron**, incluido el caudal de 2.4: era mi valor de prueba, no
+una medición del usuario, y dejarlo habría sido justo el número inventado que este proyecto no
+hace.

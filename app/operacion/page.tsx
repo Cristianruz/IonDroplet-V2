@@ -9,6 +9,7 @@ import { useRegistro } from '@/hooks/use-registro'
 import { useFertirriego } from '@/hooks/use-fertirriego'
 import { useAlertas } from '@/hooks/use-alertas'
 import { useComparar } from '@/hooks/use-comparar'
+import { useEficiencia } from '@/hooks/use-eficiencia'
 import { SerieComparada } from '@/components/serie-comparada'
 import { SerieDensa } from '@/components/serie-densa'
 import { haceCuanto, fechaCorta, duracionLarga } from '@/lib/tiempo'
@@ -87,6 +88,7 @@ export default function PanelOperacion() {
   const { eventos: eventosFert, resumen: resumenFert } = useFertirriego(90)
   const { alertas } = useAlertas()
   const { series: comparadas, cargando: cargandoComparar } = useComparar(24 * 365, 200)
+  const { datos: eficiencia } = useEficiencia(90)
 
   const riegos7d = acciones.filter(a => a.tipo === 'riego')
   const segundosRiego = riegos7d.reduce((s, a) => s + (a.duracion_seg ?? 0), 0)
@@ -388,6 +390,101 @@ export default function PanelOperacion() {
           único estado global de bomba en el backend, de modo que dos unidades con bomba propia se
           interferirían. Es el trabajo previo a la vista comparativa.
         </p>
+      </section>
+
+      {/* --- EFICIENCIA DE RIEGO --- */}
+      <section className="op-seccion">
+        <h2 className="op-h2">
+          <Gauge size={15} aria-hidden /> Eficiencia de riego · 90 días
+        </h2>
+
+        <div className="op-kpis">
+          <Kpi
+            etiqueta="Referencia"
+            valor={eficiencia?.referencia_min_por_punto ?? null}
+            unidad=" min/pt"
+            nota="mediana de esta unidad"
+          />
+          <Kpi
+            etiqueta="Último riego"
+            valor={eficiencia?.ultimo_min_por_punto ?? null}
+            unidad=" min/pt"
+            nota="minutos por punto de humedad"
+          />
+          <Kpi
+            etiqueta="Desviación"
+            valor={eficiencia?.desviacion_pct ?? null}
+            unidad=" %"
+            nota={
+              eficiencia?.desviacion_pct == null
+                ? 'sin referencia todavía'
+                : eficiencia.desviacion_pct > 0
+                  ? 'cuesta más que lo normal'
+                  : 'cuesta menos que lo normal'
+            }
+            tono={eficiencia?.desviacion_pct != null && eficiencia.desviacion_pct > 20 ? 'alerta' : 'verde'}
+          />
+          <Kpi
+            etiqueta="Caudal de bomba"
+            valor={eficiencia?.parcela.caudal_lpm ?? null}
+            unidad=" L/min"
+            nota={eficiencia?.parcela.caudal_lpm == null ? 'sin capturar' : 'capturado'}
+          />
+        </div>
+
+        {eficiencia && eficiencia.eventos.length > 0 && (
+          <div className="op-tabla-envoltura">
+            <table className="op-tabla">
+              <thead>
+                <tr>
+                  <th>Evento</th>
+                  <th className="num">Duración (min)</th>
+                  <th className="num">HV antes</th>
+                  <th className="num">HV después</th>
+                  <th className="num">Δ puntos</th>
+                  <th className="num">min/pt</th>
+                  <th className="num">L/pt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {eficiencia.eventos.slice(-12).reverse().map(e => (
+                  <tr key={e.id}>
+                    <td className="mono">{e.cuando}</td>
+                    <td className="num mono">{e.minutos}</td>
+                    <td className="num mono">{e.humedad_antes ?? '—'}</td>
+                    <td className="num mono">{e.humedad_despues ?? '—'}</td>
+                    <td className="num mono">{e.puntos_ganados ?? '—'}</td>
+                    <td className="num mono">{e.minutos_por_punto ?? '—'}</td>
+                    <td className="num mono">{e.litros_por_punto ?? '—'}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+
+        <p className="op-pie">
+          Se contrasta cada riego contra la <strong>mediana de esta misma unidad</strong>, no
+          contra un valor fijo: el consumo por punto depende del suelo, del emisor y del cultivo.
+          Una desviación positiva sostenida señala pérdida de carga, emisor obstruido o fuga.
+          Los puntos se toman de la lectura inmediatamente anterior al arranque y de la primera
+          posterior al cierre, con una ventana de 30 minutos a cada lado.
+        </p>
+
+        {eficiencia && eficiencia.faltantes.length > 0 && (
+          <div className="op-faltantes">
+            <span className="op-faltantes-titulo">
+              <TriangleAlert size={14} aria-hidden /> Lo que acota el cálculo
+            </span>
+            <ul>
+              {eficiencia.faltantes.map(f => (
+                <li key={f.dato}>
+                  <code>{f.dato}</code> — {f.porque}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
       </section>
 
       {/* --- COMPARATIVA ENTRE UNIDADES --- */}

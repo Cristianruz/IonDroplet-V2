@@ -38,16 +38,23 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
   const [area, setArea] = useState(
     parcela?.area_ha !== null && parcela?.area_ha !== undefined ? String(parcela.area_ha) : ''
   )
+  const [caudal, setCaudal] = useState(
+    parcela?.caudal_lpm !== null && parcela?.caudal_lpm !== undefined ? String(parcela.caudal_lpm) : ''
+  )
   const [umbral, setUmbral] = useState(umbralActual)
   const [aviso, setAviso] = useState<string | null>(null)
   // Errores por campo, para señalar exactamente cuál falta en vez de un
   // solo aviso al final que obliga a buscar.
-  const [errores, setErrores] = useState<{ nombre?: string; cultivo?: string; area?: string }>({})
+  const [errores, setErrores] = useState<{ nombre?: string; cultivo?: string; area?: string; caudal?: string }>({})
 
   function revisarCampos() {
     const fallas: typeof errores = {}
     if (nombre.trim() === '') fallas.nombre = 'Ponle un nombre para reconocerla.'
     if (cultivo === '') fallas.cultivo = 'Escoge qué tienes sembrado.'
+    if (caudal.trim() !== '') {
+      const c = Number(caudal.replace(',', '.'))
+      if (Number.isNaN(c) || c <= 0) fallas.caudal = 'Tiene que ser un número de litros por minuto.'
+    }
     if (area.trim() !== '') {
       const n = Number(area.replace(',', '.'))
       if (Number.isNaN(n) || n < 0) fallas.area = 'Tiene que ser un número de hectáreas.'
@@ -68,6 +75,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
     }
 
     const areaLimpia = area.trim() === '' ? null : Number(area.replace(',', '.'))
+    const caudalLimpio = caudal.trim() === '' ? null : Number(caudal.replace(',', '.'))
     if (umbral < UMBRAL_MINIMO || umbral > UMBRAL_MAXIMO) {
       setAviso(`El punto de riego tiene que quedar entre ${UMBRAL_MINIMO}% y ${UMBRAL_MAXIMO}%.`)
       return
@@ -80,6 +88,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       cultivo,
       etapa: etapa === '' ? null : etapa,
       area_ha: areaLimpia,
+      caudal_lpm: caudalLimpio,
       hum_min: umbral,
     })
     if (!listo) setAviso('No se pudo guardar. Revisa que el sistema esté conectado.')
@@ -201,6 +210,41 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         <ErrorCampo texto={errores.area} />
         <p className="text-sm mt-2" style={{ color: 'var(--tinta-suave)' }}>
           Si no lo sabes de memoria, déjalo vacío y lo pones después.
+        </p>
+      </div>
+
+      {/* El caudal de la bomba. UN número que desbloquea litros, metros
+          cúbicos, pesos y la eficiencia del riego. Se explica cómo medirlo
+          porque casi nadie lo tiene a la mano, y se deja claro que sin él la
+          app no inventa litros: simplemente no los enseña. */}
+      <div>
+        <label htmlFor="caudal-parcela" className="block text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>
+          ¿Cuánta agua echa tu bomba por minuto?
+        </label>
+        <input
+          id="caudal-parcela"
+          type="number"
+          inputMode="decimal"
+          step="0.1"
+          min="0"
+          value={caudal}
+          onChange={e => {
+            setCaudal(e.target.value)
+            if (errores.caudal) setErrores(p => ({ ...p, caudal: undefined }))
+          }}
+          placeholder="litros por minuto"
+          aria-invalid={!!errores.caudal}
+          className="w-full rounded-lg px-4 py-2.5 text-base border outline-none"
+          style={{
+            borderColor: errores.caudal ? 'var(--peligro)' : 'var(--borde)',
+            background: 'var(--tarjeta)',
+            color: 'var(--tinta)',
+          }}
+        />
+        <ErrorCampo texto={errores.caudal} />
+        <p className="text-sm mt-2" style={{ color: 'var(--tinta-suave)' }}>
+          Para saberlo: pon la manguera en un bote de medida, déjala correr un minuto justo y mira
+          cuántos litros juntó. Con eso te puedo decir cuánta agua gastas y cuánto te cuesta.
         </p>
       </div>
 
