@@ -5,6 +5,7 @@ import { useAnalisis, type Nivel, type Confianza } from '@/hooks/use-analisis'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { Aparece } from '@/components/aparece'
+import { AgenteCard } from '@/components/agente-card'
 import { haceCuanto } from '@/lib/tiempo'
 
 // El análisis del cultivo. Esta pantalla ocupa el lugar que antes tenía
@@ -181,6 +182,12 @@ export default function PantallaAnalisis() {
           </section>
         </Aparece>
       )}
+
+      {/* --- El agente ---
+          Lo que el sistema ajustó solo, con su razón y su botón de regreso.
+          Se enseña a propósito: un sistema que mueve el punto de riego sin
+          que se note es un sistema en el que no se puede confiar. */}
+      <Aparece><AgenteCard /></Aparece>
 
       {/* --- Ionización ---
           Vive aquí y ya no en su propia pestaña: es una decisión de riego, y
