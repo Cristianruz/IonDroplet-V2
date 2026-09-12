@@ -122,8 +122,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Anotar lo que le pusiste a la parcela"
     >
       <div id="campo-nutrientes">
@@ -201,14 +200,14 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 onChange={e => cambiar(r.nutriente, 'cantidad', e.target.value)}
                 placeholder="cuánto"
                 aria-label={`Cantidad de ${nombreNutriente(r.nutriente)}`}
-                className="rounded-lg border px-4 py-3 text-base"
+                className="campo"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 130 }}
               />
               <select
                 value={r.unidad}
                 onChange={e => cambiar(r.nutriente, 'unidad', e.target.value)}
                 aria-label={`Unidad de ${nombreNutriente(r.nutriente)}`}
-                className="rounded-lg border px-4 py-3 text-base font-semibold"
+                className="campo font-semibold"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               >
                 {UNIDADES.map(u => (
@@ -235,7 +234,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           value={litros}
           onChange={e => setLitros(e.target.value)}
           placeholder="litros"
-          className="rounded-lg border px-4 py-3 text-base"
+          className="campo"
           style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
         />
       </div>
@@ -269,7 +268,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 value={ec}
                 onChange={e => setEc(e.target.value)}
                 placeholder="dS/m"
-                className="rounded-lg border px-4 py-3 text-base"
+                className="campo"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
               />
             </div>
@@ -290,7 +289,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                   setErrores(x => ({ ...x, ph: undefined }))
                 }}
                 placeholder="0 a 14"
-                className="rounded-lg border px-4 py-3 text-base"
+                className="campo"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
               />
             </div>
@@ -307,7 +306,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 value={minutos}
                 onChange={e => setMinutos(e.target.value)}
                 placeholder="minutos"
-                className="rounded-lg border px-4 py-3 text-base"
+                className="campo"
                 style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
               />
             </div>
@@ -326,7 +325,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           onChange={e => setNotas(e.target.value)}
           rows={2}
           placeholder="Lo que quieras acordarte después"
-          className="rounded-lg border px-4 py-3 text-base"
+          className="campo"
           style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
         />
       </div>
@@ -341,9 +340,8 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
         type="button"
         onClick={enviar}
         disabled={guardando}
-        className="w-full rounded-lg py-3 text-lg font-bold text-white transition-transform disabled:opacity-60"
-        style={{ background: 'var(--verde)' }}
-      >
+        className="boton boton-primario boton-ancho disabled:opacity-60"
+        >
         {guardando ? 'Guardando…' : 'Anotar lo que le puse'}
       </button>
     </section>

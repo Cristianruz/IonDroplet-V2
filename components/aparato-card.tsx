@@ -31,8 +31,7 @@ export function AparatoCard({ icono: Icono, nombre, detalle, estado, etiqueta, p
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label={nombre}
     >
       <div className="flex items-start gap-4">
@@ -69,9 +68,9 @@ export function AparatoCard({ icono: Icono, nombre, detalle, estado, etiqueta, p
             onClick={() => setAbierto(a => !a)}
             aria-expanded={abierto}
             className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
-            style={{ background: 'var(--tarjeta)', borderColor: 'var(--alerta)', color: 'var(--alerta)' }}
+            style={{ borderColor: 'var(--alerta)', color: 'var(--alerta)' }}
           >
-            CÓMO REVISARLO
+            Cómo revisarlo
             <ChevronDown
               size={18}
               aria-hidden

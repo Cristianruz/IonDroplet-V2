@@ -32,9 +32,8 @@ export default function PantallaFertirriego() {
         <button
           type="button"
           onClick={() => setAnotando(true)}
-          className="w-full rounded-lg py-3 text-lg font-bold text-white transition-transform flex items-center justify-center gap-3"
-          style={{ background: 'var(--verde)' }}
-        >
+          className="boton boton-primario boton-ancho"
+          >
           <Plus size={18} aria-hidden />
           Anotar una aplicación
         </button>
@@ -60,8 +59,7 @@ export default function PantallaFertirriego() {
       {resumen && resumen.totales.eventos > 0 && (
         <Aparece>
           <section
-            className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-            style={{ background: 'var(--tarjeta)' }}
+            className="tarjeta flex flex-col gap-4"
             aria-label="Resumen de los últimos 90 días"
           >
             <h2 className="text-base font-semibold flex items-center gap-2">
@@ -110,10 +108,7 @@ export default function PantallaFertirriego() {
         {cargando ? (
           <div className="esqueleto" style={{ width: '100%', height: 90 }} aria-hidden />
         ) : eventos.length === 0 ? (
-          <div
-            className="rounded-lg p-4 text-center flex flex-col gap-2"
-            style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
-          >
+          <div className="tarjeta text-center flex flex-col gap-2">
             <p className="text-base font-semibold">Todavía no has anotado nada</p>
             <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
               Cada vez que le eches algo a la parcela, anótalo aquí. Con el tiempo vas a poder ver
@@ -124,9 +119,8 @@ export default function PantallaFertirriego() {
           eventos.map((e, i) => (
             <Aparece key={e.id} retraso={Math.min(i * 40, 200)}>
               <article
-                className="rounded-lg p-4 border flex flex-col gap-2"
-                style={{ background: 'var(--tarjeta)' }}
-              >
+                className="tarjeta flex flex-col gap-2"
+                >
                 <div className="flex items-start justify-between gap-3">
                   <div className="flex flex-col">
                     <span className="text-base font-bold">{fechaCorta(e.aplicado)}</span>

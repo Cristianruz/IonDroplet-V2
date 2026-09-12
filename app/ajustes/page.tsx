@@ -18,8 +18,7 @@ export default function PantallaAjustes() {
 
       {/* Conexión — solo lectura en esta versión */}
       <section
-        className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-        style={{ background: 'var(--tarjeta)' }}
+        className="tarjeta flex flex-col gap-4"
         aria-label="Conexión con la computadora del riego"
       >
         <h2 className="text-base font-semibold">Conexión</h2>

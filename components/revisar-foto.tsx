@@ -25,8 +25,7 @@ export function RevisarFoto() {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Revisar una foto de la planta"
     >
       <div className="flex items-center gap-3">
@@ -57,11 +56,10 @@ export function RevisarFoto() {
           <button
             type="button"
             onClick={() => entrada.current?.click()}
-            className="rounded-lg py-3 text-base font-bold text-white transition-transform flex items-center justify-center gap-3"
-            style={{ background: 'var(--verde)' }}
-          >
+            className="boton boton-primario boton-ancho"
+            >
             <Camera size={18} aria-hidden />
-            TOMAR FOTO
+            Tomar foto
           </button>
         </>
       )}

@@ -90,7 +90,7 @@ export default function PantallaDispositivos() {
             : 'La manejas tú desde la pantalla de inicio'
         }
         estado={estadoEsp.pumpState === 1 ? 'activo' : 'apagado'}
-        etiqueta={estadoEsp.pumpState === 1 ? 'REGANDO' : 'SIN REGAR'}
+        etiqueta={estadoEsp.pumpState === 1 ? 'Regando' : 'Sin regar'}
       />
 
       <AparatoCard
@@ -98,7 +98,7 @@ export default function PantallaDispositivos() {
         nombre="Ionizador"
         detalle="No avisa su estado por su cuenta: aquí se ve lo último que se le pidió"
         estado={ionizacion ? 'activo' : 'apagado'}
-        etiqueta={ionizacion ? 'ENCENDIDO' : 'APAGADO'}
+        etiqueta={ionizacion ? 'Encendido' : 'Apagado'}
       />
 
       <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>

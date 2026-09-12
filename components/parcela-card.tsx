@@ -26,8 +26,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Datos de la parcela"
     >
       <div className="flex items-center gap-3">

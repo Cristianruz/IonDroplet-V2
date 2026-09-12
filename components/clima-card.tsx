@@ -30,8 +30,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
   if (estado === 'error') {
     return (
       <section
-        className="rounded-lg p-4 sm:p-5 border"
-        style={{ background: 'var(--tarjeta)' }}
+        className="tarjeta"
         aria-label="Clima"
       >
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
@@ -45,8 +44,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
   if (estado === 'sin_ubicacion') {
     return (
       <section
-        className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-        style={{ background: 'var(--tarjeta)' }}
+        className="tarjeta flex flex-col gap-4"
         aria-label="Falta la ubicación de la parcela"
       >
         <div className="flex items-center gap-3">
@@ -61,9 +59,8 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
           type="button"
           onClick={pedirUbicacion}
           disabled={guardandoUbicacion || parcelaId === null}
-          className="rounded-lg py-2.5 text-base font-bold text-white disabled:opacity-60"
-          style={{ background: 'var(--verde)' }}
-        >
+          className="boton boton-primario boton-ancho"
+          >
           {guardandoUbicacion ? 'Buscando…' : 'Estoy parado en mi parcela, úsala'}
         </button>
         <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
@@ -84,8 +81,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Clima y pronóstico"
     >
       <div className="flex items-center gap-3">

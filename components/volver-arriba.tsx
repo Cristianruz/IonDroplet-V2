@@ -50,7 +50,6 @@ export function VolverArriba() {
         bottom: 'calc(76px + env(safe-area-inset-bottom))',
         width: 56,
         height: 56,
-        background: 'var(--tarjeta)',
         color: 'var(--verde)',
         border: '2px solid var(--borde)',
         boxShadow: 'var(--sombra-elevada)',

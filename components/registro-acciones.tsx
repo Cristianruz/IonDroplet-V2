@@ -37,8 +37,7 @@ export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEn
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Lo que ha pasado"
     >
       <h2 className="text-base font-semibold">Lo que ha pasado</h2>

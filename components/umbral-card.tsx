@@ -45,8 +45,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Punto de riego"
     >
       <h2 className="text-base font-semibold">¿Cuándo debe regar solo?</h2>
@@ -67,7 +66,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(-PASO)}
               disabled={valor <= MINIMO}
               className="rounded-lg border flex items-center justify-center disabled:opacity-40"
-              style={{ width: 'clamp(56px, 17vw, 68px)', height: 'clamp(56px, 17vw, 68px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(56px, 17vw, 68px)', height: 'clamp(56px, 17vw, 68px)', flexShrink: 0, borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               aria-label={`Bajar el punto de riego a ${Math.max(MINIMO, valor - PASO)} por ciento`}
             >
               <Minus size={40} aria-hidden />
@@ -83,7 +82,7 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               onClick={() => mover(PASO)}
               disabled={valor >= MAXIMO}
               className="rounded-lg border flex items-center justify-center disabled:opacity-40"
-              style={{ width: 'clamp(56px, 17vw, 68px)', height: 'clamp(56px, 17vw, 68px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+              style={{ width: 'clamp(56px, 17vw, 68px)', height: 'clamp(56px, 17vw, 68px)', flexShrink: 0, borderColor: 'var(--borde)', color: 'var(--tinta)' }}
               aria-label={`Subir el punto de riego a ${Math.min(MAXIMO, valor + PASO)} por ciento`}
             >
               <Plus size={40} aria-hidden />
@@ -103,11 +102,10 @@ export function UmbralCard({ umbral, humedad, guardando, onGuardar }: Props) {
               type="button"
               onClick={guardar}
               disabled={guardando}
-              className="rounded-lg py-2.5 text-lg font-bold text-white transition-transform flex items-center justify-center gap-3 disabled:opacity-60"
-              style={{ background: 'var(--verde)' }}
-            >
+              className="boton boton-primario boton-ancho"
+              >
               <Check size={18} aria-hidden />
-              {guardando ? 'GUARDANDO…' : 'GUARDAR ESTE PUNTO'}
+              {guardando ? 'Guardando…' : 'Guardar este punto'}
             </button>
           )}
 

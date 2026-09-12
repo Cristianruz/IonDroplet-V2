@@ -48,8 +48,7 @@ export default function PantallaParcela() {
       ) : parcela === null ? (
         // Todavía no hay parcela: tarjeta vacía, no el formulario de golpe.
         <section
-          className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4 items-center text-center"
-          style={{ background: 'var(--tarjeta)' }}
+          className="tarjeta flex flex-col gap-4 items-center text-center"
           aria-label="Todavía no hay parcela registrada"
         >
           <Sprout size={28} style={{ color: 'var(--verde)' }} aria-hidden />
@@ -60,9 +59,8 @@ export default function PantallaParcela() {
           <button
             type="button"
             onClick={() => setEditando(true)}
-            className="w-full rounded-lg py-3 text-lg font-bold text-white transition-transform"
-            style={{ background: 'var(--verde)' }}
-          >
+            className="boton boton-primario boton-ancho"
+            >
             Registrar mi parcela
           </button>
         </section>

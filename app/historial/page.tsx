@@ -117,8 +117,7 @@ export default function PantallaHistorial() {
 function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: string; nota: string }) {
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta"
       aria-label={etiqueta}
     >
       <p

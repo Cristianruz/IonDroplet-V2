@@ -9,8 +9,7 @@ function Barra({ ancho, alto = 22 }: { ancho: string; alto?: number }) {
 function Tarjeta({ children }: { children: React.ReactNode }) {
   return (
     <div
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
     >
       {children}
     </div>

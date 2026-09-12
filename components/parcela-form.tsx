@@ -96,8 +96,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-8"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-8"
       aria-label={parcela ? 'Editar la parcela' : 'Registrar la parcela'}
     >
       <h2 className="text-base font-semibold">{parcela ? 'Editar parcela' : 'Registrar parcela'}</h2>
@@ -116,10 +115,9 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="Parcela Norte"
           aria-invalid={!!errores.nombre}
-          className="w-full rounded-lg px-4 py-2.5 text-base border outline-none"
+          className="campo"
           style={{
             borderColor: errores.nombre ? 'var(--peligro)' : 'var(--borde)',
-            background: 'var(--tarjeta)',
             color: 'var(--tinta)',
           }}
         />
@@ -200,10 +198,9 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="1.2"
           aria-invalid={!!errores.area}
-          className="w-full rounded-lg px-4 py-2.5 text-base border outline-none"
+          className="campo"
           style={{
             borderColor: errores.area ? 'var(--peligro)' : 'var(--borde)',
-            background: 'var(--tarjeta)',
             color: 'var(--tinta)',
           }}
         />
@@ -234,10 +231,9 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           }}
           placeholder="litros por minuto"
           aria-invalid={!!errores.caudal}
-          className="w-full rounded-lg px-4 py-2.5 text-base border outline-none"
+          className="campo"
           style={{
             borderColor: errores.caudal ? 'var(--peligro)' : 'var(--borde)',
-            background: 'var(--tarjeta)',
             color: 'var(--tinta)',
           }}
         />
@@ -256,7 +252,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             onClick={() => setUmbral(v => Math.max(UMBRAL_MINIMO, v - 5))}
             disabled={umbral <= UMBRAL_MINIMO}
             className="rounded-lg border flex items-center justify-center disabled:opacity-40"
-            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, borderColor: 'var(--borde)', color: 'var(--tinta)' }}
             aria-label="Bajar el punto de riego"
           >
             <Minus size={34} aria-hidden />
@@ -270,7 +266,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             onClick={() => setUmbral(v => Math.min(UMBRAL_MAXIMO, v + 5))}
             disabled={umbral >= UMBRAL_MAXIMO}
             className="rounded-lg border flex items-center justify-center disabled:opacity-40"
-            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, borderColor: 'var(--borde)', color: 'var(--tinta)' }}
             aria-label="Subir el punto de riego"
           >
             <Plus size={34} aria-hidden />
@@ -288,10 +284,9 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         type="button"
         onClick={guardar}
         disabled={guardando}
-        className="rounded-lg py-3 text-base font-bold text-white transition-transform disabled:opacity-60"
-        style={{ background: 'var(--verde)' }}
-      >
-        {guardando ? 'GUARDANDO…' : 'GUARDAR PARCELA'}
+        className="boton boton-primario boton-ancho"
+        >
+        {guardando ? 'Guardando…' : 'Guardar parcela'}
       </button>
 
       <p className="text-sm text-center" style={{ color: 'var(--tinta-suave)' }}>

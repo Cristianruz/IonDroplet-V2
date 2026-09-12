@@ -10,8 +10,7 @@ interface Props {
 export function IonizacionCard({ encendida, cambiar }: Props) {
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Ionización del agua"
     >
       <div className="flex items-center gap-3">

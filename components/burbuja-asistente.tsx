@@ -100,7 +100,6 @@ export function BurbujaAsistente() {
               marginLeft: 'auto',
               marginRight: 'auto',
               height: 'min(70vh, 560px)',
-              background: 'var(--tarjeta)',
               border: '1px solid var(--borde)',
               borderRadius: 'var(--radio) var(--radio) 0 0',
               boxShadow: 'var(--sombra-elevada)',

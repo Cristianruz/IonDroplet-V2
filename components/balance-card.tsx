@@ -27,8 +27,7 @@ export function BalanceCard() {
   if (estado === 'cargando') {
     return (
       <div
-        className="rounded-lg p-4 sm:p-5 flex flex-col gap-3"
-        style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
+        className="tarjeta flex flex-col gap-3"
       >
         <div className="esqueleto" style={{ width: '55%', height: 22 }} aria-hidden />
         <div className="esqueleto" style={{ width: '100%', height: 64 }} aria-hidden />
@@ -48,8 +47,7 @@ export function BalanceCard() {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)', boxShadow: 'var(--sombra-tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Agua que va a pedir el cultivo"
     >
       <div className="flex items-center gap-2">

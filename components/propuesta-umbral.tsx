@@ -21,8 +21,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta flex flex-col gap-4"
       aria-label="Recomendación del asistente sobre el punto de riego"
     >
       <div className="flex items-center gap-3">
@@ -41,7 +40,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
             onClick={pedirPropuesta}
             disabled={pensando}
             className="rounded-lg py-2.5 text-base font-bold border disabled:opacity-60"
-            style={{ background: 'var(--tarjeta)', borderColor: 'var(--verde)', color: 'var(--verde)' }}
+            style={{ borderColor: 'var(--verde)', color: 'var(--verde)' }}
           >
             {pensando ? 'Pensando…' : 'Que me recomiende un punto de riego'}
           </button>
@@ -72,11 +71,10 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
           <button
             type="button"
             onClick={aceptar}
-            className="rounded-lg py-3 text-base font-bold text-white transition-transform flex items-center justify-center gap-3"
-            style={{ background: 'var(--verde)' }}
-          >
+            className="boton boton-primario boton-ancho"
+            >
             <Check size={18} aria-hidden />
-            USAR ESTE PUNTO
+            Usar este punto
           </button>
           <button
             type="button"

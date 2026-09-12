@@ -11,12 +11,15 @@ const COLOR_RIESGO: Record<Riesgo, string> = {
 }
 
 // En la tarjeta destacada cabe la frase completa; en la lista compacta solo
-// la palabra, como en el wireframe. "RIESGO ALTO" ahí desborda un teléfono
+// la palabra, como en el wireframe. "Riesgo alto" ahí desborda un teléfono
 // angosto.
+//
+// En tono normal, no en mayúsculas: el color y el peso ya dicen que importa.
+// El rediseño quitó el griterío de toda la aplicación y esto se había quedado.
 const TEXTO_RIESGO: Record<Riesgo, string> = {
-  alto: 'RIESGO ALTO',
-  medio: 'RIESGO MEDIO',
-  bajo: 'RIESGO BAJO',
+  alto: 'Riesgo alto',
+  medio: 'Riesgo medio',
+  bajo: 'Riesgo bajo',
 }
 
 const TEXTO_CORTO: Record<Riesgo, string> = {
@@ -54,8 +57,8 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border flex flex-col gap-4"
-      style={{ background: 'var(--tarjeta)', borderColor: COLOR_RIESGO[riesgo] }}
+      className="tarjeta flex flex-col gap-4"
+      style={{ borderColor: COLOR_RIESGO[riesgo] }}
       aria-label={`${plaga.nombre}, riesgo ${riesgo}`}
     >
       <div className="flex items-start gap-4">
@@ -97,10 +100,9 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
         <button
           type="button"
           onClick={onRevisar}
-          className="rounded-lg py-3 text-base font-bold text-white transition-transform"
-          style={{ background: 'var(--verde)' }}
-        >
-          YA REVISÉ
+          className="boton boton-primario boton-ancho"
+          >
+          Ya revisé
         </button>
       )}
     </section>

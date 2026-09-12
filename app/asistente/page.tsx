@@ -65,9 +65,8 @@ function Asistente() {
       <section className="flex flex-col gap-4" aria-label="Conversación con el asistente">
         {burbujas.length === 0 && !enviando && (
           <div
-            className="rounded-lg p-4 sm:p-5 border"
-            style={{ background: 'var(--tarjeta)' }}
-          >
+            className="tarjeta"
+            >
             <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
               Buenos días. Pregúntame lo que necesites de tu riego — por ejemplo, si conviene regar
               hoy o si aguanta hasta mañana.
@@ -138,7 +137,7 @@ function Asistente() {
           placeholder="Escribe tu pregunta…"
           maxLength={500}
           className="flex-1 min-w-0 rounded-lg px-3.5 py-2.5 text-base border outline-none disabled:opacity-60"
-          style={{ borderColor: 'var(--borde)', background: 'var(--tarjeta)', color: 'var(--tinta)' }}
+          style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
         />
         <button
           type="button"

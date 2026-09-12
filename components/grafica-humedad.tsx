@@ -81,8 +81,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
 
   return (
     <section
-      className="rounded-lg p-4 sm:p-5 border"
-      style={{ background: 'var(--tarjeta)' }}
+      className="tarjeta"
       aria-label={encabezado}
     >
       <div className="flex items-center gap-3 mb-4">
