@@ -1,26 +1,27 @@
 @import "tailwindcss";
 
 /* ==================================================================
-   SISTEMA VISUAL
+   SISTEMA VISUAL — NEUMORPHISM SUAVE
    ------------------------------------------------------------------
-   Referencia: aplicaciones de uso diario (Facebook, Instagram). Lo que
-   las hace ver serias no es que sean bonitas, es que son CONTENIDAS:
+   Las tarjetas y los botones parecen hechos del mismo material que el
+   fondo: son del mismo color y se separan con luz (arriba a la
+   izquierda) y sombra (abajo a la derecha). Al tocar un botón, se hunde.
 
-   - Un solo color de acento, usado poco.
-   - Bordes de 1 px, no de 4.
-   - Esquinas de 8 px, no de 16 ni 24.
+   Lo que NO cambió de la versión anterior, porque es lo que la hace
+   seria y legible bajo el sol:
+   - Un solo color de acento, usado poco. El verde y el semáforo siguen
+     siendo sólidos: un estado nunca se adivina por una sombra.
    - Tipografía de 15 px con jerarquía por peso, no por tamaño gigante.
-   - Nada se levanta ni flota al pasar el ratón.
-
-   Lo que había antes hacía justo lo contrario y por eso se veía a
-   medio hacer: todo era grande, redondo, verde y con sombra.
+   - Sombras cortas: el relieve se nota, no se exhibe.
+   - Nada flota ni brinca al pasar el ratón.
    ================================================================== */
 
 :root {
-  /* Superficies */
-  --fondo: #f7f8f9;
-  --tarjeta: #ffffff;
-  --elevado: #ffffff;
+  /* Superficies. La tarjeta es del MISMO color que el fondo: lo que la
+     separa es la luz, no un color distinto. */
+  --fondo: #eef1f4;
+  --tarjeta: #eef1f4;
+  --elevado: #f5f7f9;
 
   /* Texto */
   --tinta: #111418;
@@ -28,8 +29,8 @@
   --apagado: #8d949e;
 
   /* Líneas */
-  --borde: #e2e5e9;
-  --pista: #eef0f2;
+  --borde: #dde2e8;
+  --pista: #e2e6eb;
 
   /* Acento. Uno solo, y se usa poco: botón principal, valor que importa,
      pestaña activa. Todo lo demás es neutro. */
@@ -47,13 +48,23 @@
   --fondo-alerta: #fdf6e8;
   --fondo-peligro: #fdeeee;
 
-  /* Elevación: casi nada. Una tarjeta se distingue por su borde. */
-  --sombra-tarjeta: none;
-  --sombra-elevada: 0 4px 16px rgba(17, 20, 24, .10);
+  /* Relieve. Luz arriba a la izquierda, sombra abajo a la derecha. El tema
+     oscuro solo cambia --neu-luz, --neu-sombra y --neu-filo: las sombras
+     de abajo se arman con ellos. */
+  --neu-luz: rgba(255, 255, 255, .9);
+  --neu-sombra: rgba(158, 170, 186, .45);
+  --neu-filo: rgba(255, 255, 255, .7);
+  --sombra-tarjeta: 6px 6px 14px var(--neu-sombra), -6px -6px 14px var(--neu-luz);
+  --sombra-boton: 3px 3px 8px var(--neu-sombra), -3px -3px 8px var(--neu-luz);
+  --sombra-hundida: inset 2px 2px 5px var(--neu-sombra), inset -2px -2px 5px var(--neu-luz);
+  /* El botón verde se hunde con su propia sombra: la luz blanca sobre verde
+     se ve sucia. */
+  --sombra-hundida-acento: inset 2px 2px 6px rgba(0, 0, 0, .28), inset -2px -2px 6px rgba(255, 255, 255, .12);
+  --sombra-elevada: 0 8px 24px rgba(17, 20, 24, .12);
 
-  /* Geometría */
-  --radio: 8px;
-  --radio-sm: 6px;
+  /* Geometría. Más redonda que antes: el relieve pide esquinas suaves. */
+  --radio: 16px;
+  --radio-sm: 12px;
   --radio-pill: 999px;
 
   --curva: cubic-bezier(.2, .6, .35, 1);
@@ -64,14 +75,14 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
-    --fondo: #0b0d0f;
-    --tarjeta: #16181c;
-    --elevado: #1d2025;
+    --fondo: #1b1e23;
+    --tarjeta: #1b1e23;
+    --elevado: #22262c;
     --tinta: #e7e9ea;
     --tinta-suave: #9aa3ad;
     --apagado: #6e7781;
-    --borde: #262b31;
-    --pista: #1d2126;
+    --borde: #2b3038;
+    --pista: #242830;
     --verde: #4ec26f;
     --verde-fuerte: #6ed08a;
     --verde-suave: #14251a;
@@ -82,20 +93,22 @@
     --oro: #d9a13f;
     --fondo-alerta: #241d10;
     --fondo-peligro: #2a1516;
-    --sombra-tarjeta: none;
-    --sombra-elevada: 0 4px 16px rgba(0, 0, 0, .5);
+    --neu-luz: rgba(255, 255, 255, .045);
+    --neu-sombra: rgba(0, 0, 0, .55);
+    --neu-filo: rgba(255, 255, 255, .04);
+    --sombra-elevada: 0 8px 24px rgba(0, 0, 0, .55);
   }
 }
 
 :root[data-tema="oscuro"] {
-  --fondo: #0b0d0f;
-  --tarjeta: #16181c;
-  --elevado: #1d2025;
+  --fondo: #1b1e23;
+  --tarjeta: #1b1e23;
+  --elevado: #22262c;
   --tinta: #e7e9ea;
   --tinta-suave: #9aa3ad;
   --apagado: #6e7781;
-  --borde: #262b31;
-  --pista: #1d2126;
+  --borde: #2b3038;
+  --pista: #242830;
   --verde: #4ec26f;
   --verde-fuerte: #6ed08a;
   --verde-suave: #14251a;
@@ -106,8 +119,10 @@
   --oro: #d9a13f;
   --fondo-alerta: #241d10;
   --fondo-peligro: #2a1516;
-  --sombra-tarjeta: none;
-  --sombra-elevada: 0 4px 16px rgba(0, 0, 0, .5);
+  --neu-luz: rgba(255, 255, 255, .045);
+  --neu-sombra: rgba(0, 0, 0, .55);
+  --neu-filo: rgba(255, 255, 255, .04);
+  --sombra-elevada: 0 8px 24px rgba(0, 0, 0, .55);
 }
 
 html {
@@ -150,8 +165,11 @@ body {
 
 .tarjeta {
   background: var(--tarjeta);
-  border: 1px solid var(--borde);
+  /* Un filo de luz casi invisible: define la orilla si la pantalla tiene
+     poco contraste o le pega el sol. */
+  border: 1px solid var(--neu-filo);
   border-radius: var(--radio);
+  box-shadow: var(--sombra-tarjeta);
   padding: 16px;
 }
 
@@ -218,27 +236,33 @@ body {
   cursor: pointer;
   transition: background-color var(--rapido) var(--curva),
               border-color var(--rapido) var(--curva),
+              box-shadow var(--rapido) var(--curva),
               opacity var(--rapido) var(--curva);
 }
 
-.boton:disabled { opacity: .5; cursor: default; }
+.boton:disabled { opacity: .5; cursor: default; box-shadow: none; }
 
 .boton-primario {
   background: var(--verde);
   color: #fff;
+  box-shadow: var(--sombra-boton);
 }
 @media (hover: hover) and (pointer: fine) {
   .boton-primario:not(:disabled):hover { background: var(--verde-fuerte); }
 }
+/* Al tocarlo, el relieve se vuelve hueco: se siente que respondió. */
+.boton-primario:not(:disabled):active { box-shadow: var(--sombra-hundida-acento); }
 
 .boton-secundario {
   background: var(--tarjeta);
-  border-color: var(--borde);
+  border-color: var(--neu-filo);
   color: var(--tinta);
+  box-shadow: var(--sombra-boton);
 }
 @media (hover: hover) and (pointer: fine) {
-  .boton-secundario:not(:disabled):hover { background: var(--pista); }
+  .boton-secundario:not(:disabled):hover { background: var(--elevado); }
 }
+.boton-secundario:not(:disabled):active { box-shadow: var(--sombra-hundida); }
 
 .boton-sutil {
   background: transparent;
@@ -255,14 +279,16 @@ body {
 .boton-ancho { width: 100%; }
 
 /* --- Campos --- */
+/* Los campos van hundidos: un hueco donde se escribe. */
 .campo {
   width: 100%;
   min-height: 42px;
   padding: 9px 12px;
-  background: var(--tarjeta);
+  background: var(--fondo);
   color: var(--tinta);
-  border: 1px solid var(--borde);
+  border: 1px solid transparent;
   border-radius: var(--radio-sm);
+  box-shadow: var(--sombra-hundida);
   font-size: 0.95rem;
   transition: border-color var(--rapido) var(--curva);
 }
@@ -277,24 +303,29 @@ body {
   min-height: 38px;
   padding: 0 14px;
   border-radius: var(--radio-pill);
-  border: 1px solid var(--borde);
+  border: 1px solid var(--neu-filo);
   background: var(--tarjeta);
   color: var(--tinta);
+  box-shadow: var(--sombra-boton);
   font-size: 0.9rem;
   font-weight: 600;
   cursor: pointer;
   transition: background-color var(--rapido) var(--curva),
-              border-color var(--rapido) var(--curva);
+              border-color var(--rapido) var(--curva),
+              box-shadow var(--rapido) var(--curva);
 }
+/* La elegida queda hundida y verde: se ve "presionada" aunque no se toque. */
 .pastilla[aria-pressed="true"],
 .pastilla.activa {
   background: var(--verde);
   border-color: var(--verde);
   color: #fff;
+  box-shadow: var(--sombra-hundida-acento);
 }
 @media (hover: hover) and (pointer: fine) {
-  .pastilla:not([aria-pressed="true"]):not(.activa):hover { background: var(--pista); }
+  .pastilla:not([aria-pressed="true"]):not(.activa):hover { background: var(--elevado); }
 }
+.pastilla:not([aria-pressed="true"]):not(.activa):active { box-shadow: var(--sombra-hundida); }
 
 /* Etiqueta de solo lectura, para listar lo aplicado o lo medido. */
 .marca {
@@ -303,7 +334,8 @@ body {
   gap: 5px;
   padding: 4px 10px;
   border-radius: var(--radio-pill);
-  background: var(--pista);
+  background: var(--fondo);
+  box-shadow: var(--sombra-hundida);
   color: var(--tinta);
   font-size: 0.85rem;
   font-weight: 600;
@@ -326,9 +358,10 @@ body {
 /* Avisos. Filo de color a la izquierda en vez de fondo saturado. */
 .aviso {
   border-radius: var(--radio-sm);
-  border: 1px solid var(--borde);
+  border: 1px solid var(--neu-filo);
   border-left: 3px solid var(--alerta);
   background: var(--tarjeta);
+  box-shadow: var(--sombra-boton);
   padding: 12px 14px;
   font-size: 0.9rem;
 }
@@ -337,13 +370,18 @@ body {
 
 /* ==================================================================
    INTERACCIÓN
-   Nada se levanta, nada flota. El cambio es de color, que es lo que
-   hace una aplicación seria.
+   Nada flota ni brinca al pasar el ratón. Lo único que se mueve es el
+   relieve: al tocar un botón, se hunde.
    ================================================================== */
 
 button:not(:disabled):active,
 a:active {
   opacity: .7;
+}
+/* Los botones con relieve no se desvanecen al tocarlos: se hunden. */
+.boton:not(:disabled):active,
+.pastilla:not(:disabled):active {
+  opacity: 1;
 }
 
 :focus-visible {
