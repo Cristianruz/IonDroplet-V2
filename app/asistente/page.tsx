@@ -80,12 +80,9 @@ function Asistente() {
             className={b.de === 'agricultor' ? 'flex justify-end' : 'flex justify-start'}
           >
             <p
-              className="rounded-lg px-4 py-2.5 text-base max-w-[85%] whitespace-pre-line"
-              style={
-                b.de === 'agricultor'
-                  ? { background: 'var(--verde)', color: 'white' }
-                  : { background: 'var(--tarjeta)', color: 'var(--tinta)', border: '1px solid rgba(0,0,0,.06)' }
-              }
+              className={`rounded-lg px-4 py-2.5 text-base max-w-[85%] whitespace-pre-line globo ${
+                b.de === 'agricultor' ? 'globo-mio' : ''
+              }`}
             >
               {b.texto}
             </p>
@@ -95,8 +92,8 @@ function Asistente() {
         {enviando && (
           <div className="flex justify-start">
             <p
-              className="rounded-lg px-4 py-2.5 text-base"
-              style={{ background: 'var(--tarjeta)', color: 'var(--tinta-suave)', border: '1px solid rgba(0,0,0,.06)' }}
+              className="rounded-lg px-4 py-2.5 text-base globo"
+              style={{ color: 'var(--tinta-suave)' }}
               role="status"
             >
               Pensando…
@@ -119,12 +116,8 @@ function Asistente() {
 
       {/* La entrada va fija abajo, encima de la barra de navegación. */}
       <div
-        className="fixed left-0 right-0 z-40 px-4 py-3 flex gap-3"
-        style={{
-          bottom: 'calc(68px + env(safe-area-inset-bottom))',
-          background: 'var(--fondo)',
-          borderTop: '1px solid var(--pista)',
-        }}
+        className="fixed left-0 right-0 z-40 px-4 py-3 flex gap-3 barra-vidrio"
+        style={{ bottom: 'calc(68px + env(safe-area-inset-bottom))' }}
       >
         <label htmlFor="pregunta" className="sr-only">Escribe tu pregunta</label>
         <input
@@ -136,8 +129,7 @@ function Asistente() {
           disabled={enviando}
           placeholder="Escribe tu pregunta…"
           maxLength={500}
-          className="flex-1 min-w-0 rounded-lg px-3.5 py-2.5 text-base border outline-none disabled:opacity-60"
-          style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+          className="campo flex-1 min-w-0 text-base outline-none disabled:opacity-60"
         />
         <button
           type="button"

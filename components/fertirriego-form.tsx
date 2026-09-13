@@ -201,15 +201,13 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 placeholder="cuánto"
                 aria-label={`Cantidad de ${nombreNutriente(r.nutriente)}`}
                 className="campo"
-                style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 130 }}
+                style={{ width: 130 }}
               />
               <select
                 value={r.unidad}
                 onChange={e => cambiar(r.nutriente, 'unidad', e.target.value)}
                 aria-label={`Unidad de ${nombreNutriente(r.nutriente)}`}
-                className="campo font-semibold"
-                style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
-              >
+                className="campo font-semibold"              >
                 {UNIDADES.map(u => (
                   <option key={u} value={u}>
                     {u}
@@ -234,9 +232,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           value={litros}
           onChange={e => setLitros(e.target.value)}
           placeholder="litros"
-          className="campo"
-          style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
-        />
+          className="campo"        />
       </div>
 
       {!verMasDatos ? (
@@ -269,7 +265,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 onChange={e => setEc(e.target.value)}
                 placeholder="dS/m"
                 className="campo"
-                style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
+                style={{ width: 160 }}
               />
             </div>
             <div className="flex flex-col gap-2" id="campo-ph">
@@ -290,7 +286,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 }}
                 placeholder="0 a 14"
                 className="campo"
-                style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
+                style={{ width: 160 }}
               />
             </div>
             <div className="flex flex-col gap-2">
@@ -307,7 +303,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
                 onChange={e => setMinutos(e.target.value)}
                 placeholder="minutos"
                 className="campo"
-                style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)', width: 160 }}
+                style={{ width: 160 }}
               />
             </div>
           </div>
@@ -325,9 +321,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           onChange={e => setNotas(e.target.value)}
           rows={2}
           placeholder="Lo que quieras acordarte después"
-          className="campo"
-          style={{ background: 'var(--fondo)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
-        />
+          className="campo"        />
       </div>
 
       {aviso && (

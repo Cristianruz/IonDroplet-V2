@@ -44,15 +44,13 @@ export function VolverArriba() {
       // salida sean suaves en vez de un parpadeo.
       aria-hidden={!visible}
       tabIndex={visible ? 0 : -1}
-      className="fixed z-40 rounded-full flex items-center justify-center"
+      className="fixed z-40 rounded-full flex items-center justify-center panel-vidrio"
       style={{
         left: 16,
         bottom: 'calc(76px + env(safe-area-inset-bottom))',
         width: 56,
         height: 56,
         color: 'var(--verde)',
-        border: '2px solid var(--borde)',
-        boxShadow: 'var(--sombra-elevada)',
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(12px) scale(.9)',
         pointerEvents: visible ? 'auto' : 'none',

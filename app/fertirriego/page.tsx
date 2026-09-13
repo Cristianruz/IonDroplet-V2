@@ -71,8 +71,8 @@ export default function PantallaFertirriego() {
               {resumen.porNutriente.map(n => (
                 <div
                   key={n.nutriente + n.unidad}
-                  className="rounded-lg px-3.5 py-2.5 flex flex-col"
-                  style={{ background: 'var(--fondo)', minWidth: 140 }}
+                  className="rounded-lg px-3.5 py-2.5 flex flex-col hueco"
+                  style={{ minWidth: 140 }}
                 >
                   <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
                     {nombreNutriente(n.nutriente)}
@@ -139,8 +139,8 @@ export default function PantallaFertirriego() {
                     }}
                     disabled={borrandoId === e.id}
                     aria-label={`Borrar la aplicación del ${fechaCorta(e.aplicado)}`}
-                    className="rounded-md p-3 transition-transform disabled:opacity-50"
-                    style={{ background: 'var(--fondo)', color: 'var(--tinta-suave)' }}
+                    className="rounded-md p-3 transition-transform disabled:opacity-50 hueco"
+                    style={{ color: 'var(--tinta-suave)' }}
                   >
                     <Trash2 size={16} aria-hidden />
                   </button>

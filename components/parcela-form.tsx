@@ -138,12 +138,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                   setCultivo(id)
                   if (errores.cultivo) setErrores(p => ({ ...p, cultivo: undefined }))
                 }}
-                className="rounded-lg py-3 px-3 text-base font-bold border transition-colors flex flex-col items-center gap-2"
-                style={
-                  activo
-                    ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                    : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
-                }
+                className="opcion py-3 px-3 text-base flex flex-col items-center gap-2"
                 aria-pressed={activo}
               >
                 
@@ -165,12 +160,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                 key={id}
                 type="button"
                 onClick={() => setEtapa(activo ? '' : id)}
-                className="rounded-lg py-2.5 px-4 border transition-colors text-left"
-                style={
-                  activo
-                    ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                    : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
-                }
+                className="opcion py-2.5 px-4 text-left"
                 aria-pressed={activo}
               >
                 <span className="text-base font-bold block">{etiqueta}</span>
@@ -199,10 +189,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           placeholder="1.2"
           aria-invalid={!!errores.area}
           className="campo"
-          style={{
-            borderColor: errores.area ? 'var(--peligro)' : 'var(--borde)',
-            color: 'var(--tinta)',
-          }}
+          style={errores.area ? { borderColor: 'var(--peligro)' } : undefined}
         />
         <ErrorCampo texto={errores.area} />
         <p className="text-sm mt-2" style={{ color: 'var(--tinta-suave)' }}>
@@ -232,10 +219,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           placeholder="litros por minuto"
           aria-invalid={!!errores.caudal}
           className="campo"
-          style={{
-            borderColor: errores.caudal ? 'var(--peligro)' : 'var(--borde)',
-            color: 'var(--tinta)',
-          }}
+          style={errores.caudal ? { borderColor: 'var(--peligro)' } : undefined}
         />
         <ErrorCampo texto={errores.caudal} />
         <p className="text-sm mt-2" style={{ color: 'var(--tinta-suave)' }}>
@@ -251,8 +235,8 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             type="button"
             onClick={() => setUmbral(v => Math.max(UMBRAL_MINIMO, v - 5))}
             disabled={umbral <= UMBRAL_MINIMO}
-            className="rounded-lg border flex items-center justify-center disabled:opacity-40"
-            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            className="opcion flex items-center justify-center disabled:opacity-40"
+            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, color: 'var(--tinta)' }}
             aria-label="Bajar el punto de riego"
           >
             <Minus size={34} aria-hidden />
@@ -265,8 +249,8 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             type="button"
             onClick={() => setUmbral(v => Math.min(UMBRAL_MAXIMO, v + 5))}
             disabled={umbral >= UMBRAL_MAXIMO}
-            className="rounded-lg border flex items-center justify-center disabled:opacity-40"
-            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            className="opcion flex items-center justify-center disabled:opacity-40"
+            style={{ width: 'clamp(52px, 16vw, 62px)', height: 'clamp(52px, 16vw, 62px)', flexShrink: 0, color: 'var(--tinta)' }}
             aria-label="Subir el punto de riego"
           >
             <Plus size={34} aria-hidden />
@@ -297,8 +281,8 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
         <button
           type="button"
           onClick={onCancelar}
-          className="rounded-lg py-2.5 text-sm font-bold border"
-          style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
+          className="boton boton-secundario"
+          style={{ color: 'var(--tinta-suave)' }}
         >
           Dejarlo como estaba
         </button>

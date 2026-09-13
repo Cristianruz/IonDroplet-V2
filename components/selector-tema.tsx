@@ -55,12 +55,7 @@ export function SelectorTema() {
               type="button"
               onClick={() => escoger(id)}
               aria-pressed={activo}
-              className="rounded-lg py-3 px-4 text-base font-bold border flex items-center justify-center gap-3"
-              style={
-                activo
-                  ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                  : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
-              }
+              className="opcion py-3 px-4 text-base flex items-center justify-center gap-3"
             >
               <Icono size={18} aria-hidden />
               {etiqueta}

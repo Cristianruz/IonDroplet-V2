@@ -89,8 +89,7 @@ export default function PantallaParcela() {
               barra de abajo ya tiene cinco destinos. */}
           <Aparece><Link
             href="/fertirriego"
-            className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
-            style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+            className="fila-enlace"
           >
             <span className="flex items-center gap-3">
               <FlaskConical size={18} style={{ color: 'var(--verde)' }} aria-hidden />

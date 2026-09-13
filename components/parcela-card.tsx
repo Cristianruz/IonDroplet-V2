@@ -63,8 +63,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
           desde la barra de abajo. */}
       <Link
         href="/plagas"
-        className="rounded-lg py-3 px-4 text-base font-bold border flex items-center justify-between"
-        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+        className="fila-enlace"
       >
         <span className="flex items-center gap-3">
           <Bug size={16} aria-hidden />
@@ -76,8 +75,8 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
       <button
         type="button"
         onClick={onEditar}
-        className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
-        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
+        className="boton boton-secundario"
+        style={{ color: 'var(--tinta-suave)' }}
       >
         <Pencil size={18} aria-hidden />
         Editar parcela

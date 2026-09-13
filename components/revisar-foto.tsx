@@ -112,8 +112,8 @@ export function RevisarFoto() {
               href={`/asistente?pregunta=${encodeURIComponent(
                 `En la foto de mi cultivo se ve esto: ${revision.posible}. ¿Qué hago?`
               )}`}
-              className="rounded-lg py-2.5 text-sm font-bold border flex items-center justify-center gap-3"
-              style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
+              className="boton boton-secundario"
+              style={{ color: 'var(--tinta-suave)' }}
             >
               <MessageCircle size={18} aria-hidden />
               Preguntar más sobre esto
@@ -126,8 +126,8 @@ export function RevisarFoto() {
               limpiar()
               entrada.current?.click()
             }}
-            className="rounded-lg py-2.5 text-sm font-bold border"
-            style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
+            className="boton boton-secundario"
+            style={{ color: 'var(--tinta-suave)' }}
           >
             Tomar otra foto
           </button>

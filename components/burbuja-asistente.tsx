@@ -91,7 +91,7 @@ export function BurbujaAsistente() {
             role="dialog"
             aria-label="Asistente"
             aria-modal="true"
-            className="fixed z-50 flex flex-col"
+            className="fixed z-50 flex flex-col panel-vidrio"
             style={{
               right: 0,
               left: 0,
@@ -100,9 +100,7 @@ export function BurbujaAsistente() {
               marginLeft: 'auto',
               marginRight: 'auto',
               height: 'min(70vh, 560px)',
-              border: '1px solid var(--borde)',
               borderRadius: 'var(--radio) var(--radio) 0 0',
-              boxShadow: 'var(--sombra-elevada)',
               paddingBottom: 'env(safe-area-inset-bottom)',
             }}
           >

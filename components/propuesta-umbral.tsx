@@ -79,8 +79,8 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
           <button
             type="button"
             onClick={descartar}
-            className="rounded-lg py-2.5 text-sm font-bold border"
-            style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }}
+            className="boton boton-secundario"
+            style={{ color: 'var(--tinta-suave)' }}
           >
             Dejarlo como está
           </button>

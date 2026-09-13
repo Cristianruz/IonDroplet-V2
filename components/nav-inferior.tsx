@@ -20,14 +20,10 @@ export function NavInferior() {
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-50 flex"
-      style={{
-        // Sin fondo, el contenido de la pantalla se ve pasar por detrás de la barra.
-        background: 'var(--tarjeta)',
-        borderTop: '1px solid var(--pista)',
-        paddingBottom: 'env(safe-area-inset-bottom)',
-        boxShadow: '0 -2px 12px rgba(0,0,0,.05)',
-      }}
+      // Vidrio más opaco que las tarjetas: el contenido pasa por detrás al
+      // hacer scroll y no debe estorbar a los íconos.
+      className="fixed bottom-0 left-0 right-0 z-50 flex barra-vidrio"
+      style={{ paddingBottom: 'env(safe-area-inset-bottom)' }}
       aria-label="Navegación principal"
     >
       {/* Una sola barra verde que se desliza al destino activo, en vez de que

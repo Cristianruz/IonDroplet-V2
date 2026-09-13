@@ -60,8 +60,7 @@ export default function PantallaAjustes() {
           desde la barra de abajo. */}
       <Link
         href="/dispositivos"
-        className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
-        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+        className="fila-enlace"
       >
         <span className="flex items-center gap-3">
           <RadioTower size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
@@ -75,8 +74,7 @@ export default function PantallaAjustes() {
           quien tiene que auditar de dónde salió cada número. */}
       <Link
         href="/operacion"
-        className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-between"
-        style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta)' }}
+        className="fila-enlace"
       >
         <span className="flex items-center gap-3">
           <Gauge size={18} style={{ color: 'var(--agua)' }} aria-hidden />
@@ -109,8 +107,8 @@ export default function PantallaAjustes() {
         <button
           type="button"
           onClick={() => cerrarSesion()}
-          className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-center gap-2"
-          style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--peligro)' }}
+          className="boton boton-secundario"
+          style={{ color: 'var(--peligro)' }}
         >
           <LogOut size={18} aria-hidden />
           Cerrar sesión

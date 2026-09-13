@@ -37,12 +37,7 @@ export default function PantallaHistorial() {
               key={id}
               type="button"
               onClick={() => setRango(id)}
-              className="rounded-lg py-2.5 text-sm font-bold border transition-colors"
-              style={
-                activo
-                  ? { background: 'var(--verde)', borderColor: 'var(--verde-fuerte)', color: 'white' }
-                  : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
-              }
+              className="opcion py-2.5 text-sm"
               aria-pressed={activo}
             >
               {etiqueta}

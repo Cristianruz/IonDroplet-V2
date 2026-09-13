@@ -1,42 +1,45 @@
 @import "tailwindcss";
 
 /* ==================================================================
-   SISTEMA VISUAL — NEUMORPHISM SUAVE
+   SISTEMA VISUAL — GLASSMORPHISM
    ------------------------------------------------------------------
-   Las tarjetas y los botones parecen hechos del mismo material que el
-   fondo: son del mismo color y se separan con luz (arriba a la
-   izquierda) y sombra (abajo a la derecha). Al tocar un botón, se hunde.
+   Las superficies son vidrio esmerilado: blanco (o gris, en oscuro)
+   translúcido que desenfoca un fondo de color. El fondo es un degradado
+   de verdes y azules de agua, los colores del sistema, sin chillar.
 
-   Lo que NO cambió de la versión anterior, porque es lo que la hace
-   seria y legible bajo el sol:
-   - Un solo color de acento, usado poco. El verde y el semáforo siguen
-     siendo sólidos: un estado nunca se adivina por una sombra.
-   - Tipografía de 15 px con jerarquía por peso, no por tamaño gigante.
-   - Sombras cortas: el relieve se nota, no se exhibe.
-   - Nada flota ni brinca al pasar el ratón.
+   Lo que se cuida para que se siga leyendo bajo el sol:
+   - El vidrio es poco transparente (62 %): el texto no compite con el fondo.
+   - El verde y el semáforo son SÓLIDOS: un estado nunca se adivina a través
+     de una transparencia.
+   - Cada superficie lleva un filo de luz arriba que marca su orilla.
+   - Si el teléfono no sabe desenfocar, o pide menos transparencia, el
+     vidrio se vuelve sólido (al final de este archivo).
+   - Tipografía de 15 px con jerarquía por peso. Nada brinca al pasar el ratón.
    ================================================================== */
 
 :root {
-  /* Superficies. La tarjeta es del MISMO color que el fondo: lo que la
-     separa es la luz, no un color distinto. */
-  --fondo: #eef1f4;
-  --tarjeta: #eef1f4;
-  --elevado: #f5f7f9;
+  /* Superficies. El fondo que se ve a través del vidrio es --degradado-fondo;
+     --fondo queda como color base y para lo que va "hundido". */
+  --fondo: #edf3f0;
+  --tarjeta: rgba(255, 255, 255, .62);
+  --elevado: rgba(255, 255, 255, .80);
+  /* Lo que se usa si el teléfono no sabe desenfocar. */
+  --tarjeta-solida: #f7faf8;
 
   /* Texto */
   --tinta: #111418;
-  --tinta-suave: #5b6470;
-  --apagado: #8d949e;
+  --tinta-suave: #4a5a52;
+  --apagado: #76857e;
 
   /* Líneas */
-  --borde: #dde2e8;
-  --pista: #e2e6eb;
+  --borde: rgba(15, 45, 32, .12);
+  --pista: rgba(15, 45, 32, .08);
 
   /* Acento. Uno solo, y se usa poco: botón principal, valor que importa,
      pestaña activa. Todo lo demás es neutro. */
   --verde: #1f7a3d;
   --verde-fuerte: #17632f;
-  --verde-suave: #eaf4ed;
+  --verde-suave: rgba(31, 122, 61, .12);
 
   /* Estados. Mismo criterio: color en el texto y en un filo, no en
      bloques grandes de fondo. */
@@ -45,25 +48,29 @@
   --peligro: #c02626;
   --riesgo-medio: #9a6206;
   --oro: #9a6206;
-  --fondo-alerta: #fdf6e8;
-  --fondo-peligro: #fdeeee;
+  --fondo-alerta: rgba(154, 98, 6, .12);
+  --fondo-peligro: rgba(192, 38, 38, .10);
 
-  /* Relieve. Luz arriba a la izquierda, sombra abajo a la derecha. El tema
-     oscuro solo cambia --neu-luz, --neu-sombra y --neu-filo: las sombras
-     de abajo se arman con ellos. */
-  --neu-luz: rgba(255, 255, 255, .9);
-  --neu-sombra: rgba(158, 170, 186, .45);
-  --neu-filo: rgba(255, 255, 255, .7);
-  --sombra-tarjeta: 6px 6px 14px var(--neu-sombra), -6px -6px 14px var(--neu-luz);
-  --sombra-boton: 3px 3px 8px var(--neu-sombra), -3px -3px 8px var(--neu-luz);
-  --sombra-hundida: inset 2px 2px 5px var(--neu-sombra), inset -2px -2px 5px var(--neu-luz);
-  /* El botón verde se hunde con su propia sombra: la luz blanca sobre verde
-     se ve sucia. */
-  --sombra-hundida-acento: inset 2px 2px 6px rgba(0, 0, 0, .28), inset -2px -2px 6px rgba(255, 255, 255, .12);
-  --sombra-elevada: 0 8px 24px rgba(17, 20, 24, .12);
+  /* Vidrio. El tema oscuro cambia estos mismos nombres; las sombras de
+     abajo se arman con ellos. */
+  --vidrio-filo: rgba(255, 255, 255, .75);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .7);
+  --sombra-color: rgba(22, 60, 45, .12);
+  --desenfoque: blur(18px) saturate(165%);
+  --sombra-tarjeta: 0 10px 30px var(--sombra-color), var(--vidrio-brillo);
+  --sombra-boton: 0 4px 14px var(--sombra-color), var(--vidrio-brillo);
+  --sombra-hundida: inset 0 1px 3px var(--sombra-color);
+  --sombra-acento: 0 6px 18px rgba(31, 122, 61, .30), inset 0 1px 0 rgba(255, 255, 255, .22);
+  --sombra-hundida-acento: inset 0 2px 6px rgba(0, 0, 0, .25);
+  --sombra-elevada: 0 16px 44px rgba(22, 60, 45, .20);
+  --degradado-fondo:
+    radial-gradient(60% 45% at 8% 0%, rgba(46, 160, 90, .28), transparent 70%),
+    radial-gradient(50% 40% at 100% 18%, rgba(26, 111, 212, .20), transparent 70%),
+    radial-gradient(70% 50% at 50% 105%, rgba(20, 170, 150, .18), transparent 70%),
+    linear-gradient(180deg, #f1f7f3 0%, #e7eff4 100%);
 
-  /* Geometría. Más redonda que antes: el relieve pide esquinas suaves. */
-  --radio: 16px;
+  /* Geometría */
+  --radio: 18px;
   --radio-sm: 12px;
   --radio-pill: 999px;
 
@@ -75,54 +82,68 @@
 
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
-    --fondo: #1b1e23;
-    --tarjeta: #1b1e23;
-    --elevado: #22262c;
-    --tinta: #e7e9ea;
-    --tinta-suave: #9aa3ad;
-    --apagado: #6e7781;
-    --borde: #2b3038;
-    --pista: #242830;
+    --fondo: #0b1310;
+    --tarjeta: rgba(30, 42, 37, .55);
+    --elevado: rgba(38, 52, 46, .78);
+    --tarjeta-solida: #18221e;
+    --tinta: #e8efeb;
+    --tinta-suave: #a5b3ac;
+    --apagado: #72817a;
+    --borde: rgba(255, 255, 255, .10);
+    --pista: rgba(255, 255, 255, .07);
     --verde: #4ec26f;
     --verde-fuerte: #6ed08a;
-    --verde-suave: #14251a;
+    --verde-suave: rgba(78, 194, 111, .16);
     --agua: #4aa3f0;
     --alerta: #d9a13f;
     --peligro: #e5645c;
     --riesgo-medio: #d9a13f;
     --oro: #d9a13f;
-    --fondo-alerta: #241d10;
-    --fondo-peligro: #2a1516;
-    --neu-luz: rgba(255, 255, 255, .045);
-    --neu-sombra: rgba(0, 0, 0, .55);
-    --neu-filo: rgba(255, 255, 255, .04);
-    --sombra-elevada: 0 8px 24px rgba(0, 0, 0, .55);
+    --fondo-alerta: rgba(217, 161, 63, .14);
+    --fondo-peligro: rgba(229, 100, 92, .14);
+    --vidrio-filo: rgba(255, 255, 255, .10);
+    --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .06);
+    --sombra-color: rgba(0, 0, 0, .40);
+    --sombra-acento: 0 6px 18px rgba(78, 194, 111, .22), inset 0 1px 0 rgba(255, 255, 255, .18);
+    --sombra-elevada: 0 16px 44px rgba(0, 0, 0, .55);
+    --degradado-fondo:
+      radial-gradient(60% 45% at 8% 0%, rgba(46, 160, 90, .22), transparent 70%),
+      radial-gradient(50% 40% at 100% 20%, rgba(26, 111, 212, .20), transparent 70%),
+      radial-gradient(70% 50% at 50% 105%, rgba(20, 150, 140, .16), transparent 70%),
+      linear-gradient(180deg, #0c1512 0%, #0a1116 100%);
   }
 }
 
 :root[data-tema="oscuro"] {
-  --fondo: #1b1e23;
-  --tarjeta: #1b1e23;
-  --elevado: #22262c;
-  --tinta: #e7e9ea;
-  --tinta-suave: #9aa3ad;
-  --apagado: #6e7781;
-  --borde: #2b3038;
-  --pista: #242830;
+  --fondo: #0b1310;
+  --tarjeta: rgba(30, 42, 37, .55);
+  --elevado: rgba(38, 52, 46, .78);
+  --tarjeta-solida: #18221e;
+  --tinta: #e8efeb;
+  --tinta-suave: #a5b3ac;
+  --apagado: #72817a;
+  --borde: rgba(255, 255, 255, .10);
+  --pista: rgba(255, 255, 255, .07);
   --verde: #4ec26f;
   --verde-fuerte: #6ed08a;
-  --verde-suave: #14251a;
+  --verde-suave: rgba(78, 194, 111, .16);
   --agua: #4aa3f0;
   --alerta: #d9a13f;
   --peligro: #e5645c;
   --riesgo-medio: #d9a13f;
   --oro: #d9a13f;
-  --fondo-alerta: #241d10;
-  --fondo-peligro: #2a1516;
-  --neu-luz: rgba(255, 255, 255, .045);
-  --neu-sombra: rgba(0, 0, 0, .55);
-  --neu-filo: rgba(255, 255, 255, .04);
-  --sombra-elevada: 0 8px 24px rgba(0, 0, 0, .55);
+  --fondo-alerta: rgba(217, 161, 63, .14);
+  --fondo-peligro: rgba(229, 100, 92, .14);
+  --vidrio-filo: rgba(255, 255, 255, .10);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .06);
+  --sombra-color: rgba(0, 0, 0, .40);
+  --sombra-acento: 0 6px 18px rgba(78, 194, 111, .22), inset 0 1px 0 rgba(255, 255, 255, .18);
+  --sombra-elevada: 0 16px 44px rgba(0, 0, 0, .55);
+  --degradado-fondo:
+    radial-gradient(60% 45% at 8% 0%, rgba(46, 160, 90, .22), transparent 70%),
+    radial-gradient(50% 40% at 100% 20%, rgba(26, 111, 212, .20), transparent 70%),
+    radial-gradient(70% 50% at 50% 105%, rgba(20, 150, 140, .16), transparent 70%),
+    linear-gradient(180deg, #0c1512 0%, #0a1116 100%);
 }
 
 html {
@@ -148,6 +169,17 @@ body {
   letter-spacing: -0.005em;
 }
 
+/* El fondo de color que se ve a través del vidrio. Va fijo y en su propia
+   capa: no se repinta al hacer scroll y ninguna pantalla lo tiene que poner. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: var(--degradado-fondo);
+  pointer-events: none;
+}
+
 /* Cualquier borde que no diga de qué color es, usa el del tema. Así una
    clase suelta de Tailwind no se pinta del color del texto ni hay que ir
    componente por componente poniéndole el color a mano. */
@@ -165,9 +197,10 @@ body {
 
 .tarjeta {
   background: var(--tarjeta);
-  /* Un filo de luz casi invisible: define la orilla si la pantalla tiene
-     poco contraste o le pega el sol. */
-  border: 1px solid var(--neu-filo);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  /* El filo de luz marca la orilla del vidrio aunque el fondo sea claro. */
+  border: 1px solid var(--vidrio-filo);
   border-radius: var(--radio);
   box-shadow: var(--sombra-tarjeta);
   padding: 16px;
@@ -245,17 +278,19 @@ body {
 .boton-primario {
   background: var(--verde);
   color: #fff;
-  box-shadow: var(--sombra-boton);
+  box-shadow: var(--sombra-acento);
 }
 @media (hover: hover) and (pointer: fine) {
   .boton-primario:not(:disabled):hover { background: var(--verde-fuerte); }
 }
-/* Al tocarlo, el relieve se vuelve hueco: se siente que respondió. */
+/* Al tocarlo se hunde un poco: se siente que respondió. */
 .boton-primario:not(:disabled):active { box-shadow: var(--sombra-hundida-acento); }
 
 .boton-secundario {
   background: var(--tarjeta);
-  border-color: var(--neu-filo);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  border-color: var(--vidrio-filo);
   color: var(--tinta);
   box-shadow: var(--sombra-boton);
 }
@@ -279,21 +314,22 @@ body {
 .boton-ancho { width: 100%; }
 
 /* --- Campos --- */
-/* Los campos van hundidos: un hueco donde se escribe. */
+/* Campos: vidrio más opaco, para que lo que se escribe se lea bien. */
 .campo {
   width: 100%;
   min-height: 42px;
   padding: 9px 12px;
-  background: var(--fondo);
+  background: var(--elevado);
   color: var(--tinta);
-  border: 1px solid transparent;
+  border: 1px solid var(--borde);
   border-radius: var(--radio-sm);
   box-shadow: var(--sombra-hundida);
   font-size: 0.95rem;
-  transition: border-color var(--rapido) var(--curva);
+  transition: border-color var(--rapido) var(--curva),
+              box-shadow var(--rapido) var(--curva);
 }
 .campo::placeholder { color: var(--apagado); }
-.campo:focus { border-color: var(--verde); }
+.campo:focus { border-color: var(--verde); box-shadow: 0 0 0 3px var(--verde-suave); }
 
 /* --- Pastillas de selección --- */
 .pastilla {
@@ -303,8 +339,10 @@ body {
   min-height: 38px;
   padding: 0 14px;
   border-radius: var(--radio-pill);
-  border: 1px solid var(--neu-filo);
+  border: 1px solid var(--vidrio-filo);
   background: var(--tarjeta);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
   color: var(--tinta);
   box-shadow: var(--sombra-boton);
   font-size: 0.9rem;
@@ -314,13 +352,13 @@ body {
               border-color var(--rapido) var(--curva),
               box-shadow var(--rapido) var(--curva);
 }
-/* La elegida queda hundida y verde: se ve "presionada" aunque no se toque. */
+/* La elegida va en verde sólido: se distingue sin depender del vidrio. */
 .pastilla[aria-pressed="true"],
 .pastilla.activa {
   background: var(--verde);
   border-color: var(--verde);
   color: #fff;
-  box-shadow: var(--sombra-hundida-acento);
+  box-shadow: var(--sombra-acento);
 }
 @media (hover: hover) and (pointer: fine) {
   .pastilla:not([aria-pressed="true"]):not(.activa):hover { background: var(--elevado); }
@@ -334,8 +372,7 @@ body {
   gap: 5px;
   padding: 4px 10px;
   border-radius: var(--radio-pill);
-  background: var(--fondo);
-  box-shadow: var(--sombra-hundida);
+  background: var(--pista);
   color: var(--tinta);
   font-size: 0.85rem;
   font-weight: 600;
@@ -358,15 +395,108 @@ body {
 /* Avisos. Filo de color a la izquierda en vez de fondo saturado. */
 .aviso {
   border-radius: var(--radio-sm);
-  border: 1px solid var(--neu-filo);
+  border: 1px solid var(--vidrio-filo);
   border-left: 3px solid var(--alerta);
   background: var(--tarjeta);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
   box-shadow: var(--sombra-boton);
   padding: 12px 14px;
   font-size: 0.9rem;
 }
 .aviso-peligro { border-left-color: var(--peligro); }
 .aviso-ok { border-left-color: var(--verde); }
+
+/* ==================================================================
+   VIDRIO FUERA DE LAS TARJETAS
+   Lo que antes cada pantalla pintaba a mano con style={{ background }}:
+   renglones que llevan a otra pantalla, opciones para escoger, barras
+   fijas y globos del asistente. Con clase cambian todos juntos, y el
+   respaldo sólido del final los cubre a todos.
+   ================================================================== */
+
+/* Renglón que lleva a otra pantalla. */
+.fila-enlace {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radio-sm);
+  background: var(--tarjeta);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  border: 1px solid var(--vidrio-filo);
+  box-shadow: var(--sombra-boton);
+  color: var(--tinta);
+  font-size: 1rem;
+  font-weight: 700;
+  transition: background-color var(--rapido) var(--curva);
+}
+@media (hover: hover) and (pointer: fine) {
+  .fila-enlace:hover { background: var(--elevado); }
+}
+
+/* Una opción entre varias (tema, horas, cultivo). La elegida va en verde
+   sólido: se distingue sin depender de la transparencia. */
+.opcion {
+  border-radius: var(--radio-sm);
+  background: var(--tarjeta);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  border: 1px solid var(--vidrio-filo);
+  box-shadow: var(--sombra-boton);
+  color: var(--tinta-suave);
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--rapido) var(--curva),
+              color var(--rapido) var(--curva),
+              box-shadow var(--rapido) var(--curva);
+}
+.opcion[aria-pressed="true"] {
+  background: var(--verde);
+  border-color: var(--verde-fuerte);
+  color: #fff;
+  box-shadow: var(--sombra-acento);
+}
+@media (hover: hover) and (pointer: fine) {
+  .opcion:not([aria-pressed="true"]):hover { background: var(--elevado); color: var(--tinta); }
+}
+
+/* Barras fijas: la de navegación y la de escribir en el asistente. */
+.barra-vidrio {
+  background: var(--elevado);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  border-top: 1px solid var(--vidrio-filo);
+  box-shadow: 0 -10px 30px var(--sombra-color);
+}
+
+/* Lo que flota encima de todo: la ventana del asistente, el botón de subir. */
+.panel-vidrio {
+  background: var(--elevado);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  border: 1px solid var(--vidrio-filo);
+  box-shadow: var(--sombra-elevada);
+}
+
+/* Globos del asistente: el del agricultor en verde, el del sistema de vidrio. */
+.globo {
+  background: var(--tarjeta);
+  -webkit-backdrop-filter: var(--desenfoque);
+  backdrop-filter: var(--desenfoque);
+  border: 1px solid var(--vidrio-filo);
+  color: var(--tinta);
+}
+.globo-mio {
+  background: var(--verde);
+  border-color: var(--verde);
+  color: #fff;
+}
+
+/* Un hueco dentro de una tarjeta: un dato aparte, un botón de borrar. */
+.hueco { background: var(--pista); }
 
 /* ==================================================================
    INTERACCIÓN
@@ -464,6 +594,27 @@ html:not([data-tema="claro"]) .esqueleto {
   }
   .aparece { opacity: 1; }
   .hero > * { opacity: 1; }
+}
+
+/* Sin desenfoque (teléfonos viejos) el vidrio se vuelve sólido: si no, el
+   texto quedaría encima del fondo de color sin nada que lo separe. */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .tarjeta, .fila-enlace, .opcion:not([aria-pressed="true"]), .boton-secundario,
+  .pastilla:not([aria-pressed="true"]):not(.activa), .aviso, .globo:not(.globo-mio),
+  .barra-vidrio, .panel-vidrio {
+    background: var(--tarjeta-solida);
+  }
+}
+
+/* Lo mismo si la persona pidió menos transparencia en su teléfono. */
+@media (prefers-reduced-transparency: reduce) {
+  .tarjeta, .fila-enlace, .opcion:not([aria-pressed="true"]), .boton-secundario,
+  .pastilla:not([aria-pressed="true"]):not(.activa), .aviso, .globo:not(.globo-mio),
+  .barra-vidrio, .panel-vidrio {
+    background: var(--tarjeta-solida);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
 }
 
 /* ==================================================================
