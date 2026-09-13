@@ -22,6 +22,8 @@ export function NavInferior() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-50 flex"
       style={{
+        // Sin fondo, el contenido de la pantalla se ve pasar por detrás de la barra.
+        background: 'var(--tarjeta)',
         borderTop: '1px solid var(--pista)',
         paddingBottom: 'env(safe-area-inset-bottom)',
         boxShadow: '0 -2px 12px rgba(0,0,0,.05)',

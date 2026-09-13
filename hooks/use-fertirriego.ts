@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 
 // Lo que se le aplicó a la parcela. Captura a mano: no hay sonda de EC ni de
 // pH, así que esos dos campos son opcionales y quien los llena es el
@@ -60,8 +60,8 @@ export function useFertirriego(dias = 90) {
   const cargar = useCallback(async () => {
     try {
       const [listaRes, resumenRes] = await Promise.all([
-        fetch(`${API_URL}/api/fertirriego?limit=50`),
-        fetch(`${API_URL}/api/fertirriego/resumen?dias=${dias}`),
+        apiFetch(`/api/fertirriego?limit=50`),
+        apiFetch(`/api/fertirriego/resumen?dias=${dias}`),
       ])
       if (!listaRes.ok || !resumenRes.ok) throw new Error()
 
@@ -85,7 +85,7 @@ export function useFertirriego(dias = 90) {
     async (datos: DatosAplicacion): Promise<string | null> => {
       setGuardando(true)
       try {
-        const res = await fetch(`${API_URL}/api/fertirriego`, {
+        const res = await apiFetch(`/api/fertirriego`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(datos),
@@ -108,7 +108,7 @@ export function useFertirriego(dias = 90) {
   const borrar = useCallback(
     async (id: number): Promise<boolean> => {
       try {
-        const res = await fetch(`${API_URL}/api/fertirriego/${id}`, { method: 'DELETE' })
+        const res = await apiFetch(`/api/fertirriego/${id}`, { method: 'DELETE' })
         if (!res.ok) return false
         await cargar()
         return true

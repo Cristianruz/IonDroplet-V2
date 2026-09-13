@@ -33,7 +33,7 @@ const PASOS_SENSOR = [
 ]
 
 export default function PantallaDispositivos() {
-  const { conectado, estadoEsp, humedad, ultimaLectura, ionizacion } = useIonDroplet({
+  const { conectado, estadoEsp, humedad, ultimaLectura } = useIonDroplet({
     conHistorial: false,
   })
 
@@ -93,12 +93,14 @@ export default function PantallaDispositivos() {
         etiqueta={estadoEsp.pumpState === 1 ? 'Regando' : 'Sin regar'}
       />
 
+      {/* El mismo relé prende la bomba y las varillas: el ionizador no tiene
+          estado propio, sigue al de la bomba. */}
       <AparatoCard
         icono={ICONOS.ionizador}
         nombre="Ionizador"
-        detalle="No avisa su estado por su cuenta: aquí se ve lo último que se le pidió"
-        estado={ionizacion ? 'activo' : 'apagado'}
-        etiqueta={ionizacion ? 'Encendido' : 'Apagado'}
+        detalle="Va junto con la bomba: el mismo relé prende las dos"
+        estado={estadoEsp.pumpState === 1 ? 'activo' : 'apagado'}
+        etiqueta={estadoEsp.pumpState === 1 ? 'Ionizando' : 'Apagado'}
       />
 
       <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>

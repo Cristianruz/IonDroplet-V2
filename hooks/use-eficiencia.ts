@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 // Cuánto cuesta subir un punto de humedad.
 //
@@ -39,7 +39,7 @@ export function useEficiencia(dias = 90) {
 
   const cargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/riego/eficiencia?dias=${dias}`)
+      const res = await apiFetch(`/api/riego/eficiencia?dias=${dias}`)
       if (!res.ok) return
       setDatos(await res.json())
     } catch {

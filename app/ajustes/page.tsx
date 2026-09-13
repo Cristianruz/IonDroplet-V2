@@ -1,16 +1,21 @@
 'use client'
 
 import Link from 'next/link'
-import { ChevronRight, Gauge, RadioTower } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { ChevronRight, Gauge, LogOut, RadioTower } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/umbral-card'
 import { SelectorTema } from '@/components/selector-tema'
 import { API_URL } from '@/lib/api'
+import { cerrarSesion, leerSesion } from '@/lib/sesion'
 
 export default function PantallaAjustes() {
   const { conectado, humedad } = useIonDroplet({ conHistorial: false })
   const { umbralRiego, guardando, guardarUmbral } = useParcela()
+  // Se lee después de montar: en el servidor no hay localStorage.
+  const [correo, setCorreo] = useState<string | null>(null)
+  useEffect(() => setCorreo(leerSesion()?.email ?? null), [])
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
@@ -93,6 +98,24 @@ export default function PantallaAjustes() {
         guardando={guardando}
         onGuardar={guardarUmbral}
       />
+
+      <section className="tarjeta flex flex-col gap-3" aria-label="Tu cuenta">
+        <h2 className="text-base font-semibold">Tu cuenta</h2>
+        {correo && (
+          <p className="text-base break-all" style={{ color: 'var(--tinta-suave)' }}>
+            {correo}
+          </p>
+        )}
+        <button
+          type="button"
+          onClick={() => cerrarSesion()}
+          className="rounded-lg px-4 py-3 text-base font-bold border flex items-center justify-center gap-2"
+          style={{ background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--peligro)' }}
+        >
+          <LogOut size={18} aria-hidden />
+          Cerrar sesión
+        </button>
+      </section>
     </main>
   )
 }

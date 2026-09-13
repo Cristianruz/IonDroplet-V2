@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 // El análisis completo del cultivo.
 //
@@ -80,7 +80,7 @@ export function useAnalisis() {
   const cargar = useCallback(async (refrescar = false) => {
     if (refrescar) setRefrescando(true)
     try {
-      const res = await fetch(`${API_URL}/api/ai/analisis${refrescar ? '?refrescar=1' : ''}`)
+      const res = await apiFetch(`/api/ai/analisis${refrescar ? '?refrescar=1' : ''}`)
       if (res.status === 503) {
         setEstado('sin_configurar')
         return

@@ -1,10 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { NavInferior } from '@/components/nav-inferior'
-import { VolverArriba } from '@/components/volver-arriba'
-import { BurbujaAsistente } from '@/components/burbuja-asistente'
 import { RegistrarSW } from '@/components/registrar-sw'
-import { ProveedorDatos } from '@/hooks/datos-provider'
+import { GuardiaSesion } from '@/components/guardia-sesion'
 
 export const metadata: Metadata = {
   title: 'IonDroplet — Riego Inteligente',
@@ -39,18 +36,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: TEMA_SIN_PARPADEO }} />
       </head>
       <body>
-        {/* Un solo proveedor arriba de todo: los datos sobreviven al cambio de
-            pantalla, así no hay que volver a pedirlos ni enseñar "Buscando…" */}
-        <ProveedorDatos>
-          {/* Hueco para que la barra fija de abajo no tape el final de la página */}
-          <div style={{ paddingBottom: 'calc(84px + env(safe-area-inset-bottom))' }}>
-            {children}
-          </div>
-          <BurbujaAsistente />
-          <RegistrarSW />
-          <VolverArriba />
-          <NavInferior />
-        </ProveedorDatos>
+        {/* Sin sesión, la guardia manda a /entrar y no monta el resto */}
+        <GuardiaSesion>{children}</GuardiaSesion>
+        <RegistrarSW />
       </body>
     </html>
   )

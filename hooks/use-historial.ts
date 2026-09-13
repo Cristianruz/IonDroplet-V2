@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 import type { PuntoHistorial } from './use-iondroplet'
 
 export type RangoHistorial = 'hoy' | '7dias' | '30dias'
@@ -51,10 +51,10 @@ export function useHistorial(rango: RangoHistorial, intervaloMs = 60000) {
       const [res, resResumen, resSensores] = await Promise.all([
         // El servidor manda la muestra ya reducida: un día de operación son
         // más de 23,000 lecturas y la gráfica dibuja unos cientos.
-        fetch(`${API_URL}/api/sensors/history?hours=${horas}&max=${MAXIMO_PUNTOS}`),
-        fetch(`${API_URL}/api/logs/resumen?hours=${horas}`),
+        apiFetch(`/api/sensors/history?hours=${horas}&max=${MAXIMO_PUNTOS}`),
+        apiFetch(`/api/logs/resumen?hours=${horas}`),
         // El promedio se saca aparte, sobre todas las lecturas, no sobre la muestra.
-        fetch(`${API_URL}/api/sensors/resumen?hours=${horas}`),
+        apiFetch(`/api/sensors/resumen?hours=${horas}`),
       ])
       if (!res.ok) throw new Error()
       const filas: Array<{ humidity: number | null; timestamp: string }> = await res.json()

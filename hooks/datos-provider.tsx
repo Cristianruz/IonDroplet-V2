@@ -9,7 +9,7 @@ import {
   useRef,
   type ReactNode,
 } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 import type { EstadoEsp, PuntoHistorial } from './use-iondroplet'
 import type { Parcela, Umbrales } from './use-parcela'
 
@@ -117,11 +117,11 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     // estado de la bomba NO se guarda nunca: servirlo viejo haría creer que
     // está regando cuando no. Si fueran juntas en un Promise.all, la caída de
     // una tiraría a la otra y se perdería el último dato conocido.
-    const lectura = fetch(`${API_URL}/api/sensors/latest`, { signal })
+    const lectura = apiFetch(`/api/sensors/latest`, { signal })
       .then(r => (r.ok ? r.json() : null))
       .catch(() => null)
 
-    const estado = fetch(`${API_URL}/api/esp/status`, { signal })
+    const estado = apiFetch(`/api/esp/status`, { signal })
       .then(r => (r.ok ? r.json() : Promise.reject(new Error())))
       .catch(() => null)
 
@@ -146,8 +146,8 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
 
   const leerHistorial = useCallback(async (signal?: AbortSignal) => {
     try {
-      const res = await fetch(
-        `${API_URL}/api/sensors/history?hours=24&max=${PUNTOS_GRAFICA}`,
+      const res = await apiFetch(
+        `/api/sensors/history?hours=24&max=${PUNTOS_GRAFICA}`,
         { signal }
       )
       if (!res.ok) return
@@ -163,13 +163,13 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
   const leerParcela = useCallback(async (signal?: AbortSignal) => {
     try {
       const [resParcelas, resUmbrales] = await Promise.all([
-        fetch(
+        apiFetch(
           idParcela.current !== null
-            ? `${API_URL}/api/parcelas/${idParcela.current}`
-            : `${API_URL}/api/parcelas`,
+            ? `/api/parcelas/${idParcela.current}`
+            : `/api/parcelas`,
           { signal }
         ),
-        fetch(`${API_URL}/api/thresholds`, { signal }),
+        apiFetch(`/api/thresholds`, { signal }),
       ])
       if (!resUmbrales.ok) throw new Error()
 
@@ -199,7 +199,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
       // Lo último que se le pidió al ionizador. Antes esto vivía solo en el
       // navegador y se perdía al recargar la página.
       try {
-        const resIon = await fetch(`${API_URL}/api/ionization/estado`, { signal })
+        const resIon = await apiFetch(`/api/ionization/estado`, { signal })
         if (resIon.ok && Date.now() - ultimoComando.current > 2000) {
           const estado: { encendida: boolean } = await resIon.json()
           setIonizacion(estado.encendida)
@@ -280,7 +280,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     ultimoComando.current = Date.now()
     setEstadoEsp(prev => ({ ...prev, autoMode: automatico }))
     try {
-      const res = await fetch(`${API_URL}/api/esp/control`, {
+      const res = await apiFetch(`/api/esp/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ autoMode: automatico }),
@@ -294,7 +294,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     ultimoComando.current = Date.now()
     setEstadoEsp(prev => ({ ...prev, autoMode: false, pumpState: encender ? 1 : 0 }))
     try {
-      const res = await fetch(`${API_URL}/api/esp/control`, {
+      const res = await apiFetch(`/api/esp/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bomba: encender ? 1 : 0, autoMode: false }),
@@ -319,12 +319,12 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     ultimoComando.current = Date.now()
     setEstadoEsp(prev => ({ ...prev, autoMode: true, pumpState: 0 }))
     try {
-      await fetch(`${API_URL}/api/esp/control`, {
+      await apiFetch(`/api/esp/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bomba: 0 }),
       })
-      const res = await fetch(`${API_URL}/api/esp/control`, {
+      const res = await apiFetch(`/api/esp/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ autoMode: true }),
@@ -339,7 +339,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     ultimoComando.current = Date.now()
     setIonizacion(nuevo)
     try {
-      await fetch(`${API_URL}/api/ionization/toggle`, {
+      await apiFetch(`/api/ionization/toggle`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ state: nuevo }),
@@ -351,7 +351,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     const previos = umbralesCompletos.current ?? {
       temp_max: null, hum_max: null, volt_min: null, volt_max: null, curr_max: null,
     }
-    const res = await fetch(`${API_URL}/api/thresholds`, {
+    const res = await apiFetch(`/api/thresholds`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ ...previos, hum_max: nuevo }),
@@ -367,8 +367,8 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
       ultimoComando.current = Date.now()
       try {
         const nueva = parcela === null
-        const res = await fetch(
-          nueva ? `${API_URL}/api/parcelas` : `${API_URL}/api/parcelas/${parcela.id}`,
+        const res = await apiFetch(
+          nueva ? `/api/parcelas` : `/api/parcelas/${parcela.id}`,
           {
             method: nueva ? 'POST' : 'PUT',
             headers: { 'Content-Type': 'application/json' },
@@ -401,7 +401,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
       try {
         if (!(await escribirUmbralDeRiego(nuevo))) return false
         if (parcela !== null) {
-          const res = await fetch(`${API_URL}/api/parcelas/${parcela.id}`, {
+          const res = await apiFetch(`/api/parcelas/${parcela.id}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ hum_min: nuevo }),

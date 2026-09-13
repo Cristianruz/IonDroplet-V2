@@ -26,6 +26,8 @@ const ORIGENES: Record<string, string> = {
   usuario: 'lo hiciste tú',
   ia: 'lo recomendó el asistente',
   umbral: 'la tierra estaba seca',
+  // El tope de minutos del backend: la bomba se apagó sola por seguridad.
+  sistema: 'se apagó sola por seguridad',
 }
 
 export function RegistroAcciones({ acciones, hayMas, cargando, onVerMas, bombaEncendida = false }: Props) {

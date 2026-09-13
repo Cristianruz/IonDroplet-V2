@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback, useRef } from 'react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 // El historial vive solo en memoria: al cerrar la app se va. No hay tabla para
 // esto y guardar conversaciones sin necesidad no le sirve a nadie.
@@ -27,7 +27,7 @@ export function useAsistente() {
     setEnviando(true)
 
     try {
-      const res = await fetch(`${API_URL}/api/chat`, {
+      const res = await apiFetch(`/api/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ pregunta: limpia }),
@@ -75,7 +75,7 @@ export function usePropuestaUmbral() {
     setAviso(null)
     setPropuesta(null)
     try {
-      const res = await fetch(`${API_URL}/api/ai/umbral`, {
+      const res = await apiFetch(`/api/ai/umbral`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: '{}',
@@ -95,7 +95,7 @@ export function usePropuestaUmbral() {
 
   const aplicar = useCallback(async (valor: number): Promise<boolean> => {
     try {
-      const res = await fetch(`${API_URL}/api/ai/umbral/aplicar`, {
+      const res = await apiFetch(`/api/ai/umbral/aplicar`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ valor }),

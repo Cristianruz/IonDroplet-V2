@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 
 // Las alertas las decide el servidor con reglas de código, no la IA: un aviso
 // de helada no puede depender de que el modelo esté disponible. Aquí sólo se
@@ -44,7 +44,7 @@ export function useResumenAlertas(intervaloMs = 60000) {
 
   const cargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/alertas/resumen`)
+      const res = await apiFetch(`/api/alertas/resumen`)
       if (!res.ok) return
       setResumen(await res.json())
     } catch {
@@ -69,7 +69,7 @@ export function useAlertas() {
 
   const cargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/alertas?limit=80`)
+      const res = await apiFetch(`/api/alertas?limit=80`)
       if (!res.ok) throw new Error()
       const filas = await res.json()
       setAlertas(filas.map(aAlerta))
@@ -88,14 +88,14 @@ export function useAlertas() {
   /** Al abrir la pantalla, lo nuevo pasa a visto y la campanita se apaga. */
   const marcarVistas = useCallback(async () => {
     try {
-      await fetch(`${API_URL}/api/alertas/vistas`, { method: 'POST' })
+      await apiFetch(`/api/alertas/vistas`, { method: 'POST' })
     } catch {}
   }, [])
 
   const cambiarEstado = useCallback(
     async (id: number, estado: EstadoAlerta): Promise<boolean> => {
       try {
-        const res = await fetch(`${API_URL}/api/alertas/${id}/estado`, {
+        const res = await apiFetch(`/api/alertas/${id}/estado`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ estado }),

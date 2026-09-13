@@ -35,7 +35,9 @@ const COLOR_CONFIANZA: Record<Confianza, string> = {
 
 export default function PantallaAnalisis() {
   const { analisis, indicadores, cuando, estado, refrescando, refrescar } = useAnalisis()
-  const { conectado, ionizacion, cambiarIonizacion } = useIonDroplet({ conHistorial: false })
+  const { conectado, estadoEsp } = useIonDroplet({ conHistorial: false })
+  // Un solo relé prende la bomba y las varillas: si está regando, está ionizando.
+  const ionizando = estadoEsp.pumpState === 1
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
@@ -190,9 +192,10 @@ export default function PantallaAnalisis() {
       <Aparece><AgenteCard /></Aparece>
 
       {/* --- Ionización ---
-          Vive aquí y ya no en su propia pestaña: es una decisión de riego, y
-          ahora la IA dice si conviene. Lo que NO cambia: el aparato no
-          confirma su estado, y eso se sigue diciendo con todas sus letras. */}
+          En el prototipo no es un aparato aparte: el mismo relé que prende la
+          bomba le da corriente a las varillas que ionizan el agua. Por eso aquí
+          no hay botón propio (antes lo había y no movía nada) y el estado sale
+          del relé, no de lo último que se tocó en la app. */}
       <Aparece>
         <section className="tarjeta flex flex-col gap-3" aria-label="Agua ionizada">
           <div className="flex items-center justify-between gap-2">
@@ -200,16 +203,21 @@ export default function PantallaAnalisis() {
               <Zap size={13} aria-hidden />
               Agua ionizada
             </span>
-            <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: ionizacion ? 'var(--oro)' : 'var(--tinta-suave)' }}>
-              <span className="punto" style={{ background: ionizacion ? 'var(--oro)' : 'var(--apagado)' }} aria-hidden />
-              {ionizacion ? 'Encendida' : 'Apagada'}
+            <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: ionizando ? 'var(--oro)' : 'var(--tinta-suave)' }}>
+              <span className="punto" style={{ background: ionizando ? 'var(--oro)' : 'var(--apagado)' }} aria-hidden />
+              {ionizando ? 'Ionizando' : 'Apagada'}
             </span>
           </div>
+
+          <p className="text-sm">
+            La ionización va junto con el riego: cada vez que la bomba riega, las varillas ionizan
+            el agua. Se prende con <strong>Regar ahora</strong> o cuando el sistema decide regar.
+          </p>
 
           {analisis?.ionizacion && (
             <p className="text-sm texto-suave">
               <strong style={{ color: analisis.ionizacion.recomendada ? 'var(--verde)' : 'var(--tinta)' }}>
-                {analisis.ionizacion.recomendada ? 'Conviene encenderla.' : 'Ahorita no hace falta.'}
+                {analisis.ionizacion.recomendada ? 'Conviene regar con agua ionizada.' : 'Ahorita no hace falta.'}
               </strong>{' '}
               {analisis.ionizacion.porque}
             </p>
@@ -223,19 +231,10 @@ export default function PantallaAnalisis() {
               </p>
             )}
 
-          <button
-            type="button"
-            onClick={cambiarIonizacion}
-            className={`boton boton-ancho ${ionizacion ? 'boton-secundario' : 'boton-primario'}`}
-            aria-pressed={ionizacion}
-          >
-            {ionizacion ? 'Apagar la ionización' : 'Encender la ionización'}
-          </button>
-
           <p className="text-xs texto-apagado">
-            El ionizador no avisa su estado por su cuenta: aquí se ve lo último que se le pidió
-            desde esta aplicación. Tampoco se mide ninguna propiedad del agua, así que el sistema
-            no puede demostrar su efecto.
+            El relé no avisa su estado por su cuenta: aquí se ve la última orden que se le mandó.
+            Tampoco se mide ninguna propiedad del agua, así que el sistema no puede demostrar el
+            efecto de la ionización.
           </p>
         </section>
       </Aparece>

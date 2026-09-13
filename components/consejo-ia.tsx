@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { Sparkles } from 'lucide-react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 export type Pantalla = 'inicio' | 'parcela' | 'historial' | 'plagas'
 
@@ -24,7 +24,7 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
 
   const pedir = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/ai/consejo?pantalla=${pantalla}`)
+      const res = await apiFetch(`/api/ai/consejo?pantalla=${pantalla}`)
       if (!res.ok) {
         setFallo(true)
         return

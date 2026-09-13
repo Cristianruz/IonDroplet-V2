@@ -1,9 +1,9 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 
-export type OrigenAccion = 'usuario' | 'ia' | 'umbral'
+export type OrigenAccion = 'usuario' | 'ia' | 'umbral' | 'sistema'
 
 export interface Accion {
   id: number
@@ -36,7 +36,7 @@ export function useRegistro(horas?: number, intervaloMs = 30000) {
       // puntos verdes de riego, en vez de pedir la bitácora dos veces.
       const filtro = horas ? `&hours=${horas}` : ''
       const pedir = Math.max(limite + 1, PARA_LA_GRAFICA)
-      const res = await fetch(`${API_URL}/api/logs?limit=${pedir}${filtro}`)
+      const res = await apiFetch(`/api/logs?limit=${pedir}${filtro}`)
       if (!res.ok) throw new Error()
       const filas: Array<{
         id: number

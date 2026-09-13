@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 export interface AvisoClima {
   tipo: 'helada' | 'lluvia' | 'viento' | 'calor'
@@ -41,7 +41,7 @@ export function useClima(parcelaId: number | null) {
 
   const cargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/clima`)
+      const res = await apiFetch(`/api/clima`)
       if (res.status === 404) {
         setEstado('sin_ubicacion')
         return
@@ -80,7 +80,7 @@ export function useClima(parcelaId: number | null) {
           timeout: 15000,
         })
       })
-      const res = await fetch(`${API_URL}/api/parcelas/${parcelaId}`, {
+      const res = await apiFetch(`/api/parcelas/${parcelaId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

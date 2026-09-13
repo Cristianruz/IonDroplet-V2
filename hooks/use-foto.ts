@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useCallback } from 'react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 export interface RevisionDeFoto {
   esPlanta: boolean
@@ -54,7 +54,7 @@ export function useFoto() {
       const pequena = await encoger(archivo)
       setVistaPrevia(URL.createObjectURL(pequena))
 
-      const res = await fetch(`${API_URL}/api/ai/foto`, {
+      const res = await apiFetch(`/api/ai/foto`, {
         method: 'POST',
         headers: { 'Content-Type': 'image/jpeg' },
         body: pequena,

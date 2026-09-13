@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 
 // El agente agrónomo: lo que decidió, por qué, y el botón de deshacer.
 //
@@ -43,8 +43,8 @@ export function useAgente() {
   const cargar = useCallback(async () => {
     try {
       const [dRes, eRes] = await Promise.all([
-        fetch(`${API_URL}/api/agente/decisiones?limit=15`),
-        fetch(`${API_URL}/api/agente/estado`),
+        apiFetch(`/api/agente/decisiones?limit=15`),
+        apiFetch(`/api/agente/estado`),
       ])
       if (dRes.ok) {
         const filas = await dRes.json()
@@ -74,7 +74,7 @@ export function useAgente() {
   const correr = useCallback(async () => {
     setCorriendo(true)
     try {
-      await fetch(`${API_URL}/api/agente/correr`, { method: 'POST' })
+      await apiFetch(`/api/agente/correr`, { method: 'POST' })
       await cargar()
     } catch {
     } finally {
@@ -85,7 +85,7 @@ export function useAgente() {
   const deshacer = useCallback(
     async (id: number) => {
       try {
-        const res = await fetch(`${API_URL}/api/agente/revertir/${id}`, { method: 'POST' })
+        const res = await apiFetch(`/api/agente/revertir/${id}`, { method: 'POST' })
         await cargar()
         return res.ok
       } catch {
@@ -98,7 +98,7 @@ export function useAgente() {
   const cambiarHabilitado = useCallback(
     async (valor: boolean) => {
       try {
-        await fetch(`${API_URL}/api/agente/habilitar`, {
+        await apiFetch(`/api/agente/habilitar`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ habilitado: valor }),

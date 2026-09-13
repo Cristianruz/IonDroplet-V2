@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL } from '@/lib/api'
+import { apiFetch } from '@/lib/api'
 
 // El balance hídrico: cuánta agua va a pedir el cultivo esta semana contra
 // cuánta va a llover. Es lo que permite adelantarse en vez de reaccionar.
@@ -62,7 +62,7 @@ export function useBalance(dias = 7) {
 
   const cargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/agua/balance?dias=${dias}`)
+      const res = await apiFetch(`/api/agua/balance?dias=${dias}`)
       if (res.status === 404) {
         setEstado('sin_ubicacion')
         return

@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { API_URL, parseTimestampUTC } from '@/lib/api'
+import { apiFetch, parseTimestampUTC } from '@/lib/api'
 
 // Comparación entre parcelas. Era el punto del jurado que estaba bloqueado por
 // el estado de riego global: con una sola bomba para todo el sistema no había
@@ -32,7 +32,7 @@ export function useComparar(horas = 168, max = 200) {
 
   const cargar = useCallback(async () => {
     try {
-      const res = await fetch(`${API_URL}/api/parcelas/comparar?hours=${horas}&max=${max}`)
+      const res = await apiFetch(`/api/parcelas/comparar?hours=${horas}&max=${max}`)
       if (!res.ok) throw new Error()
       const datos = await res.json()
       setSeries(
