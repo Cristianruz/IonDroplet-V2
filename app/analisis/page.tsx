@@ -75,6 +75,13 @@ export default function PantallaAnalisis() {
         </div>
       )}
 
+      {estado === 'sin_sesion' && (
+        <p className="aviso">
+          El análisis con IA lo pide quien entra con su cuenta.{' '}
+          <a href="/entrar" className="font-bold" style={{ color: 'var(--verde)' }}>Entrar</a>
+        </p>
+      )}
+
       {estado === 'sin_configurar' && (
         <p className="aviso">El asistente no está configurado en esta computadora.</p>
       )}

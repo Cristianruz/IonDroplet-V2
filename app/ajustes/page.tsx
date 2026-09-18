@@ -48,11 +48,11 @@ export default function PantallaAjustes() {
           className="text-base rounded-lg px-3.5 py-2.5 break-all"
           style={{ background: 'var(--pista)', color: 'var(--tinta)' }}
         >
-          {API_URL}
+          {API_URL || 'La misma dirección de la app (la reenvía al backend)'}
         </p>
         <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-          Esta dirección se cambia en el archivo <code>.env.local</code> de la aplicación. Aquí solo
-          se muestra.
+          El backend se cambia con <code>BACKEND_URL</code> al construir la aplicación. Aquí solo se
+          muestra.
         </p>
       </section>
 
@@ -104,15 +104,22 @@ export default function PantallaAjustes() {
             {correo}
           </p>
         )}
-        <button
-          type="button"
-          onClick={() => cerrarSesion()}
-          className="boton boton-secundario"
-          style={{ color: 'var(--peligro)' }}
-        >
-          <LogOut size={18} aria-hidden />
-          Cerrar sesión
-        </button>
+        {correo ? (
+          <button
+            type="button"
+            onClick={() => cerrarSesion()}
+            className="boton boton-secundario"
+            style={{ color: 'var(--peligro)' }}
+          >
+            <LogOut size={18} aria-hidden />
+            Cerrar sesión
+          </button>
+        ) : (
+          <>
+            <p className="text-base texto-suave">Estás como visita: puedes ver todo, pero no cambiar nada.</p>
+            <a href="/entrar" className="boton boton-primario">Entrar con mi cuenta</a>
+          </>
+        )}
       </section>
     </main>
   )

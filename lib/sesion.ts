@@ -57,6 +57,20 @@ export function guardarSesion(sesion: Sesion): void {
   localStorage.setItem(CLAVE, JSON.stringify(sesion))
 }
 
+/** Aviso global: alguien sin sesión intentó operar (regar, guardar…). */
+export const EVENTO_PIDE_SESION = 'iondroplet:pide-sesion'
+
+export function pedirSesion(): void {
+  window.dispatchEvent(new Event(EVENTO_PIDE_SESION))
+}
+
+/** Olvida una sesión vencida sin sacar a nadie: sigue viendo como visita. */
+export function olvidarSesion(): void {
+  try {
+    localStorage.removeItem(CLAVE)
+  } catch {}
+}
+
 /**
  * Cierra la sesión y borra lo que el service worker guardó de la API: si no,
  * sin señal ese teléfono seguiría enseñando los datos de la parcela a quien

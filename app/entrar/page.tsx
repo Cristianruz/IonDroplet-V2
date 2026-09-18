@@ -109,7 +109,7 @@ export default function PantallaEntrar() {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold">IonDroplet</h1>
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
-          Entra con tu cuenta de Google para ver y controlar tu parcela.
+          Entra con tu cuenta de Google para controlar tu parcela. Para solo verla no hace falta.
         </p>
       </div>
 
@@ -121,6 +121,10 @@ export default function PantallaEntrar() {
           <code>.env.local</code> de la aplicación y vuelve a construirla.
         </p>
       )}
+
+      <a href="/" className="text-base font-semibold" style={{ color: 'var(--verde)' }}>
+        Solo quiero ver el sistema
+      </a>
 
       {entrando && (
         <p className="text-base" role="status">

@@ -3,6 +3,14 @@ const nextConfig = {
   // Que la respuesta no anuncie con qué está hecha la app.
   poweredByHeader: false,
 
+  // La app y la API salen por la misma dirección: /api/* se reenvía al
+  // backend de la computadora del riego. BACKEND_URL se lee al CONSTRUIR
+  // (npm run build): si cambia, hay que reconstruir.
+  async rewrites() {
+    const backend = process.env.BACKEND_URL || 'http://localhost:3001'
+    return [{ source: '/api/:path*', destination: `${backend}/api/:path*` }]
+  },
+
   // Cabeceras de seguridad en todas las páginas.
   // No hay Content-Security-Policy todavía: el backend vive en otro puerto con
   // una IP que cambia según la red, y una política mal puesta deja la app en
