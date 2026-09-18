@@ -37,7 +37,8 @@ export default function PantallaHistorial() {
               key={id}
               type="button"
               onClick={() => setRango(id)}
-              className="opcion py-2.5 text-sm"
+              className="opcion text-[13.5px]"
+              style={{ minHeight: 44 }}
               aria-pressed={activo}
             >
               {etiqueta}

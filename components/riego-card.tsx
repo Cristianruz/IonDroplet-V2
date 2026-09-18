@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Waves, Droplet, Square } from 'lucide-react'
 import type { EstadoEsp } from '@/hooks/use-iondroplet'
+import { colorEstado } from '@/lib/estilo'
 
 interface Props {
   estadoEsp: EstadoEsp
@@ -52,18 +53,16 @@ export function RiegoCard({
           <Waves size={13} aria-hidden />
           Riego
         </span>
-        <span
-          className={`flex items-center gap-1.5 text-sm font-semibold ${regando ? 'regando' : ''}`}
-          style={{ color: regando ? 'var(--agua)' : 'var(--tinta-suave)' }}
-          role="status"
-        >
-          <span
-            className="punto"
-            style={{ background: regando ? 'var(--agua)' : 'var(--apagado)' }}
-            aria-hidden
-          />
-          {regando ? 'Regando ahora' : 'Sin regar'}
-        </span>
+        {regando ? (
+          <span className="capsula regando" style={colorEstado('var(--agua)')} role="status">
+            Regando ahora
+          </span>
+        ) : (
+          <span className="flex items-center gap-1.5 text-sm font-semibold texto-suave" role="status">
+            <span className="punto" style={{ background: 'var(--apagado)' }} aria-hidden />
+            Sin regar
+          </span>
+        )}
       </div>
 
       {/* La razón, siempre. Es lo que convierte un tablero en un sistema que
@@ -74,8 +73,8 @@ export function RiegoCard({
         <button
           type="button"
           onClick={terminarRiegoManual}
-          className="boton boton-ancho text-white"
-          style={{ background: 'var(--peligro)' }}
+          className="boton boton-ancho"
+          style={{ background: 'var(--peligro)', color: 'var(--sobre-estado)', boxShadow: 'var(--brillo-capsula)' }}
         >
           <Square size={15} aria-hidden />
           Detener riego
@@ -83,7 +82,7 @@ export function RiegoCard({
       ) : regando ? (
         // Regando por decisión del sistema: no se ofrece detener desde aquí,
         // se detiene solo cuando la tierra llegue a su punto.
-        <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-sm texto-apagado">
           Se detiene solo cuando la tierra llegue a su punto.
         </p>
       ) : confirmando ? (
@@ -98,8 +97,12 @@ export function RiegoCard({
                 setConfirmando(false)
                 regarAhora()
               }}
-              className="boton text-white"
-              style={{ background: 'var(--agua)' }}
+              className="boton"
+              style={{
+                background: 'var(--agua)',
+                color: 'var(--sobre-estado)',
+                boxShadow: 'var(--brillo-capsula), 0 5px 16px color-mix(in srgb, var(--agua) 30%, transparent)',
+              }}
             >
               Sí, riega
             </button>

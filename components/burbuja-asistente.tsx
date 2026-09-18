@@ -68,7 +68,7 @@ export function BurbujaAsistente() {
             height: 52,
             borderRadius: 'var(--radio-pill)',
             background: 'var(--verde)',
-            color: '#fff',
+            color: 'var(--sobre-estado)',
             boxShadow: 'var(--sombra-elevada)',
           }}
         >
@@ -138,7 +138,7 @@ export function BurbujaAsistente() {
                     padding: '8px 12px',
                     borderRadius: 'var(--radio)',
                     background: b.de === 'agricultor' ? 'var(--verde)' : 'var(--pista)',
-                    color: b.de === 'agricultor' ? '#fff' : 'var(--tinta)',
+                    color: b.de === 'agricultor' ? 'var(--sobre-estado)' : 'var(--tinta)',
                     lineHeight: 1.5,
                   }}
                 >

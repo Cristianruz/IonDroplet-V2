@@ -116,7 +116,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
 
   const estiloChip = (activo: boolean) => ({
     background: activo ? 'var(--verde)' : 'var(--tarjeta)',
-    color: activo ? '#fff' : 'var(--tinta)',
+    color: activo ? 'var(--sobre-estado)' : 'var(--tinta)',
     borderColor: activo ? 'var(--verde)' : 'var(--borde)',
   })
 

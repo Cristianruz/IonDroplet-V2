@@ -4,8 +4,9 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { ChevronRight, FlaskConical, Sprout } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { useParcela } from '@/hooks/use-parcela'
-import { HumedadCard } from '@/components/humedad-card'
+import { useParcela, type DatosParcela } from '@/hooks/use-parcela'
+import { apiFetch } from '@/lib/api'
+import { VistaParcela } from '@/components/parcela-3d/vista-parcela'
 import { ParcelaCard } from '@/components/parcela-card'
 import { ParcelaForm } from '@/components/parcela-form'
 import { UmbralCard } from '@/components/umbral-card'
@@ -16,23 +17,58 @@ import { ConsejoIA } from '@/components/consejo-ia'
 import { EsqueletoParcela, EsqueletoHumedad } from '@/components/esqueletos'
 
 export default function PantallaParcela() {
-  const { humedad, sensorActivo, ultimaLectura } = useIonDroplet({ conHistorial: false })
+  const { humedad } = useIonDroplet({ conHistorial: false })
   const { parcela, umbralRiego, cargando, conectado, guardando, guardarParcela, guardarUmbral } = useParcela()
   const [editando, setEditando] = useState(false)
+  const [agregando, setAgregando] = useState(false)
+  const [guardandoNueva, setGuardandoNueva] = useState(false)
+  const [avisoNueva, setAvisoNueva] = useState<string | null>(null)
+
+  // Una parcela más en el campo. Va directo al servidor y NO toca el punto de
+  // riego: ese número es de la bomba (thresholds.hum_max) y lo manda la
+  // parcela que ya existe.
+  async function agregarParcela(datos: DatosParcela): Promise<boolean> {
+    setGuardandoNueva(true)
+    try {
+      const res = await apiFetch('/api/parcelas', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ ...datos, hum_min: umbralRiego ?? datos.hum_min }),
+      })
+      if (!res.ok) return false
+      setAgregando(false)
+      setAvisoNueva(`Listo, ${datos.nombre} ya está en tu campo. La ves en "Mi campo".`)
+      return true
+    } catch {
+      return false
+    } finally {
+      setGuardandoNueva(false)
+    }
+  }
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      <h1 className="text-xl font-bold leading-tight">Mi parcela</h1>
+      {(cargando || editando || agregando || parcela === null) && (
+        <h1 className="titulo-pantalla">Mi parcela</h1>
+      )}
 
       {!conectado && !cargando && <AvisoSinConexion />}
 
-      <ConsejoIA pantalla="parcela" />
+      {(cargando || editando || agregando || parcela === null) && <ConsejoIA pantalla="parcela" />}
 
       {cargando ? (
         <>
           <EsqueletoParcela />
           <EsqueletoHumedad />
         </>
+      ) : agregando ? (
+        <ParcelaForm
+          parcela={null}
+          umbralActual={umbralRiego ?? 40}
+          guardando={guardandoNueva}
+          onGuardar={agregarParcela}
+          onCancelar={() => setAgregando(false)}
+        />
       ) : editando ? (
         <ParcelaForm
           parcela={parcela}
@@ -66,15 +102,18 @@ export default function PantallaParcela() {
         </section>
       ) : (
         <>
-          <Aparece><ParcelaCard parcela={parcela} onEditar={() => setEditando(true)} /></Aparece>
+          <VistaParcela
+            parcela={parcela}
+            umbral={umbralRiego ?? 40}
+            onEditar={() => setEditando(true)}
+            onAgregar={() => { setAvisoNueva(null); setAgregando(true) }}
+            consejo={<ConsejoIA pantalla="parcela" />}
+          />
+
+          {avisoNueva && <p className="aviso aviso-ok" role="status">{avisoNueva}</p>}
 
           <div className="grid md:grid-cols-2 gap-4">
-            <HumedadCard
-              humedad={humedad}
-              sensorActivo={sensorActivo}
-              ultimaLectura={ultimaLectura}
-              umbral={umbralRiego ?? 40}
-            />
+            <Aparece><ParcelaCard parcela={parcela} onEditar={() => setEditando(true)} /></Aparece>
             <UmbralCard
               umbral={umbralRiego}
               humedad={humedad}

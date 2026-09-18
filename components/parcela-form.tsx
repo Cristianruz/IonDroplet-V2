@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Minus, Plus } from 'lucide-react'
-import { CULTIVOS, ETAPAS, cultivoPorId, etapaPorId } from '@/lib/cultivos'
+import { CULTIVOS, ETAPAS, SISTEMAS_RIEGO, cultivoPorId, etapaPorId, sistemaPorId } from '@/lib/cultivos'
 import type { Parcela, DatosParcela } from '@/hooks/use-parcela'
 
 interface Props {
@@ -35,6 +35,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
   const [nombre, setNombre] = useState(parcela?.nombre ?? '')
   const [cultivo, setCultivo] = useState(cultivoPorId(parcela?.cultivo)?.id ?? '')
   const [etapa, setEtapa] = useState(etapaPorId(parcela?.etapa)?.id ?? '')
+  const [sistema, setSistema] = useState<string>(sistemaPorId(parcela?.tipo_sistema)?.id ?? '')
   const [area, setArea] = useState(
     parcela?.area_ha !== null && parcela?.area_ha !== undefined ? String(parcela.area_ha) : ''
   )
@@ -89,6 +90,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       etapa: etapa === '' ? null : etapa,
       area_ha: areaLimpia,
       caudal_lpm: caudalLimpio,
+      tipo_sistema: sistema === '' ? null : sistema,
       hum_min: umbral,
     })
     if (!listo) setAviso('No se pudo guardar. Revisa que el sistema esté conectado.')
@@ -160,6 +162,27 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
                 key={id}
                 type="button"
                 onClick={() => setEtapa(activo ? '' : id)}
+                className="opcion py-2.5 px-4 text-left"
+                aria-pressed={activo}
+              >
+                <span className="text-base font-bold block">{etiqueta}</span>
+                <span className="text-sm block leading-snug" style={{ opacity: 0.85 }}>{explicacion}</span>
+              </button>
+            )
+          })}
+        </div>
+      </div>
+
+      <div>
+        <p className="text-base mb-3" style={{ color: 'var(--tinta-suave)' }}>¿Cómo le llega el agua?</p>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3" role="group" aria-label="Sistema de riego">
+          {SISTEMAS_RIEGO.map(({ id, nombre: etiqueta, explicacion }) => {
+            const activo = sistema === id
+            return (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setSistema(activo ? '' : id)}
                 className="opcion py-2.5 px-4 text-left"
                 aria-pressed={activo}
               >
@@ -259,7 +282,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       </div>
 
       {aviso && (
-        <p className="text-base font-semibold rounded-lg p-4 text-white" style={{ background: 'var(--peligro)' }} role="alert">
+        <p className="text-base font-semibold rounded-lg p-4 sobre-estado" style={{ background: 'var(--peligro)' }} role="alert">
           {aviso}
         </p>
       )}

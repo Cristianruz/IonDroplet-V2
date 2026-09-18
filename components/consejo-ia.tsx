@@ -75,7 +75,7 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
         <Sparkles size={13} aria-hidden />
         Lo que veo hoy
       </span>
-      <p className="text-sm leading-relaxed" role="status">
+      <p className="text-[14.5px] leading-relaxed" role="status">
         {consejo}
       </p>
     </section>

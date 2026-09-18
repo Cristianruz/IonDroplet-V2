@@ -1,77 +1,79 @@
 @import "tailwindcss";
 
 /* ==================================================================
-   SISTEMA VISUAL — GLASSMORPHISM
+   SISTEMA VISUAL — VIDRIO LÍQUIDO PARA EL SOL (dirección 2a)
    ------------------------------------------------------------------
-   Las superficies son vidrio esmerilado: blanco (o gris, en oscuro)
-   translúcido que desenfoca un fondo de color. El fondo es un degradado
-   de verdes y azules de agua, los colores del sistema, sin chillar.
+   Se queda el vidrio, pero deja de ser transparente donde hay texto.
+   Tres reglas hacen que aguante el sol:
 
-   Lo que se cuida para que se siga leyendo bajo el sol:
-   - El vidrio es poco transparente (62 %): el texto no compite con el fondo.
-   - El verde y el semáforo son SÓLIDOS: un estado nunca se adivina a través
-     de una transparencia.
-   - Cada superficie lleva un filo de luz arriba que marca su orilla.
-   - Si el teléfono no sabe desenfocar, o pide menos transparencia, el
-     vidrio se vuelve sólido (al final de este archivo).
-   - Tipografía de 15 px con jerarquía por peso. Nada brinca al pasar el ratón.
+   1. El panel que carga texto va al 92 % y lleva sombra propia: el
+      contraste no depende del fondo. El cristal al 66 % (--cristal-suave)
+      sólo va en cosas sin dato crítico: botones secundarios, columnas
+      del pronóstico.
+   2. El semáforo y los niveles de riesgo van en cápsula de color SÓLIDO
+      con texto blanco (.capsula), nunca en transparencia.
+   3. El degradado se queda en las orillas y detrás de las cápsulas,
+      nunca debajo de una palabra.
+
+   Si el teléfono no sabe desenfocar, o pide menos transparencia, los
+   mismos paneles se vuelven opacos y no cambia nada más (final del archivo).
    ================================================================== */
 
 :root {
-  /* Superficies. El fondo que se ve a través del vidrio es --degradado-fondo;
-     --fondo queda como color base y para lo que va "hundido". */
-  --fondo: #edf3f0;
-  --tarjeta: rgba(255, 255, 255, .62);
+  --fondo: #edf6f1;
+  --tarjeta: rgba(255, 255, 255, .92);
+  --cristal-suave: rgba(255, 255, 255, .66);
   --elevado: rgba(255, 255, 255, .80);
-  /* Lo que se usa si el teléfono no sabe desenfocar. */
-  --tarjeta-solida: #f7faf8;
+  --tarjeta-solida: #f8fbf9;
 
   /* Texto */
-  --tinta: #111418;
-  --tinta-suave: #4a5a52;
-  --apagado: #76857e;
+  --tinta: #0c1a15;
+  --tinta-suave: #3a4f45;
+  --etiqueta: #40584d;
+  --apagado: #5a6e63;
 
   /* Líneas */
-  --borde: rgba(15, 45, 32, .12);
-  --pista: rgba(15, 45, 32, .08);
+  --borde: rgba(12, 26, 21, .10);
+  --pista: rgba(12, 26, 21, .08);
 
-  /* Acento. Uno solo, y se usa poco: botón principal, valor que importa,
-     pestaña activa. Todo lo demás es neutro. */
-  --verde: #1f7a3d;
-  --verde-fuerte: #17632f;
-  --verde-suave: rgba(31, 122, 61, .12);
+  /* Acento */
+  --verde: #11794a;
+  --verde-fuerte: #0d6139;
+  --verde-suave: rgba(17, 121, 74, .12);
 
-  /* Estados. Mismo criterio: color en el texto y en un filo, no en
-     bloques grandes de fondo. */
-  --agua: #1a6fd4;
-  --alerta: #9a6206;
-  --peligro: #c02626;
-  --riesgo-medio: #9a6206;
-  --oro: #9a6206;
-  --fondo-alerta: rgba(154, 98, 6, .12);
-  --fondo-peligro: rgba(192, 38, 38, .10);
+  /* Estados. En texto y filo sobre vidrio; en cápsula, de fondo sólido. */
+  --agua: #0f62b8;
+  --alerta: #8a5a05;
+  --alerta-texto: #7a5004;
+  --peligro: #b02222;
+  --riesgo-medio: #8a5a05;
+  --oro: #8a6512;
+  --fondo-alerta: rgba(138, 90, 5, .12);
+  --fondo-peligro: rgba(176, 34, 34, .10);
+  /* Texto encima de una cápsula de estado. */
+  --sobre-estado: #ffffff;
 
-  /* Vidrio. El tema oscuro cambia estos mismos nombres; las sombras de
-     abajo se arman con ellos. */
-  --vidrio-filo: rgba(255, 255, 255, .75);
-  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .7);
-  --sombra-color: rgba(22, 60, 45, .12);
+  /* Vidrio */
+  --vidrio-filo: rgba(255, 255, 255, .9);
+  --vidrio-brillo: inset 0 1px 0 #fff;
+  --sombra-color: rgba(10, 40, 30, .14);
   --desenfoque: blur(18px) saturate(165%);
-  --sombra-tarjeta: 0 10px 30px var(--sombra-color), var(--vidrio-brillo);
-  --sombra-boton: 0 4px 14px var(--sombra-color), var(--vidrio-brillo);
-  --sombra-hundida: inset 0 1px 3px var(--sombra-color);
-  --sombra-acento: 0 6px 18px rgba(31, 122, 61, .30), inset 0 1px 0 rgba(255, 255, 255, .22);
+  --sombra-tarjeta: var(--vidrio-brillo), 0 8px 22px var(--sombra-color);
+  --sombra-boton: var(--vidrio-brillo), 0 3px 10px rgba(10, 40, 30, .12);
+  --sombra-hundida: inset 0 1px 3px rgba(12, 26, 21, .18);
+  --sombra-acento: inset 0 1px 0 rgba(255, 255, 255, .24), 0 5px 16px rgba(17, 121, 74, .30);
   --sombra-hundida-acento: inset 0 2px 6px rgba(0, 0, 0, .25);
-  --sombra-elevada: 0 16px 44px rgba(22, 60, 45, .20);
+  --sombra-elevada: 0 18px 44px rgba(8, 34, 24, .28);
+  --brillo-capsula: inset 0 1px 0 rgba(255, 255, 255, .28);
   --degradado-fondo:
-    radial-gradient(60% 45% at 8% 0%, rgba(46, 160, 90, .28), transparent 70%),
-    radial-gradient(50% 40% at 100% 18%, rgba(26, 111, 212, .20), transparent 70%),
-    radial-gradient(70% 50% at 50% 105%, rgba(20, 170, 150, .18), transparent 70%),
-    linear-gradient(180deg, #f1f7f3 0%, #e7eff4 100%);
+    radial-gradient(75% 55% at 4% 0%, rgba(30, 190, 130, .30), transparent 72%),
+    radial-gradient(65% 45% at 100% 14%, rgba(30, 130, 225, .26), transparent 72%),
+    radial-gradient(80% 50% at 50% 104%, rgba(20, 180, 165, .22), transparent 72%),
+    linear-gradient(180deg, #edf6f1 0%, #e4eef4 100%);
 
   /* Geometría */
-  --radio: 18px;
-  --radio-sm: 12px;
+  --radio: 22px;
+  --radio-sm: 14px;
   --radio-pill: 999px;
 
   --curva: cubic-bezier(.2, .6, .35, 1);
@@ -80,70 +82,82 @@
   --lento: 340ms;
 }
 
+/* Modo noche. El vidrio aquí sí es claro sobre oscuro (10 %), y los
+   estados suben de luminosidad; la cápsula lleva texto oscuro encima. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
-    --fondo: #0b1310;
-    --tarjeta: rgba(30, 42, 37, .55);
-    --elevado: rgba(38, 52, 46, .78);
-    --tarjeta-solida: #18221e;
-    --tinta: #e8efeb;
-    --tinta-suave: #a5b3ac;
-    --apagado: #72817a;
-    --borde: rgba(255, 255, 255, .10);
-    --pista: rgba(255, 255, 255, .07);
-    --verde: #4ec26f;
-    --verde-fuerte: #6ed08a;
-    --verde-suave: rgba(78, 194, 111, .16);
-    --agua: #4aa3f0;
-    --alerta: #d9a13f;
-    --peligro: #e5645c;
-    --riesgo-medio: #d9a13f;
-    --oro: #d9a13f;
-    --fondo-alerta: rgba(217, 161, 63, .14);
-    --fondo-peligro: rgba(229, 100, 92, .14);
-    --vidrio-filo: rgba(255, 255, 255, .10);
-    --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .06);
-    --sombra-color: rgba(0, 0, 0, .40);
-    --sombra-acento: 0 6px 18px rgba(78, 194, 111, .22), inset 0 1px 0 rgba(255, 255, 255, .18);
-    --sombra-elevada: 0 16px 44px rgba(0, 0, 0, .55);
+    --fondo: #0a1512;
+    --tarjeta: rgba(255, 255, 255, .10);
+    --cristal-suave: rgba(255, 255, 255, .07);
+    --elevado: rgba(22, 36, 31, .88);
+    --tarjeta-solida: #16221d;
+    --tinta: #e8f3ee;
+    --tinta-suave: #c4d6cd;
+    --etiqueta: #9fb6ab;
+    --apagado: #9fb6ab;
+    --borde: rgba(255, 255, 255, .14);
+    --pista: rgba(255, 255, 255, .10);
+    --verde: #45d383;
+    --verde-fuerte: #6ee09e;
+    --verde-suave: rgba(69, 211, 131, .16);
+    --agua: #5aaef5;
+    --alerta: #f0b849;
+    --alerta-texto: #f0b849;
+    --peligro: #f07068;
+    --riesgo-medio: #f0b849;
+    --oro: #e2b64f;
+    --fondo-alerta: rgba(240, 184, 73, .14);
+    --fondo-peligro: rgba(240, 112, 104, .14);
+    --sobre-estado: #0b1510;
+    --vidrio-filo: rgba(255, 255, 255, .18);
+    --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .14);
+    --sombra-color: rgba(0, 0, 0, .45);
+    --sombra-hundida: inset 0 1px 3px rgba(0, 0, 0, .4);
+    --sombra-acento: inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 20px rgba(69, 211, 131, .28);
+    --sombra-elevada: 0 18px 44px rgba(0, 0, 0, .5);
+    --brillo-capsula: inset 0 1px 0 rgba(255, 255, 255, .35);
     --degradado-fondo:
-      radial-gradient(60% 45% at 8% 0%, rgba(46, 160, 90, .22), transparent 70%),
-      radial-gradient(50% 40% at 100% 20%, rgba(26, 111, 212, .20), transparent 70%),
-      radial-gradient(70% 50% at 50% 105%, rgba(20, 150, 140, .16), transparent 70%),
-      linear-gradient(180deg, #0c1512 0%, #0a1116 100%);
+      radial-gradient(75% 55% at 4% 0%, rgba(30, 190, 130, .22), transparent 72%),
+      radial-gradient(65% 45% at 100% 14%, rgba(30, 130, 225, .20), transparent 72%),
+      linear-gradient(180deg, #0a1512 0%, #08110f 100%);
   }
 }
 
 :root[data-tema="oscuro"] {
-  --fondo: #0b1310;
-  --tarjeta: rgba(30, 42, 37, .55);
-  --elevado: rgba(38, 52, 46, .78);
-  --tarjeta-solida: #18221e;
-  --tinta: #e8efeb;
-  --tinta-suave: #a5b3ac;
-  --apagado: #72817a;
-  --borde: rgba(255, 255, 255, .10);
-  --pista: rgba(255, 255, 255, .07);
-  --verde: #4ec26f;
-  --verde-fuerte: #6ed08a;
-  --verde-suave: rgba(78, 194, 111, .16);
-  --agua: #4aa3f0;
-  --alerta: #d9a13f;
-  --peligro: #e5645c;
-  --riesgo-medio: #d9a13f;
-  --oro: #d9a13f;
-  --fondo-alerta: rgba(217, 161, 63, .14);
-  --fondo-peligro: rgba(229, 100, 92, .14);
-  --vidrio-filo: rgba(255, 255, 255, .10);
-  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .06);
-  --sombra-color: rgba(0, 0, 0, .40);
-  --sombra-acento: 0 6px 18px rgba(78, 194, 111, .22), inset 0 1px 0 rgba(255, 255, 255, .18);
-  --sombra-elevada: 0 16px 44px rgba(0, 0, 0, .55);
+  --fondo: #0a1512;
+  --tarjeta: rgba(255, 255, 255, .10);
+  --cristal-suave: rgba(255, 255, 255, .07);
+  --elevado: rgba(22, 36, 31, .88);
+  --tarjeta-solida: #16221d;
+  --tinta: #e8f3ee;
+  --tinta-suave: #c4d6cd;
+  --etiqueta: #9fb6ab;
+  --apagado: #9fb6ab;
+  --borde: rgba(255, 255, 255, .14);
+  --pista: rgba(255, 255, 255, .10);
+  --verde: #45d383;
+  --verde-fuerte: #6ee09e;
+  --verde-suave: rgba(69, 211, 131, .16);
+  --agua: #5aaef5;
+  --alerta: #f0b849;
+  --alerta-texto: #f0b849;
+  --peligro: #f07068;
+  --riesgo-medio: #f0b849;
+  --oro: #e2b64f;
+  --fondo-alerta: rgba(240, 184, 73, .14);
+  --fondo-peligro: rgba(240, 112, 104, .14);
+  --sobre-estado: #0b1510;
+  --vidrio-filo: rgba(255, 255, 255, .18);
+  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .14);
+  --sombra-color: rgba(0, 0, 0, .45);
+  --sombra-hundida: inset 0 1px 3px rgba(0, 0, 0, .4);
+  --sombra-acento: inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 20px rgba(69, 211, 131, .28);
+  --sombra-elevada: 0 18px 44px rgba(0, 0, 0, .5);
+  --brillo-capsula: inset 0 1px 0 rgba(255, 255, 255, .35);
   --degradado-fondo:
-    radial-gradient(60% 45% at 8% 0%, rgba(46, 160, 90, .22), transparent 70%),
-    radial-gradient(50% 40% at 100% 20%, rgba(26, 111, 212, .20), transparent 70%),
-    radial-gradient(70% 50% at 50% 105%, rgba(20, 150, 140, .16), transparent 70%),
-    linear-gradient(180deg, #0c1512 0%, #0a1116 100%);
+    radial-gradient(75% 55% at 4% 0%, rgba(30, 190, 130, .22), transparent 72%),
+    radial-gradient(65% 45% at 100% 14%, rgba(30, 130, 225, .20), transparent 72%),
+    linear-gradient(180deg, #0a1512 0%, #08110f 100%);
 }
 
 html {
@@ -203,7 +217,7 @@ body::before {
   border: 1px solid var(--vidrio-filo);
   border-radius: var(--radio);
   box-shadow: var(--sombra-tarjeta);
-  padding: 16px;
+  padding: 17px;
 }
 
 @media (min-width: 640px) {
@@ -227,11 +241,11 @@ body::before {
 
 /* La etiqueta chiquita arriba de un dato. */
 .etiqueta {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: .04em;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .09em;
   text-transform: uppercase;
-  color: var(--tinta-suave);
+  color: var(--etiqueta);
 }
 
 /* El número protagonista. Antes era de 72 px; 34 se lee igual de bien
@@ -251,7 +265,77 @@ body::before {
   margin-left: 2px;
 }
 
+/* El número de la humedad en Inicio: el dato que se ve desde lejos. */
+.dato-grande {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: -.045em;
+  line-height: .9;
+  font-variant-numeric: tabular-nums;
+}
+.dato-grande .dato-unidad { font-size: 20px; margin-left: 3px; }
+
+/* Cápsula de estado: color SÓLIDO, texto blanco. Es lo único que dice un
+   estado; nunca se lee a través de una transparencia. El color se pasa con
+   --c (style={{ '--c': 'var(--alerta)' }}). */
+.capsula {
+  --c: var(--verde);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border-radius: var(--radio-pill);
+  background: var(--c);
+  color: var(--sobre-estado);
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.2;
+  white-space: nowrap;
+  box-shadow: var(--brillo-capsula), 0 4px 14px color-mix(in srgb, var(--c) 32%, transparent);
+}
+.capsula::before {
+  content: "";
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex-shrink: 0;
+}
+/* Nivel de riesgo: la misma cápsula, más chica y en mayúsculas, sin punto. */
+.capsula-nivel {
+  padding: 4px 11px;
+  font-size: 11px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  box-shadow: var(--brillo-capsula);
+}
+.capsula-nivel::before { display: none; }
+
+/* Franja de aviso sólida dentro de una tarjeta (calor fuerte, helada). */
+.franja-estado {
+  --c: var(--alerta);
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 10px 13px;
+  border-radius: var(--radio-sm);
+  background: var(--c);
+  color: var(--sobre-estado);
+  font-size: 13.5px;
+  font-weight: 700;
+  line-height: 1.4;
+  box-shadow: var(--brillo-capsula);
+}
+
+/* Cristal al 66 %: sólo para lo que no carga un dato crítico. */
+.cristal-suave {
+  background: var(--cristal-suave);
+  border: 1px solid var(--vidrio-filo);
+  box-shadow: var(--vidrio-brillo);
+}
+
 .texto-suave { color: var(--tinta-suave); }
+.sobre-estado { color: var(--sobre-estado); }
 .texto-apagado { color: var(--apagado); }
 
 /* --- Botones --- */
@@ -277,7 +361,7 @@ body::before {
 
 .boton-primario {
   background: var(--verde);
-  color: #fff;
+  color: var(--sobre-estado);
   box-shadow: var(--sombra-acento);
 }
 @media (hover: hover) and (pointer: fine) {
@@ -287,7 +371,7 @@ body::before {
 .boton-primario:not(:disabled):active { box-shadow: var(--sombra-hundida-acento); }
 
 .boton-secundario {
-  background: var(--tarjeta);
+  background: var(--cristal-suave);
   -webkit-backdrop-filter: var(--desenfoque);
   backdrop-filter: var(--desenfoque);
   border-color: var(--vidrio-filo);
@@ -295,7 +379,7 @@ body::before {
   box-shadow: var(--sombra-boton);
 }
 @media (hover: hover) and (pointer: fine) {
-  .boton-secundario:not(:disabled):hover { background: var(--elevado); }
+  .boton-secundario:not(:disabled):hover { background: var(--tarjeta); }
 }
 .boton-secundario:not(:disabled):active { box-shadow: var(--sombra-hundida); }
 
@@ -357,7 +441,7 @@ body::before {
 .pastilla.activa {
   background: var(--verde);
   border-color: var(--verde);
-  color: #fff;
+  color: var(--sobre-estado);
   box-shadow: var(--sombra-acento);
 }
 @media (hover: hover) and (pointer: fine) {
@@ -441,7 +525,7 @@ body::before {
    sólido: se distingue sin depender de la transparencia. */
 .opcion {
   border-radius: var(--radio-sm);
-  background: var(--tarjeta);
+  background: var(--cristal-suave);
   -webkit-backdrop-filter: var(--desenfoque);
   backdrop-filter: var(--desenfoque);
   border: 1px solid var(--vidrio-filo);
@@ -456,7 +540,7 @@ body::before {
 .opcion[aria-pressed="true"] {
   background: var(--verde);
   border-color: var(--verde-fuerte);
-  color: #fff;
+  color: var(--sobre-estado);
   box-shadow: var(--sombra-acento);
 }
 @media (hover: hover) and (pointer: fine) {
@@ -492,11 +576,153 @@ body::before {
 .globo-mio {
   background: var(--verde);
   border-color: var(--verde);
-  color: #fff;
+  color: var(--sobre-estado);
 }
 
 /* Un hueco dentro de una tarjeta: un dato aparte, un botón de borrar. */
 .hueco { background: var(--pista); }
+
+/* ==================================================================
+   PARCELA 3D
+   La escena y lo que va encima de ella. Los chips de encima son vidrio
+   casi opaco: la escena de atrás cambia de color con el dato.
+   ================================================================== */
+
+/* Dos opciones del mismo tamaño: "Mi campo" y "Esta parcela". */
+.segmentado {
+  display: flex;
+  gap: 6px;
+  padding: 4px;
+  border-radius: var(--radio-sm);
+  background: var(--pista);
+}
+.segmentado > button {
+  flex: 1;
+  min-height: 48px;
+  border: 0;
+  border-radius: 11px;
+  background: transparent;
+  color: var(--tinta-suave);
+  font-size: 14.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color var(--rapido) var(--curva), color var(--rapido) var(--curva);
+}
+.segmentado > button[aria-pressed="true"] {
+  background: var(--verde);
+  color: var(--sobre-estado);
+  box-shadow: var(--sombra-acento);
+}
+
+.escena-3d {
+  position: relative;
+  height: 296px;
+  background: #cfe6f2;
+  overflow: hidden;
+}
+@media (min-width: 768px) {
+  .escena-3d { height: 380px; }
+}
+
+/* Van encima de la escena, que es clara en los dos temas: por eso su color
+   es fijo del tema claro y no sigue al tema oscuro. */
+.chip-escena {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 10px;
+  border-radius: var(--radio-pill);
+  background: rgba(255, 255, 255, .9);
+  border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  font-size: 12px;
+  font-weight: 700;
+}
+/* Lo que falta va punteado: se ve que es un hueco, no un dato. */
+.chip-escena.chip-falta { border-style: dashed; }
+
+@keyframes onda-agua {
+  from { background-position: 0 0; }
+  to   { background-position: 64px 0; }
+}
+.banda-riego {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  background-color: var(--agua);
+  background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, .22) 0 14px, rgba(255, 255, 255, 0) 14px 32px);
+  background-size: 64px 100%;
+  animation: onda-agua 1.9s linear infinite;
+}
+
+.control-escena { min-height: 60px; gap: 4px; font-weight: 700; }
+
+.linea-etapas {
+  position: relative;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+.linea-etapas:active { cursor: grabbing; }
+
+.ficha-parcela {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  width: 100%;
+  min-height: 60px;
+  padding: 0 12px;
+  border-radius: 13px;
+  border: 1px solid var(--vidrio-filo);
+  background: var(--cristal-suave);
+  box-shadow: var(--vidrio-brillo);
+  color: var(--tinta);
+  cursor: pointer;
+}
+.ficha-parcela[aria-pressed="true"] {
+  background: var(--verde-suave);
+  border-color: var(--verde);
+}
+
+/* De dónde salió cada dato de la ficha. */
+.procedencia {
+  --p: var(--tinta-suave);
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 8px;
+  border-radius: var(--radio-pill);
+  border: 1px solid color-mix(in srgb, var(--p) 35%, transparent);
+  background: color-mix(in srgb, var(--p) 12%, transparent);
+  color: var(--p);
+  font-size: 10.5px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.procedencia[data-tipo="medido"] { --p: var(--verde); }
+.procedencia[data-tipo="calculado"] { --p: var(--agua); }
+.procedencia[data-tipo="pronosticado"] { --p: var(--alerta-texto); }
+.procedencia[data-tipo="registrado"] { background: var(--pista); border-color: var(--borde); }
+.procedencia[data-tipo="falta"] { background: transparent; border-style: dashed; border-color: var(--apagado); }
+
+.agregar-parcela {
+  min-height: 60px;
+  border: 1px dashed color-mix(in srgb, var(--tinta) 30%, transparent);
+  background: var(--cristal-suave);
+  color: var(--verde);
+  font-size: 16px;
+  font-weight: 700;
+}
 
 /* ==================================================================
    INTERACCIÓN
@@ -601,7 +827,7 @@ html:not([data-tema="claro"]) .esqueleto {
 @supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
   .tarjeta, .fila-enlace, .opcion:not([aria-pressed="true"]), .boton-secundario,
   .pastilla:not([aria-pressed="true"]):not(.activa), .aviso, .globo:not(.globo-mio),
-  .barra-vidrio, .panel-vidrio {
+  .barra-vidrio, .panel-vidrio, .cristal-suave {
     background: var(--tarjeta-solida);
   }
 }
@@ -610,7 +836,7 @@ html:not([data-tema="claro"]) .esqueleto {
 @media (prefers-reduced-transparency: reduce) {
   .tarjeta, .fila-enlace, .opcion:not([aria-pressed="true"]), .boton-secundario,
   .pastilla:not([aria-pressed="true"]):not(.activa), .aviso, .globo:not(.globo-mio),
-  .barra-vidrio, .panel-vidrio {
+  .barra-vidrio, .panel-vidrio, .cristal-suave {
     background: var(--tarjeta-solida);
     -webkit-backdrop-filter: none;
     backdrop-filter: none;

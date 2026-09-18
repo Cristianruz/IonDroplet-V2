@@ -89,7 +89,7 @@ export function AparatoCard({ icono: Icono, nombre, detalle, estado, etiqueta, p
               {pasos.map((paso, i) => (
                 <li key={i} className="flex gap-4 text-base">
                   <span
-                    className="rounded-full flex items-center justify-center font-bold text-white"
+                    className="rounded-full flex items-center justify-center font-bold sobre-estado"
                     style={{ width: 34, height: 34, background: 'var(--tinta-suave)', flexShrink: 0 }}
                     aria-hidden
                   >

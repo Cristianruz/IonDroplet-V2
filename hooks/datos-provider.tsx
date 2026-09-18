@@ -62,6 +62,8 @@ export interface DatosParcelaProvider {
   cultivo: string
   etapa: string | null
   area_ha: number | null
+  caudal_lpm: number | null
+  tipo_sistema: string | null
   hum_min: number
 }
 

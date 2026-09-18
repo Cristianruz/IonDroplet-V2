@@ -135,7 +135,7 @@ function Asistente() {
           type="button"
           onClick={enviar}
           disabled={enviando || texto.trim() === ''}
-          className="rounded-lg flex items-center justify-center text-white disabled:opacity-40"
+          className="rounded-lg flex items-center justify-center sobre-estado disabled:opacity-40"
           style={{ width: 64, height: 60, flexShrink: 0, background: 'var(--verde)' }}
           aria-label="Enviar la pregunta"
         >

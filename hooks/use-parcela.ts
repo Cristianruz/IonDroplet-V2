@@ -29,6 +29,8 @@ export interface DatosParcela {
   etapa: string | null
   area_ha: number | null
   caudal_lpm: number | null
+  /** goteo | aspersion | gravedad. null = no lo ha dicho. */
+  tipo_sistema: string | null
   hum_min: number
 }
 

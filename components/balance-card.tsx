@@ -52,7 +52,7 @@ export function BalanceCard() {
     >
       <div className="flex items-center gap-2">
         <Droplets size={16} style={{ color: 'var(--agua)' }} aria-hidden />
-        <h2 className="text-sm font-bold">Lo que va a pedir esta semana</h2>
+        <h2 className="text-[14.5px] font-bold">Lo que va a pedir esta semana</h2>
       </div>
 
       {sinCultivo ? (
@@ -77,13 +77,18 @@ export function BalanceCard() {
           </p>
 
           <div
-            className="rounded-md px-4 py-3 flex items-baseline gap-2 flex-wrap"
-            style={{ background: 'var(--fondo-alerta)' }}
+            className="flex items-baseline gap-2 flex-wrap"
+            style={{
+              padding: '11px 14px',
+              borderRadius: 'var(--radio-sm)',
+              background: 'var(--fondo-alerta)',
+              border: '1px solid color-mix(in srgb, var(--alerta) 22%, transparent)',
+            }}
           >
-            <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
+            <span className="text-[13.5px] texto-suave">
               Le vas a tener que reponer
             </span>
-            <strong className="text-xl" style={{ color: 'var(--alerta)' }}>
+            <strong style={{ fontSize: 20, color: 'var(--alerta-texto)', fontVariantNumeric: 'tabular-nums' }}>
               {Math.round(totales.deficit_mm!)} mm
             </strong>
           </div>
@@ -111,7 +116,7 @@ export function BalanceCard() {
                       width: '42%',
                       height: `${((d.etc_mm ?? 0) / maximo) * 100}%`,
                       background: 'var(--agua)',
-                      borderRadius: '3px 3px 0 0',
+                      borderRadius: '4px 4px 0 0',
                       transition: 'height var(--lento) var(--curva)',
                     }}
                   />
@@ -121,7 +126,7 @@ export function BalanceCard() {
                       height: `${(d.lluvia_mm / maximo) * 100}%`,
                       minHeight: d.lluvia_mm > 0 ? 3 : 0,
                       background: 'var(--verde)',
-                      borderRadius: '3px 3px 0 0',
+                      borderRadius: '4px 4px 0 0',
                       transition: 'height var(--lento) var(--curva)',
                     }}
                   />
@@ -149,7 +154,7 @@ export function BalanceCard() {
       {faltaEtapa && (
         <p
           className="text-sm flex items-start gap-2 pt-1"
-          style={{ color: 'var(--tinta-suave)', borderTop: '1px solid var(--pista)' }}
+          style={{ color: 'var(--tinta-suave)', borderTop: '1px solid var(--borde)', paddingTop: 11 }}
         >
           <Info size={16} style={{ flexShrink: 0, marginTop: 2 }} aria-hidden />
           No me has dicho en qué etapa va el cultivo, así que usé la de en medio. Si me la pones,
@@ -162,7 +167,7 @@ export function BalanceCard() {
       {balance.riego.eventos > 0 && (
         <p
           className="text-sm flex items-start gap-2 pt-1"
-          style={{ color: 'var(--tinta-suave)', borderTop: '1px solid var(--pista)' }}
+          style={{ color: 'var(--tinta-suave)', borderTop: '1px solid var(--borde)', paddingTop: 11 }}
         >
           <CloudRain size={16} style={{ flexShrink: 0, marginTop: 2 }} aria-hidden />
           Estos días regaste {balance.riego.minutos} minutos en {balance.riego.eventos}{' '}

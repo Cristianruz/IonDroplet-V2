@@ -2,6 +2,7 @@
 
 import { Droplets, TriangleAlert } from 'lucide-react'
 import { haceCuanto } from '@/lib/tiempo'
+import { colorEstado } from '@/lib/estilo'
 
 // Antes esta tarjeta era un número de 72 px en mayúsculas gritando
 // "TIERRA SECA". Se lee igual de bien a 34 px y en minúsculas, y deja
@@ -44,43 +45,69 @@ export function HumedadCard({ humedad, sensorActivo, ultimaLectura = null, umbra
             {/* Si el sensor lleva rato callado, el número se atenúa: sigue
                 siendo el último dato real, pero ya no vale como "ahorita". */}
             <span
-              className="dato"
+              className="dato-grande"
               style={{ color: estado!.color, opacity: sensorActivo ? 1 : 0.45 }}
             >
               {Math.round(humedad!)}
               <span className="dato-unidad">%</span>
             </span>
 
+            {/* El estado va en cápsula sólida: bajo el sol no se adivina
+                a través del vidrio. */}
             {sensorActivo ? (
-              <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: estado!.color }}>
-                <span className="punto" style={{ background: estado!.color }} aria-hidden />
+              <span className="capsula" style={colorEstado(estado!.color)}>
                 {estado!.texto}
               </span>
             ) : (
-              <span className="text-sm texto-suave">Esperando al sensor…</span>
+              <span className="text-sm texto-apagado">Esperando al sensor…</span>
             )}
           </div>
 
           <div
-            className="h-1.5 rounded-full overflow-hidden"
-            style={{ background: 'var(--pista)', opacity: sensorActivo ? 1 : 0.45 }}
+            className="relative"
+            style={{ opacity: sensorActivo ? 1 : 0.45 }}
             role="progressbar"
             aria-valuenow={Math.round(humedad!)}
             aria-valuemin={0}
             aria-valuemax={100}
+            aria-label={`Humedad ${Math.round(humedad!)}%, punto de riego ${umbral}%`}
           >
             <div
-              className="h-full rounded-full transition-all duration-500"
-              style={{ width: `${Math.min(100, Math.max(0, humedad!))}%`, background: estado!.color }}
+              className="h-2.5 rounded-full overflow-hidden"
+              style={{ background: 'var(--pista)', boxShadow: 'var(--sombra-hundida)' }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-500"
+                style={{
+                  width: `${Math.min(100, Math.max(0, humedad!))}%`,
+                  background: estado!.color,
+                  boxShadow: 'inset 0 1px 0 rgba(255,255,255,.45)',
+                }}
+              />
+            </div>
+            {/* La raya del punto de riego: ahí se prende la bomba. */}
+            <span
+              aria-hidden
+              className="absolute rounded-sm"
+              style={{
+                left: `${Math.min(100, Math.max(0, umbral))}%`,
+                top: -3,
+                width: 2,
+                height: 16,
+                background: 'var(--tinta)',
+              }}
             />
           </div>
 
-          {sensorActivo && <p className="text-sm texto-suave">{estado!.detalle}</p>}
+          <div className="flex items-center justify-between gap-2">
+            {sensorActivo ? <span className="text-sm texto-suave">{estado!.detalle}</span> : <span />}
+            <span className="text-xs font-semibold texto-apagado">punto de riego {umbral}%</span>
+          </div>
         </>
       )}
 
       {!sensorActivo && !sinDato && (
-        <p className="text-sm flex items-start gap-2" style={{ color: 'var(--alerta)' }}>
+        <p className="text-sm font-semibold flex items-start gap-2" style={{ color: 'var(--alerta-texto)' }}>
           <TriangleAlert size={15} style={{ flexShrink: 0, marginTop: 2 }} aria-hidden />
           El sensor lleva rato sin mandar datos. Revisa que el aparato esté conectado.
         </p>

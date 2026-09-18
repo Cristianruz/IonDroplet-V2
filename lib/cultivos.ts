@@ -44,6 +44,26 @@ export const ETAPAS: Etapa[] = [
   { id: 'descanso', nombre: 'Descanso', explicacion: 'no pide casi agua' },
 ]
 
+// Cómo le llega el agua. La base vieja guarda 'suelo' por omisión, que no es
+// ninguno de estos: se trata como "no lo ha dicho", no se adivina.
+export interface SistemaRiego {
+  id: 'goteo' | 'aspersion' | 'gravedad'
+  nombre: string
+  explicacion: string
+}
+
+export const SISTEMAS_RIEGO: SistemaRiego[] = [
+  { id: 'goteo', nombre: 'Goteo', explicacion: 'manguera con goteros junto a cada planta' },
+  { id: 'aspersion', nombre: 'Aspersión', explicacion: 'regaderas que tiran el agua en arco' },
+  { id: 'gravedad', nombre: 'Gravedad', explicacion: 'el agua corre por los surcos' },
+]
+
+export function sistemaPorId(valor: string | null | undefined): SistemaRiego | null {
+  if (!valor) return null
+  const buscado = valor.trim().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '')
+  return SISTEMAS_RIEGO.find(s => s.id === buscado) ?? null
+}
+
 export function etapaPorId(valor: string | null | undefined): Etapa | null {
   if (!valor) return null
   const buscado = valor.trim().toLowerCase()

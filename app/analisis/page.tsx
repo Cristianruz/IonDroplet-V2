@@ -7,6 +7,7 @@ import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
 import { Aparece } from '@/components/aparece'
 import { AgenteCard } from '@/components/agente-card'
 import { haceCuanto } from '@/lib/tiempo'
+import { colorEstado } from '@/lib/estilo'
 
 // El análisis del cultivo. Esta pantalla ocupa el lugar que antes tenía
 // Ionización, que era una pestaña entera para un solo botón.
@@ -47,14 +48,15 @@ export default function PantallaAnalisis() {
           type="button"
           onClick={refrescar}
           disabled={refrescando || estado === 'cargando'}
-          className="boton boton-sutil"
+          className="boton boton-secundario"
+          style={{ minHeight: 38, padding: '0 13px', borderRadius: 'var(--radio-pill)', fontSize: 13, fontWeight: 700, color: 'var(--tinta-suave)' }}
         >
           <RefreshCw
             size={15}
             aria-hidden
             style={{ animation: refrescando ? 'girar 1s linear infinite' : undefined }}
           />
-          {refrescando ? 'Revisando…' : 'Revisar de nuevo'}
+          {refrescando ? 'Revisando…' : 'Revisar'}
         </button>
       </header>
 
@@ -96,12 +98,15 @@ export default function PantallaAnalisis() {
           <section className="tarjeta flex flex-col gap-3" aria-label="Resumen">
             <div className="flex items-center justify-between gap-2 flex-wrap">
               <span className="etiqueta">Lo que veo</span>
-              <span className="flex items-center gap-1.5 text-xs texto-suave">
+              <span
+                className="flex items-center gap-1.5 text-xs font-bold"
+                style={{ color: analisis.confianza === 'media' ? 'var(--alerta-texto)' : COLOR_CONFIANZA[analisis.confianza] ?? 'var(--apagado)' }}
+              >
                 <span className="punto" style={{ background: COLOR_CONFIANZA[analisis.confianza] ?? 'var(--apagado)' }} aria-hidden />
                 {TEXTO_CONFIANZA[analisis.confianza] ?? analisis.confianza}
               </span>
             </div>
-            <p className="text-sm leading-relaxed">{analisis.resumen}</p>
+            <p className="text-[14.5px] leading-relaxed">{analisis.resumen}</p>
             <p className="text-xs texto-apagado">{analisis.porque_confianza}</p>
             {cuando && (
               <p className="text-xs texto-apagado">
@@ -127,18 +132,26 @@ export default function PantallaAnalisis() {
                 style={{ borderLeft: `3px solid ${COLOR_NIVEL[r.nivel] ?? 'var(--borde)'}` }}
               >
                 <div className="flex items-center justify-between gap-2">
-                  <span className="titulo-bloque">{r.nombre}</span>
+                  <span className="text-[15px] font-bold">{r.nombre}</span>
+                  {/* El nivel en cápsula sólida: se lee igual bajo el sol. */}
                   <span
-                    className="text-xs font-bold uppercase tracking-wide"
-                    style={{ color: COLOR_NIVEL[r.nivel] ?? 'var(--tinta-suave)' }}
+                    className="capsula capsula-nivel"
+                    style={colorEstado(COLOR_NIVEL[r.nivel] ?? 'var(--apagado)')}
                   >
                     {r.nivel}
                   </span>
                 </div>
                 {/* El número que sostiene el nivel. Sin esto sería una opinión. */}
-                {r.dato && <p className="text-xs texto-apagado">{r.dato}</p>}
-                <p className="text-sm texto-suave">{r.porque}</p>
-                <p className="text-sm font-semibold">{r.quehacer}</p>
+                {r.dato && (
+                  <span
+                    className="w-fit text-xs font-semibold texto-suave"
+                    style={{ padding: '4px 10px', borderRadius: 8, background: 'var(--pista)', fontVariantNumeric: 'tabular-nums' }}
+                  >
+                    {r.dato}
+                  </span>
+                )}
+                <p className="text-[13.5px] leading-normal texto-suave">{r.porque}</p>
+                <p className="text-[14.5px] font-bold">{r.quehacer}</p>
               </article>
             ))}
           </section>
@@ -175,7 +188,7 @@ export default function PantallaAnalisis() {
                     aria-hidden
                   />
                   <div className="flex flex-col gap-0.5">
-                    <span className="text-sm font-semibold">{a.texto}</span>
+                    <span className="text-[14.5px] font-bold">{a.texto}</span>
                     <span className="text-xs texto-suave">{a.porque}</span>
                   </div>
                 </li>
@@ -203,10 +216,14 @@ export default function PantallaAnalisis() {
               <Zap size={13} aria-hidden />
               Agua ionizada
             </span>
-            <span className="flex items-center gap-1.5 text-sm font-semibold" style={{ color: ionizando ? 'var(--oro)' : 'var(--tinta-suave)' }}>
-              <span className="punto" style={{ background: ionizando ? 'var(--oro)' : 'var(--apagado)' }} aria-hidden />
-              {ionizando ? 'Ionizando' : 'Apagada'}
-            </span>
+            {ionizando ? (
+              <span className="capsula" style={colorEstado('var(--oro)')}>Ionizando</span>
+            ) : (
+              <span className="flex items-center gap-1.5 text-sm font-semibold texto-suave">
+                <span className="punto" style={{ background: 'var(--apagado)' }} aria-hidden />
+                Apagada
+              </span>
+            )}
           </div>
 
           <p className="text-sm">

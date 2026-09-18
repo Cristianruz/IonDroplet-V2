@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { Sun, MapPin, Snowflake, CloudRain, Wind, Thermometer, type LucideIcon } from 'lucide-react'
 import { useClima, type AvisoClima } from '@/hooks/use-clima'
+import { colorEstado } from '@/lib/estilo'
 
 const ICONO_AVISO: Record<AvisoClima['tipo'], LucideIcon> = {
   helada: Snowflake,
@@ -81,20 +82,23 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
 
   return (
     <section
-      className="tarjeta flex flex-col gap-4"
+      className="tarjeta flex flex-col gap-3.5"
       aria-label="Clima y pronóstico"
     >
-      <div className="flex items-center gap-3">
-        <Sun size={18} style={{ color: 'var(--alerta)' }} aria-hidden />
-        <h2 className="text-base font-semibold">El tiempo en tu parcela</h2>
+      <div className="flex items-center gap-2">
+        <Sun size={17} style={{ color: 'var(--alerta)' }} aria-hidden />
+        <h2 className="text-[15px] font-bold">El tiempo en tu parcela</h2>
       </div>
 
-      <div className="flex items-baseline gap-4 flex-wrap">
-        <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.25rem, 12vw, 3.25rem)' }}>
+      <div className="flex items-baseline gap-3 flex-wrap">
+        <p
+          className="font-bold"
+          style={{ fontSize: 44, letterSpacing: '-.04em', lineHeight: .9, fontVariantNumeric: 'tabular-nums' }}
+        >
           {Math.round(ahora.temperature_2m)}
-          <span style={{ fontSize: '0.5em' }}>°</span>
+          <span style={{ fontSize: 22 }}>°</span>
         </p>
-        <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
+        <p className="text-[13.5px] texto-suave">
           aire al {Math.round(ahora.relative_humidity_2m)}% · viento {Math.round(ahora.wind_speed_10m)} km/h
         </p>
       </div>
@@ -105,15 +109,11 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
           {avisos.map((a, i) => (
             <p
               key={i}
-              className="text-base font-semibold rounded-lg px-3.5 py-2.5 flex items-start gap-3"
-              style={
-                a.nivel === 'peligro'
-                  ? { background: 'var(--fondo-peligro)', color: 'var(--peligro)' }
-                  : { background: 'var(--fondo-alerta)', color: 'var(--alerta)' }
-              }
+              className="franja-estado"
+              style={colorEstado(a.nivel === 'peligro' ? 'var(--peligro)' : 'var(--alerta)')}
               role={a.nivel === 'peligro' ? 'alert' : 'status'}
             >
-              {(() => { const Icono = ICONO_AVISO[a.tipo]; return <Icono size={15} aria-hidden style={{ flexShrink: 0 }} /> })()}
+              {(() => { const Icono = ICONO_AVISO[a.tipo]; return <Icono size={15} aria-hidden style={{ flexShrink: 0, marginTop: 1 }} /> })()}
               {a.texto}
             </p>
           ))}
@@ -122,21 +122,21 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
 
       {/* Pronóstico de la semana */}
       <div style={{ overflowX: 'auto' }}>
-        <div className="flex gap-2" style={{ minWidth: 300 }}>
+        <div className="flex gap-[7px]" style={{ minWidth: 300 }}>
           {dias.time.slice(0, 7).map((fecha, i) => (
             <div
               key={fecha}
-              className="flex-1 rounded-lg py-3 px-2 text-center"
-              style={{ background: 'var(--pista)', minWidth: 62 }}
+              className="flex-1 cristal-suave text-center"
+              style={{ minWidth: 44, borderRadius: 'var(--radio-sm)', padding: '10px 6px' }}
             >
-              <p className="text-sm font-bold capitalize">{nombreDelDia(fecha, i)}</p>
-              <p className="text-base font-bold" style={{ color: 'var(--tinta)' }}>
+              <p className="text-xs font-bold capitalize">{nombreDelDia(fecha, i)}</p>
+              <p className="text-[15px] font-bold">
                 {Math.round(dias.temperature_2m_max[i])}°
               </p>
-              <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
+              <p className="text-xs texto-apagado">
                 {Math.round(dias.temperature_2m_min[i])}°
               </p>
-              <p className="text-sm" style={{ color: 'var(--agua)' }}>
+              <p className="text-xs font-bold" style={{ color: 'var(--agua)' }}>
                 {Math.round(dias.precipitation_probability_max[i] ?? 0)}%
               </p>
             </div>
@@ -144,7 +144,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
         </div>
       </div>
 
-      <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
+      <p className="text-xs texto-apagado">
         Máxima, mínima y probabilidad de agua.{' '}
         {clima.ubicacion.fuente === 'aparato'
           ? 'La ubicación la reporta el aparato del campo.'
