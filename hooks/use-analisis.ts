@@ -68,7 +68,7 @@ export interface Indicadores {
   faltantes: string[]
 }
 
-type Estado = 'cargando' | 'listo' | 'error' | 'sin_configurar' | 'sin_sesion'
+type Estado = 'cargando' | 'listo' | 'error' | 'sin_configurar' | 'solo_dueno'
 
 export function useAnalisis() {
   const [analisis, setAnalisis] = useState<Analisis | null>(null)
@@ -81,8 +81,8 @@ export function useAnalisis() {
     if (refrescar) setRefrescando(true)
     try {
       const res = await apiFetch(`/api/ai/analisis${refrescar ? '?refrescar=1' : ''}`)
-      if (res.status === 401) {
-        setEstado('sin_sesion')
+      if (res.status === 401 || res.status === 403) {
+        setEstado('solo_dueno')
         return
       }
       if (res.status === 503) {
