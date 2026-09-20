@@ -1,5 +1,26 @@
 # Pendientes de IonDroplet V2
 
+> **Al 20 de septiembre de 2026** (lo de abajo es de septiembre 3 y quedó viejo en varias filas):
+>
+> - **Quién entra.** Ya no se pide cuenta: cualquiera abre la app y ve todo, y también puede
+>   operar. Se vuelve a cerrar con `REQUIERE_LOGIN=si` en el `.env` del backend, y hay que
+>   hacerlo **antes** de exponerla a internet.
+> - **La IA aparte.** El asistente, el análisis, el consejo y la foto piden la llave del dueño
+>   (`CLAVE_DUENO` en el `.env`), que se pega una vez en Ajustes en la computadora del dueño.
+>   Así nadie más gasta créditos. Sin llave responden 403 y la pantalla lo explica.
+> - **Una sola dirección.** El navegador le pide la API a la misma dirección de la app y Next la
+>   reenvía al backend (`BACKEND_URL`, por omisión `localhost:3001`). Ya no se abre el 3001.
+> - **Diseño 2a y Parcela 3D.** Vidrio al 92 % con estados en cápsula sólida, y la parcela en
+>   3D (three.js empaquetado) que pinta la tierra con la humedad medida y las plantas con la
+>   etapa capturada; lo que falta se dibuja en gris y se dice.
+> - **Arranque:** `INICIAR_SISTEMA.bat` en `IonDroplet Completo` levanta backend y app;
+>   `RECONSTRUIR_APP.bat` reconstruye cuando cambia el código.
+> - **Sigue pendiente y es de hardware:** el sensor marca 44–45 % fijo y no hay lecturas nuevas
+>   desde el 13 de septiembre. Por eso "Hoy" y "7 días" salen vacíos. Ver la sección 1.
+> - **Falta capturar** la etapa del cultivo, el sistema de riego, la superficie y el caudal:
+>   son cuatro campos en "Editar parcela" y desbloquean el 3D a color y los litros.
+> - **Falta https** para entrar desde un teléfono fuera de la wifi (túnel de Cloudflare).
+
 Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo que sigue es pulido y decisiones abiertas.
 
 ---
@@ -20,7 +41,7 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo qu
 | # | Decisión | Cómo quedó |
 |---|---|---|
 | 2.1 | Dónde se guarda el punto de riego | **Se queda escribiendo en los dos**: `thresholds.hum_max` (que mueve la bomba) y `parcelas.hum_min` como copia. Además, en la Fase 5 la IA va a **proponer** el punto de riego (ver abajo). |
-| 2.5 | ¿Login en la v1? | **No.** El sistema corre en la red del rancho y el agricultor no teclea contraseñas bajo el sol. El `authMiddleware` se queda desactivado y no hay botón de cerrar sesión. Los endpoints de auth siguen ahí sin usarse. |
+| 2.5 | ¿Login en la v1? | **Cambió dos veces.** El 12 de septiembre se puso login con Google porque cualquiera en la wifi podía prender la bomba. El 18 de septiembre se quitó, a pedido del usuario, para que el jurado y los visitantes entren sin cuenta; el candado vuelve con `REQUIERE_LOGIN=si`. Lo único que sigue cerrado es la IA, con la llave del dueño. |
 | 4.11 | Control de versiones del backend | **Hecho**, `git init` local en `iondroplet-backend`. Sin remoto: ese `.env` tiene llaves de verdad. |
 | 4.13 | Nada commiteado | **Hecho.** Repositorio privado `Cristianruz/IonDroplet-V2` en GitHub, con las fases 0 a 3. |
 | 4.14 | Runner de pruebas para la Fase 4 | **El de Node**, `node --test`, que corre TypeScript directo en Node 24. Cero dependencias nuevas. |

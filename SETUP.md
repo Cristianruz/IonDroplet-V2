@@ -5,6 +5,15 @@ en una máquina limpia. Toma unos 10 minutos la primera vez.
 
 Requisitos: Node.js 20 o superior (probado con 24.14.0) y el ESP32 conectado por USB.
 
+> **Atajo (20 sep 2026).** Si ya está todo instalado, no hace falta seguir esta guía:
+> `INICIAR_SISTEMA.bat`, en `IonDroplet\IonDroplet Nv\IonDroplet Completo`, levanta el backend
+> y la app en dos ventanas. `RECONSTRUIR_APP.bat` reconstruye la app cuando cambia el código
+> (una pantalla nueva no aparece hasta reconstruir).
+>
+> Dos variables del `.env` del backend que hoy mandan:
+> `REQUIERE_LOGIN` (sin ponerla, se entra sin cuenta; `si` vuelve a pedir Google) y
+> `CLAVE_DUENO` (la llave que abre la IA, se pega en Ajustes en la computadora del dueño).
+
 Las dos carpetas del sistema:
 
 | Parte | Carpeta |

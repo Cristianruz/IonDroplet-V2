@@ -18,6 +18,20 @@ exactamente los mismos endpoints que la versión anterior:
 | `POST /api/esp/control` | Regar / detener / cambiar modo (idéntico a la V1) |
 | `POST /api/ionization/toggle` | Encender/apagar ionización |
 
+## Quién puede entrar (20 sep 2026)
+
+No se pide cuenta: cualquiera que abra la app la ve y puede operarla. Sirve para enseñar el
+sistema sin repartir accesos. Se vuelve a cerrar con `REQUIERE_LOGIN=si` en el `.env` del
+backend, y **hay que hacerlo antes de exponerla a internet**.
+
+Lo único cerrado es lo que llama a Claude (asistente, análisis, consejo, foto y el agente):
+pide la llave del dueño, `CLAVE_DUENO` del `.env`, que se pega una sola vez en
+**Ajustes → Asistente con IA** en la computadora del dueño. Sin ella responde 403 y la
+pantalla lo explica en vez de fallar.
+
+La app le pide la API a su misma dirección y Next la reenvía a `BACKEND_URL`
+(por omisión `http://localhost:3001`), así que no hace falta abrir el 3001 ni pelear con CORS.
+
 ## Cómo correrlo
 
 1. Arranca el backend de siempre (el del repo principal, puerto 3001).
