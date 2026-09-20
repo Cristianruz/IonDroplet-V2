@@ -1,4 +1,5 @@
 import { leerSesion, olvidarSesion, pedirSesion } from './sesion'
+import { leerLlave } from './dueno'
 
 // Dónde vive el backend.
 //
@@ -33,6 +34,9 @@ export async function apiFetch(ruta: string, init: RequestInit = {}): Promise<Re
   const sesion = leerSesion()
   const cabeceras = new Headers(init.headers)
   if (sesion) cabeceras.set('Authorization', `Bearer ${sesion.token}`)
+  // Solo la tiene la computadora del dueño; es lo que abre la IA.
+  const llave = typeof window !== 'undefined' ? leerLlave() : null
+  if (llave) cabeceras.set('x-iondroplet-dueno', llave)
   const res = await fetch(`${API_URL}${ruta}`, { ...init, headers: cabeceras })
   if (res.status === 401 && typeof window !== 'undefined') {
     if (sesion) olvidarSesion()

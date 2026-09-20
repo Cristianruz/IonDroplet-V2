@@ -75,10 +75,10 @@ export default function PantallaAnalisis() {
         </div>
       )}
 
-      {estado === 'sin_sesion' && (
+      {estado === 'solo_dueno' && (
         <p className="aviso">
-          El análisis con IA lo pide quien entra con su cuenta.{' '}
-          <a href="/entrar" className="font-bold" style={{ color: 'var(--verde)' }}>Entrar</a>
+          El análisis con IA lo pide el dueño del sistema desde su computadora. Lo demás de esta
+          pantalla son datos medidos, no opiniones de la IA.
         </p>
       )}
 
