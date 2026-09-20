@@ -97,6 +97,8 @@ export default function PantallaAjustes() {
         onGuardar={guardarUmbral}
       />
 
+      {/* Sin login no hay cuenta que enseñar; solo aparece si alguien entró. */}
+      {correo && (
       <section className="tarjeta flex flex-col gap-3" aria-label="Tu cuenta">
         <h2 className="text-base font-semibold">Tu cuenta</h2>
         {correo && (
@@ -104,23 +106,17 @@ export default function PantallaAjustes() {
             {correo}
           </p>
         )}
-        {correo ? (
-          <button
-            type="button"
-            onClick={() => cerrarSesion()}
-            className="boton boton-secundario"
-            style={{ color: 'var(--peligro)' }}
-          >
-            <LogOut size={18} aria-hidden />
-            Cerrar sesión
-          </button>
-        ) : (
-          <>
-            <p className="text-base texto-suave">Estás como visita: puedes ver todo, pero no cambiar nada.</p>
-            <a href="/entrar" className="boton boton-primario">Entrar con mi cuenta</a>
-          </>
-        )}
+        <button
+          type="button"
+          onClick={() => cerrarSesion()}
+          className="boton boton-secundario"
+          style={{ color: 'var(--peligro)' }}
+        >
+          <LogOut size={18} aria-hidden />
+          Cerrar sesión
+        </button>
       </section>
+      )}
     </main>
   )
 }
