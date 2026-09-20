@@ -7,7 +7,7 @@ import { useClima, type Clima } from '@/hooks/use-clima'
 import { useComparar } from '@/hooks/use-comparar'
 import { useBalance } from '@/hooks/use-balance'
 import type { Parcela } from '@/hooks/use-parcela'
-import { ETAPAS, cultivoPorId, etapaPorId, sistemaPorId } from '@/lib/cultivos'
+import { FASES, cultivoPorId, etapaEquivalente, faseDeEtapa, sistemaPorId } from '@/lib/cultivos'
 import { Diorama3D, type AtributosDiorama, type ControlDiorama } from './diorama-3d'
 
 // "Mi parcela" en 3D, del diseño Parcela 3D. Lo que se ve en la escena es
@@ -77,10 +77,13 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
   const arrastrando = useRef(false)
 
   const cultivo = cultivoPorId(parcela.cultivo)
-  const etapa = etapaPorId(parcela.etapa)
+  // La etapa es la del cultivo ("llenado de almendra"); la escena se mueve
+  // con su fase, que es lo que sabe dibujar.
+  const etapa = etapaEquivalente(parcela.etapa, parcela.cultivo)
   const sistema = sistemaPorId(parcela.tipo_sistema)
   const capturada = etapa !== null
-  const iReal = capturada ? ETAPAS.findIndex(e => e.id === etapa.id) : 1
+  const faseReal = faseDeEtapa(parcela.etapa, parcela.cultivo)
+  const iReal = faseReal ? FASES.findIndex(f => f.id === faseReal) : 1
   const iVis = preview ?? iReal
   const previsualizando = preview !== null && preview !== iReal
 
@@ -108,8 +111,8 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
 
   const atributos: AtributosDiorama = {
     cultivo: cultivo?.id ?? 'otro',
-    etapa: ETAPAS[iReal].id,
-    preview: preview !== null ? ETAPAS[preview].id : '',
+    etapa: FASES[iReal].id,
+    preview: preview !== null ? FASES[preview].id : '',
     humedad: sinDato ? null : humedad,
     umbral,
     sistema: sistema?.id ?? '',
@@ -140,8 +143,8 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
   const etiquetaEtapa = !capturada
     ? 'Etapa sin capturar — las plantas van en gris hasta que la registres'
     : previsualizando
-      ? `Así se vería en ${ETAPAS[iVis].nombre}`
-      : `Etapa: ${ETAPAS[iReal].nombre}`
+      ? `Así se vería en ${FASES[iVis].nombre.toLowerCase()}`
+      : `Etapa: ${etapa!.nombre}`
 
   const notaEtapa = previsualizando
     ? 'Es una ilustración de cómo se vería en esa etapa. No es un pronóstico de fechas. Suelta y vuelve a la etapa real.'
@@ -382,7 +385,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
                 aria-valuemin={1}
                 aria-valuemax={6}
                 aria-valuenow={iVis + 1}
-                aria-valuetext={ETAPAS[iVis].nombre}
+                aria-valuetext={FASES[iVis].nombre}
                 tabIndex={0}
                 onKeyDown={e => {
                   if (e.key === 'ArrowRight') setPreview(Math.min(5, iVis + 1))
@@ -407,7 +410,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
                   className="absolute left-2.5 h-2 rounded-full"
                   style={{ background: colorVista, width: `calc(${(iVis / 5) * 100}% - ${(iVis / 5) * 20}px)` }}
                 />
-                {ETAPAS.map((e, i) => (
+                {FASES.map((e, i) => (
                   <span
                     key={e.id}
                     className="absolute rounded-full"
@@ -445,7 +448,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-xl leading-none" aria-hidden>{cultivo?.icono ?? '🌱'}</span>
                 <span className="text-[19px] font-bold" style={{ letterSpacing: '-.02em', color: colorVista }}>
-                  {ETAPAS[iVis].nombre}
+                  {FASES[iVis].nombre}
                 </span>
                 <span className="text-[13px] texto-suave">{RIEGO_ETAPA[iVis]}</span>
               </div>

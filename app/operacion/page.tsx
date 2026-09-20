@@ -13,7 +13,7 @@ import { useEficiencia } from '@/hooks/use-eficiencia'
 import { SerieComparada } from '@/components/serie-comparada'
 import { SerieDensa } from '@/components/serie-densa'
 import { haceCuanto, fechaCorta, duracionLarga } from '@/lib/tiempo'
-import { CULTIVOS } from '@/lib/cultivos'
+import { CULTIVOS, etapaPorId } from '@/lib/cultivos'
 
 // PANEL DE OPERACIÓN — la misma información que ve el agricultor, dicha en
 // ingeniero. No sustituye a ninguna pantalla: es una vista aparte, para el
@@ -27,14 +27,6 @@ import { CULTIVOS } from '@/lib/cultivos'
 //
 // El Modo Campo NO se toca. Esta ruta es aditiva.
 
-const ETAPAS: Record<string, string> = {
-  siembra: 'Siembra',
-  crecimiento: 'Desarrollo vegetativo',
-  floracion: 'Floración',
-  fruto: 'Llenado de fruto',
-  cosecha: 'Maduración / cosecha',
-  descanso: 'Reposo',
-}
 
 function nombreCultivo(id: string | null): string {
   if (!id) return '—'
@@ -365,7 +357,7 @@ export default function PanelOperacion() {
                 <tr>
                   <td>{parcela.nombre ?? '—'}</td>
                   <td>{nombreCultivo(parcela.cultivo)}</td>
-                  <td>{parcela.etapa ? (ETAPAS[parcela.etapa] ?? parcela.etapa) : '—'}</td>
+                  <td>{parcela.etapa ? (etapaPorId(parcela.etapa, parcela.cultivo)?.nombre ?? parcela.etapa) : '—'}</td>
                   <td className="num mono">{parcela.area_ha ?? '—'}</td>
                   <td className="num mono">{parcela.num_hileras ?? '—'}</td>
                   <td>{parcela.tipo_sistema ?? '—'}</td>
@@ -521,7 +513,7 @@ export default function PanelOperacion() {
                   <tr key={s.parcela_id}>
                     <td>{s.nombre ?? `Unidad ${s.parcela_id}`}</td>
                     <td>{nombreCultivo(s.cultivo)}</td>
-                    <td>{s.etapa ? (ETAPAS[s.etapa] ?? s.etapa) : '—'}</td>
+                    <td>{s.etapa ? (etapaPorId(s.etapa, s.cultivo)?.nombre ?? s.etapa) : '—'}</td>
                     <td className="num mono">{s.lecturas_en_ventana.toLocaleString('es-MX')}</td>
                     <td className="num mono">{s.riego.eventos}</td>
                     <td className="num mono">{s.riego.minutos}</td>
@@ -641,7 +633,7 @@ export default function PanelOperacion() {
                   {eventosFert.slice(0, 12).map(e => (
                     <tr key={e.id}>
                       <td className="mono">{e.aplicado.toISOString().slice(0, 10)}</td>
-                      <td>{e.etapa ? (ETAPAS[e.etapa] ?? e.etapa) : '—'}</td>
+                      <td>{e.etapa ? (etapaPorId(e.etapa)?.nombre ?? e.etapa) : '—'}</td>
                       <td>
                         {e.nutrientes
                           .map(n => `${n.nutriente}${n.cantidad !== null ? ` ${n.cantidad}${n.unidad ?? ''}` : ''}`)
