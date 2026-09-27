@@ -55,12 +55,21 @@ Si el backend corre en otra dirección, copia `.env.example` a `.env.local` y aj
   regar, modo "Solo (automático) / Yo decido" en lenguaje llano.
 - Cero dependencias pesadas: Next.js + Tailwind + lucide-react. La gráfica es SVG puro.
 
-## Pendientes (plan InnovaTecNM 2026)
+## Pendientes (28 sep 2026)
 
-- Fase 0: tabla `parcelas` (requiere endpoint nuevo **aditivo** en el backend)
-- Fase 2: recomendaciones de riego por días
-- Fase 4: avisos por WhatsApp (Twilio Sandbox)
-- Fase 5: comparación entre parcelas
+El detalle y la bitácora están en [docs/PENDIENTES.md](docs/PENDIENTES.md). Lo que falta:
+
+- **Avisos por WhatsApp.** Espera la verificación de negocio con Meta.
+- **Hidroponía.** Pospuesta. Necesita sensores de CE, pH, temperatura del agua y nivel del
+  tanque; riego por ciclos de tiempo; y medir primero qué le hace la ionización a la solución.
+- **Hardware.** Sensor a 5 V y calibrado (hoy marca 45 % fijo), y firmware nuevo de los ESP.
+- **Revisión de un agrónomo** a la guía de cultivos y al catálogo de plagas.
+
+## Nombres en pantalla
+
+El agricultor ve **"Cultivo"**: la pestaña, los títulos, los avisos y lo que dice la IA. Por
+dentro todo se sigue llamando `parcela` (tabla `parcelas`, `parcela_id`, `components/parcela`),
+para no migrar la base. La pantalla vive en `/cultivo` y `/parcela` redirige ahí.
 
 ## Cómo está organizado (24 sep 2026)
 
@@ -86,12 +95,12 @@ diagnóstico por foto), `agronomia/` (guía de cultivos), `riego/` (frenos) y
 
 ## Diagnóstico por foto
 
-Pantalla `/diagnostico`, a la que se entra desde Plagas o desde la ficha de la parcela. Se
-escoge la parcela u "Otra planta", qué parte se fotografía, y se mandan hasta 3 fotos, que el
+Pantalla `/diagnostico`, a la que se entra desde Plagas o desde la ficha del cultivo. Se
+escoge el cultivo u "Otra planta", qué parte se fotografía, y se mandan hasta 3 fotos, que el
 celular encoge a 2048 px. Sirve para cualquier planta, no solo el nogal.
 
 El backend (`ia/diagnostico-foto.js`) arma el contexto desde la base (cultivo, etapa, guía,
-humedad de la parcela y el catálogo de plagas como referencia) y le pide a Claude un reporte
+humedad del cultivo y el catálogo de plagas como referencia) y le pide a Claude un reporte
 con esquema fijo:
 - si la foto sirve;
 - qué se observa;
