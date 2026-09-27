@@ -6,7 +6,7 @@ import { House, Sprout, Brain, TrendingUp, Settings } from 'lucide-react'
 
 const DESTINOS = [
   { href: '/', etiqueta: 'Inicio', Icono: House },
-  { href: '/parcela', etiqueta: 'Parcela', Icono: Sprout },
+  { href: '/cultivo', etiqueta: 'Cultivo', Icono: Sprout },
   { href: '/analisis', etiqueta: 'Análisis', Icono: Brain },
   { href: '/historial', etiqueta: 'Historial', Icono: TrendingUp },
   { href: '/ajustes', etiqueta: 'Ajustes', Icono: Settings },

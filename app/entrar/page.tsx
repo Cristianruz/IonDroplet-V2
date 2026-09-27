@@ -109,7 +109,7 @@ export default function PantallaEntrar() {
       <div className="flex flex-col gap-2">
         <h1 className="text-2xl font-bold">IonDroplet</h1>
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
-          Entra con tu cuenta de Google para controlar tu parcela. Para solo verla no hace falta.
+          Entra con tu cuenta de Google para controlar el riego. Para solo consultar no hace falta.
         </p>
       </div>
 

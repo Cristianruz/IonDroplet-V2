@@ -17,6 +17,12 @@ const nextConfig = {
     proxyTimeout: 180_000,
   },
 
+  // La pantalla se llamaba "Mi parcela" en /parcela. Los enlaces viejos siguen
+  // llegando.
+  async redirects() {
+    return [{ source: '/parcela', destination: '/cultivo', permanent: false }]
+  },
+
   // Cabeceras de seguridad en todas las páginas.
   // No hay Content-Security-Policy todavía: el backend vive en otro puerto con
   // una IP que cambia según la red, y una política mal puesta deja la app en

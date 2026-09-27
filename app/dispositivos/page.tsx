@@ -26,7 +26,7 @@ const PASOS_CENTRAL = [
 ]
 
 const PASOS_SENSOR = [
-  'Ve a la parcela y revisa que el aparato esté enchufado.',
+  'Revisa en campo que el aparato esté conectado a la corriente.',
   'Fíjate que el cable del sensor no esté suelto ni mordido.',
   'Revisa que las puntas del sensor sigan enterradas en la tierra.',
   'Desconéctalo y vuélvelo a conectar. Espera un minuto y regresa a esta pantalla.',

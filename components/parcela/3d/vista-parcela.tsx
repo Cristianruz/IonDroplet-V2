@@ -220,7 +220,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
   return (
     <>
       <div className="flex items-center justify-between gap-2.5">
-        <h1 className="titulo-pantalla">Mi parcela</h1>
+        <h1 className="titulo-pantalla">Cultivo</h1>
         <span className="flex items-center gap-1.5 text-[13px] font-semibold texto-suave" role="status">
           <span className="punto" style={{ background: conectado ? 'var(--verde)' : 'var(--peligro)' }} aria-hidden />
           {conectado ? 'Conectado' : 'Sin conexión'}
@@ -230,11 +230,11 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
       {consejo}
 
       <div className="segmentado" role="group" aria-label="Qué ver">
-        <button type="button" aria-pressed={modo === 'mapa'} onClick={verCampo}>Mi campo</button>
-        <button type="button" aria-pressed={modo === 'parcela'} onClick={verParcela}>Esta parcela</button>
+        <button type="button" aria-pressed={modo === 'mapa'} onClick={verCampo}>Todos los cultivos</button>
+        <button type="button" aria-pressed={modo === 'parcela'} onClick={verParcela}>Este cultivo</button>
       </div>
 
-      <section className="tarjeta" style={{ padding: 0, overflow: 'hidden' }} aria-label="Parcela en 3D">
+      <section className="tarjeta" style={{ padding: 0, overflow: 'hidden' }} aria-label="Cultivo en 3D">
         <div className="escena-3d">
           <Diorama3D ref={escena} atributos={atributos} />
 
@@ -315,7 +315,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
 
           {modo === 'mapa' ? (
             <div className="flex flex-col gap-2">
-              <span className="etiqueta">Parcelas del campo</span>
+              <span className="etiqueta">Cultivos registrados</span>
               {[{ id: parcela.id, nombre: parcela.nombre, cultivo, etapa: parcela.etapa, humedad, mia: true },
                 ...otras.map(o => ({ ...o, mia: false }))].map((p, i) => {
                 const s = semaforo(p.humedad, umbral)
@@ -336,7 +336,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
                   >
                     <span className="text-[22px] leading-none" aria-hidden>{p.cultivo?.icono ?? '🌱'}</span>
                     <span className="flex-1 min-w-0 flex flex-col gap-0.5 text-left">
-                      <span className="text-[15px] font-bold truncate">{p.nombre || 'Parcela sin nombre'}</span>
+                      <span className="text-[15px] font-bold truncate">{p.nombre || 'Cultivo sin nombre'}</span>
                       <span className="text-[12.5px] texto-suave">{detalle}</span>
                     </span>
                     <span
@@ -354,10 +354,10 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
               })}
               <p className="text-[13px] leading-snug texto-suave">
                 {foco !== null
-                  ? 'Estás viendo de cerca esa parcela. Su tierra se pinta con su propia lectura; el detalle en vivo está en la tuya.'
+                  ? 'Estás viendo de cerca ese cultivo. Su suelo se pinta con su propia lectura; el detalle en vivo está en el principal.'
                   : otras.length > 0
-                    ? 'Toca una parcela y la escena se acerca a ella. El color de la tierra de cada ficha es dato medido de su propio sensor.'
-                    : 'Hoy solo tienes una parcela dada de alta. Agrega otra y aquí las vas a ver lado a lado.'}
+                    ? 'Toca un cultivo y la escena se acerca a él. El color del suelo de cada ficha es dato medido de su propio sensor.'
+                    : 'Por ahora hay un solo cultivo registrado. Al agregar otro, aquí se muestran lado a lado.'}
                 {otras.length > 2 && ' En la escena caben las dos primeras.'}
               </p>
               {foco !== null && (
@@ -473,8 +473,8 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
         </div>
       </section>
 
-      <section className="tarjeta flex flex-col gap-3" aria-label="Lo que sé de esta parcela">
-        <h2 className="titulo-bloque">Lo que sé de esta parcela</h2>
+      <section className="tarjeta flex flex-col gap-3" aria-label="Datos de este cultivo">
+        <h2 className="titulo-bloque">Datos de este cultivo</h2>
         <dl className="flex flex-col">
           {ficha.map(f => (
             <div
@@ -499,7 +499,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
       </section>
 
       <button type="button" onClick={onAgregar} className="boton agregar-parcela">
-        + Agregar parcela
+        + Agregar cultivo
       </button>
     </>
   )

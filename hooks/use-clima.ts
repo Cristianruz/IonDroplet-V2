@@ -68,7 +68,7 @@ export function useClima(parcelaId: number | null) {
   // agricultor, que está parado en la parcela. Se marca como 'telefono' para
   // que se sepa de dónde vino.
   const usarUbicacionDelTelefono = useCallback(async (): Promise<string | null> => {
-    if (parcelaId === null) return 'Primero registra tu parcela.'
+    if (parcelaId === null) return 'Primero registra tu cultivo.'
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
       return 'Este teléfono no puede dar su ubicación.'
     }

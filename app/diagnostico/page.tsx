@@ -24,7 +24,7 @@ const MIENTRAS_ANALIZA = [
   'Identificando la planta y la parte dañada…',
   'Describiendo manchas, colores y patrón…',
   'Comparando con plagas, hongos, deficiencias y daño por clima…',
-  'Cruzando con la humedad y los riegos de tu parcela…',
+  'Cruzando con la humedad y los riegos de tu cultivo…',
   'Armando el reporte…',
 ]
 
@@ -41,7 +41,26 @@ export default function PantallaDiagnostico() {
   const [tieneLlave, setTieneLlave] = useState(true)
   useEffect(() => setTieneLlave(leerLlave() !== null), [])
 
-  // Las parcelas registradas. ?parcela=N preselecciona una (viene de Plagas).
+  // Lo elegido antes de una recarga vuelve a su lugar.
+  const recuperado = useRef(d.borradorRecuperado)
+  recuperado.current = d.borradorRecuperado
+  useEffect(() => {
+    const b = d.borradorRecuperado
+    if (!b) return
+    setPlantaDeclarada(b.plantaDeclarada ?? '')
+    setParte(b.parte ?? null)
+    setNota(b.nota ?? '')
+    if (b.eleccion) setEleccion(prev => prev || b.eleccion)
+  }, [d.borradorRecuperado])
+
+  // Y cada cambio se guarda, por si la página se recarga.
+  const { guardarBorrador } = d
+  useEffect(() => {
+    if (eleccion === '') return
+    guardarBorrador({ eleccion, plantaDeclarada, parte, nota })
+  }, [eleccion, plantaDeclarada, parte, nota, guardarBorrador])
+
+  // Los cultivos registrados. ?parcela=N preselecciona uno (viene de Plagas).
   useEffect(() => {
     let vivo = true
     apiFetch('/api/parcelas')
@@ -50,6 +69,13 @@ export default function PantallaDiagnostico() {
       .then((lista: Parcela[]) => {
         if (!vivo) return
         setParcelas(lista)
+        // Si la página se recargó (la cámara de Android lo provoca), se
+        // respeta lo que ya se había elegido.
+        const previa = recuperado.current?.eleccion
+        if (previa && (previa === OTRA || lista.some(p => String(p.id) === previa))) {
+          setEleccion(previa)
+          return
+        }
         const pedida = new URLSearchParams(window.location.search).get('parcela')
         const inicial = lista.find(p => String(p.id) === pedida) ?? lista[0]
         setEleccion(inicial ? String(inicial.id) : OTRA)
@@ -93,7 +119,7 @@ export default function PantallaDiagnostico() {
           <ScanSearch size={36} className="regando" style={{ color: 'var(--verde)' }} aria-hidden />
           <p className="text-lg font-bold">{etapaMensaje}</p>
           <p className="text-sm texto-suave">
-            {d.segundos} s · Un análisis a fondo tarda entre medio minuto y un minuto y medio.
+            {d.segundos} s · Un análisis a fondo tarda entre medio minuto y un minuto y medio. Mantén la pantalla encendida y la app abierta.
           </p>
         </section>
       )}
@@ -123,7 +149,7 @@ export default function PantallaDiagnostico() {
           <section className="tarjeta flex flex-col gap-3" aria-label="De qué planta es">
             <h2 className="titulo-bloque">1. ¿De qué planta es?</h2>
             {parcelas === null ? (
-              <p className="text-sm texto-suave">Buscando tus parcelas…</p>
+              <p className="text-sm texto-suave">Buscando tus cultivos…</p>
             ) : (
               <div className="flex flex-wrap gap-2" role="group" aria-label="Planta">
                 {parcelas.map(p => {
@@ -137,7 +163,7 @@ export default function PantallaDiagnostico() {
                       onClick={() => setEleccion(String(p.id))}
                     >
                       <span aria-hidden>{c?.icono ?? '🌱'}</span>
-                      {p.nombre || `Parcela ${p.id}`}
+                      {p.nombre || `Cultivo ${p.id}`}
                       {c && <span style={{ opacity: 0.8 }}>· {c.nombre}</span>}
                     </button>
                   )
@@ -158,7 +184,7 @@ export default function PantallaDiagnostico() {
               <p className="text-sm texto-suave">
                 {cultivo ? cultivo.nombre : 'Sin cultivo registrado'}
                 {parcela.etapa && ` · ${etapaPorId(parcela.etapa, parcela.cultivo)?.nombre ?? parcela.etapa}`}. El
-                análisis usa la humedad y los riegos de esta parcela.
+                análisis usa la humedad y los riegos de este cultivo.
               </p>
             )}
             {eleccion === OTRA && (

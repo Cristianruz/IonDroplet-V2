@@ -27,12 +27,12 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
   return (
     <section
       className="tarjeta flex flex-col gap-4"
-      aria-label="Datos de la parcela"
+      aria-label="Datos del cultivo"
     >
       <div className="flex items-center gap-3">
         <div className="min-w-0">
           <h2 className="titulo-pantalla">
-            {vacio(parcela.nombre) ? 'Parcela sin nombre' : parcela.nombre}
+            {vacio(parcela.nombre) ? 'Cultivo sin nombre' : parcela.nombre}
           </h2>
           <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             {partes.length > 0 ? partes.join(' · ') : 'Falta decir qué tienes sembrado'}
@@ -90,7 +90,7 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
         style={{ color: 'var(--tinta-suave)' }}
       >
         <Pencil size={18} aria-hidden />
-        Editar parcela
+        Editar cultivo
       </button>
     </section>
   )

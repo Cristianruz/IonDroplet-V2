@@ -24,7 +24,7 @@ export default function PantallaFertirriego() {
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      <h1 className="text-xl font-bold leading-tight">Lo que le he puesto</h1>
+      <h1 className="text-xl font-bold leading-tight">Nutrientes aplicados</h1>
 
       {!conectado && !cargando && <AvisoSinConexion />}
 
@@ -111,8 +111,8 @@ export default function PantallaFertirriego() {
           <div className="tarjeta text-center flex flex-col gap-2">
             <p className="text-base font-semibold">Todavía no has anotado nada</p>
             <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-              Cada vez que le eches algo a la parcela, anótalo aquí. Con el tiempo vas a poder ver
-              qué le diste en cada etapa del cultivo.
+              Registra aquí cada aplicación de nutrientes. Con el tiempo podrás consultar qué se
+              aplicó en cada etapa del cultivo.
             </p>
           </div>
         ) : (

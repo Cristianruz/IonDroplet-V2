@@ -67,12 +67,12 @@ export default function PantallaPlagas() {
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
-          href="/parcela"
+          href="/cultivo"
           className="flex items-center gap-2 text-base font-semibold w-fit"
           style={{ color: 'var(--verde)' }}
         >
           <ArrowLeft size={18} aria-hidden />
-          Mi parcela
+          Cultivo
         </Link>
         <h1 className="text-xl font-bold leading-tight">
           {cultivo ? `Plagas del ${cultivo.nombre.toLowerCase()}` : 'Plagas'}
@@ -91,19 +91,19 @@ export default function PantallaPlagas() {
       ) : parcela === null || !parcela.cultivo ? (
         <section
           className="tarjeta flex flex-col gap-4 items-center text-center"
-          aria-label="Todavía no hay parcela registrada"
+          aria-label="Todavía no hay cultivo registrado"
         >
           <Sprout size={28} style={{ color: 'var(--verde)' }} aria-hidden />
-          <p className="text-lg font-bold">Registra tu parcela para ver sus plagas</p>
+          <p className="text-lg font-bold">Registra tu cultivo para ver sus plagas</p>
           <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
             Cada cultivo tiene las suyas. En cuanto me digas qué siembras, te aviso a cuáles
             estar atento.
           </p>
           <Link
-            href="/parcela"
+            href="/cultivo"
             className="boton boton-primario boton-ancho text-center"
             >
-            Ir a mi parcela
+            Ir a Cultivo
           </Link>
         </section>
       ) : (

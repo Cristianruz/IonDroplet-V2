@@ -22,17 +22,17 @@ const PASOS = [
     Icono: Sprout,
     titulo: 'Bienvenido a IonDroplet',
     texto:
-      'El sistema mide la humedad del suelo de tu parcela, controla el riego con agua ionizada y te ayuda a decidir con datos. Esta guía toma un minuto.',
+      'El sistema mide la humedad del suelo de tu cultivo, controla el riego con agua ionizada y te ayuda a decidir con datos. Esta guía toma un minuto.',
   },
   {
     Icono: House,
-    titulo: 'Inicio: el estado de tu parcela',
+    titulo: 'Inicio: el estado de tu cultivo',
     texto:
       'Aquí ves la humedad actual, si el sistema está regando y por qué. En modo automático riega cuando la humedad baja del punto de riego; con «Regar ahora» inicias un riego cuando lo necesites.',
   },
   {
     Icono: Sprout,
-    titulo: 'Parcela: tu cultivo',
+    titulo: 'Cultivo: la ficha técnica',
     texto:
       'Registra cultivo, etapa, superficie y caudal de la bomba: con esos datos se calculan el agua y las recomendaciones. Ahí también ajustas el punto de riego y consultas las plagas de temporada.',
   },
@@ -40,7 +40,7 @@ const PASOS = [
     Icono: Camera,
     titulo: 'Diagnóstico por foto',
     texto:
-      'Si notas algo extraño en una planta, toma hasta tres fotos. Recibes las causas más probables, cómo confirmarlas en campo y qué hacer. Lo encuentras en Parcela y en Plagas.',
+      'Si notas algo extraño en una planta, toma hasta tres fotos. Recibes las causas más probables, cómo confirmarlas en campo y qué hacer. Lo encuentras en Cultivo y en Plagas.',
   },
   {
     Icono: MessageCircle,

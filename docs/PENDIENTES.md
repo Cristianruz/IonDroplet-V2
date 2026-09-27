@@ -40,6 +40,18 @@
 >   el productor confirma con un toque; la IA nunca mueve la bomba sola.
 > - **Tono profesional en toda la IA**, definido en un solo lugar (`TONO` en `ia/texto.js`).
 >   Se quitaron también las expresiones coloquiales de la app.
+> - **"Parcela" ahora es "Cultivo"** en toda la app, a pedido del dueño: pestaña, títulos,
+>   formularios, avisos y la IA. La dirección pasó a `/cultivo` y `/parcela` redirige ahí. En el
+>   formulario, el campo de la especie se llama "Especie". "Lo que le he puesto" pasó a
+>   "Nutrientes aplicados".
+> - **Cultivo ya no enseña "no hay cultivos"** mientras carga: una petición cancelada contaba
+>   como "ya se buscó y no hay".
+> - **Fotos en el celular:**
+>   - Todo sobrevive a la recarga que provoca la cámara de Android: fotos, lo elegido y el reporte.
+>   - Se respeta la orientación de la foto, y hay un segundo camino para abrir las HEIC del iPhone.
+>   - Si una foto falla, las demás se conservan.
+>   - Si el análisis se corta porque la pantalla se bloqueó, se avisa al volver.
+>   - El análisis tiene un tope de 170 s.
 > - **Guía de inicio:** seis pasos que salen la primera vez en cada aparato (Inicio, Parcela,
 >   diagnóstico, asistente, avisos). Se puede saltar y se vuelve a ver en Ajustes. No sale en
 >   el panel de operación.

@@ -145,10 +145,10 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
   return (
     <section
       className="tarjeta flex flex-col gap-7"
-      aria-label={parcela ? 'Editar la ficha de la parcela' : 'Registrar la parcela'}
+      aria-label={parcela ? 'Editar la ficha del cultivo' : 'Registrar un cultivo'}
     >
       <div>
-        <h2 className="titulo-pantalla">{parcela ? 'Ficha de la parcela' : 'Registrar parcela'}</h2>
+        <h2 className="titulo-pantalla">{parcela ? 'Ficha del cultivo' : 'Registrar cultivo'}</h2>
         <p className="text-sm texto-suave mt-1">
           Con estos datos el sistema calcula cuánta agua pide el cultivo y cuándo regar. Lo que
           dejes vacío no se inventa: la app avisa que falta.
@@ -157,7 +157,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
       {/* --- Identificación --- */}
       <div>
-        <Etiqueta htmlFor="nombre-parcela">Nombre de la parcela</Etiqueta>
+        <Etiqueta htmlFor="nombre-parcela">Nombre del cultivo</Etiqueta>
         <input
           id="nombre-parcela"
           type="text"
@@ -166,7 +166,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
             setNombre(e.target.value)
             if (errores.nombre) setErrores(p => ({ ...p, nombre: undefined }))
           }}
-          placeholder="Parcela Norte"
+          placeholder="Nogal Norte"
           aria-invalid={!!errores.nombre}
           className="campo"
           style={errores.nombre ? { borderColor: 'var(--peligro)' } : undefined}
@@ -177,7 +177,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
 
       {/* --- Cultivo --- */}
       <div>
-        <Etiqueta>Cultivo</Etiqueta>
+        <Etiqueta>Especie</Etiqueta>
         <Ayuda>De aquí salen el coeficiente de cultivo (Kc), las etapas y las plagas de la lista.</Ayuda>
 
         <div className="relative mt-3">
@@ -268,7 +268,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
       {/* --- Sistema de riego --- */}
       <div>
         <Etiqueta>Sistema de riego</Etiqueta>
-        <Ayuda>Define cómo se dibuja la parcela y cómo se reparte el agua en el cálculo.</Ayuda>
+        <Ayuda>Define cómo se dibuja el cultivo y cómo se reparte el agua en el cálculo.</Ayuda>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-2 mt-3" role="group" aria-label="Sistema de riego">
           {SISTEMAS_RIEGO.map(({ id, nombre: etiqueta, explicacion }) => (
             <button
@@ -455,7 +455,7 @@ function CalculadoraSuperficie({ onListo }: { onListo: (hectareas: string) => vo
         </>
       )}
       <p className="text-sm texto-suave">
-        Si la parcela no es un rectángulo, pártela en pedazos rectangulares, saca cada uno y súmalos.
+        Si el terreno no es rectangular, divídelo en rectángulos, calcula cada uno y súmalos.
       </p>
     </div>
   )

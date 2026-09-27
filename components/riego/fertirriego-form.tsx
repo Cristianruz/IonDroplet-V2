@@ -68,7 +68,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
 
   async function enviar() {
     const fallas: typeof errores = {}
-    if (renglones.length === 0) fallas.nutrientes = 'Dime al menos qué le pusiste.'
+    if (renglones.length === 0) fallas.nutrientes = 'Indica al menos un nutriente aplicado.'
 
     const phNum = ph.trim() === '' ? null : Number(ph)
     if (phNum !== null && (!Number.isFinite(phNum) || phNum < 0 || phNum > 14)) {
@@ -123,10 +123,10 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
   return (
     <section
       className="tarjeta flex flex-col gap-4"
-      aria-label="Anotar lo que le pusiste a la parcela"
+      aria-label="Registrar lo aplicado al cultivo"
     >
       <div id="campo-nutrientes">
-        <h2 className="text-base font-semibold mb-1">¿Qué le pusiste?</h2>
+        <h2 className="text-base font-semibold mb-1">¿Qué se aplicó?</h2>
         <p className="text-sm mb-3" style={{ color: 'var(--tinta-suave)' }}>
           Puedes marcar varios.
         </p>

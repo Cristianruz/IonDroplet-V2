@@ -144,7 +144,7 @@ export function VistaReporte({ reporte: r, cultivoDeclarado, onAgregarFoto, onEm
           <p className="text-sm texto-suave">
             Planta que se ve: <strong>{r.plantaVista}</strong>
             {r.coincideConCultivo === 'no' && cultivoDeclarado && (
-              <> — no parece {cultivoDeclarado.toLowerCase()}. Revisa que la foto sea de la parcela correcta.</>
+              <> — no parece {cultivoDeclarado.toLowerCase()}. Revisa que la foto corresponda al cultivo seleccionado.</>
             )}
           </p>
         )}

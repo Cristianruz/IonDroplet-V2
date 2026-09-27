@@ -46,11 +46,11 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
     return (
       <section
         className="tarjeta flex flex-col gap-4"
-        aria-label="Falta la ubicación de la parcela"
+        aria-label="Falta la ubicación del cultivo"
       >
         <div className="flex items-center gap-3">
           <MapPin size={18} style={{ color: 'var(--verde)' }} aria-hidden />
-          <h2 className="text-base font-semibold">¿Dónde está tu parcela?</h2>
+          <h2 className="text-base font-semibold">¿Dónde está tu cultivo?</h2>
         </div>
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
           Con eso te puedo avisar si viene agua o si va a helar. No lo adivino: un pueblo y otro
@@ -62,11 +62,11 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
           disabled={guardandoUbicacion || parcelaId === null}
           className="boton boton-primario boton-ancho"
           >
-          {guardandoUbicacion ? 'Buscando…' : 'Estoy parado en mi parcela, úsala'}
+          {guardandoUbicacion ? 'Buscando…' : 'Usar mi ubicación actual'}
         </button>
         <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-          Tócalo estando en la parcela. Cuando el aparato del campo traiga su propio GPS, la
-          ubicación se va a tomar sola de ahí.
+          Úsalo estando en el lugar del cultivo. Cuando el aparato de campo tenga GPS, la
+          ubicación se tomará de ahí automáticamente.
         </p>
         {aviso && (
           <p className="text-base font-semibold" style={{ color: 'var(--peligro)' }} role="alert">
@@ -87,7 +87,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
     >
       <div className="flex items-center gap-2">
         <Sun size={17} style={{ color: 'var(--alerta)' }} aria-hidden />
-        <h2 className="text-[15px] font-bold">El tiempo en tu parcela</h2>
+        <h2 className="text-[15px] font-bold">Clima en tu cultivo</h2>
       </div>
 
       <div className="flex items-baseline gap-3 flex-wrap">

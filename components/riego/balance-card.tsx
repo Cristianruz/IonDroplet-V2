@@ -57,8 +57,8 @@ export function BalanceCard() {
 
       {sinCultivo ? (
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
-          No sé qué se sembró aquí, así que no puedo decirte cuánta agua pide. Pon el cultivo en
-          la pantalla de Parcela y te lo calculo.
+          Falta registrar la especie, así que no se puede calcular cuánta agua requiere.
+          Captúrala en la pantalla Cultivo.
         </p>
       ) : (
         <>

@@ -37,7 +37,7 @@ export default function PantallaParcela() {
       })
       if (!res.ok) return false
       setAgregando(false)
-      setAvisoNueva(`Listo, ${datos.nombre} ya está en tu campo. La ves en "Mi campo".`)
+      setAvisoNueva(`Listo: ${datos.nombre} quedó registrado. Lo ves en "Todos los cultivos".`)
       return true
     } catch {
       return false
@@ -49,7 +49,7 @@ export default function PantallaParcela() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       {(cargando || editando || agregando || parcela === null) && (
-        <h1 className="titulo-pantalla">Mi parcela</h1>
+        <h1 className="titulo-pantalla">Cultivo</h1>
       )}
 
       {!conectado && !cargando && <AvisoSinConexion />}
@@ -85,19 +85,19 @@ export default function PantallaParcela() {
         // Todavía no hay parcela: tarjeta vacía, no el formulario de golpe.
         <section
           className="tarjeta flex flex-col gap-4 items-center text-center"
-          aria-label="Todavía no hay parcela registrada"
+          aria-label="Todavía no hay cultivo registrado"
         >
           <Sprout size={28} style={{ color: 'var(--verde)' }} aria-hidden />
-          <p className="text-lg font-bold">Todavía no me has dicho qué siembras</p>
+          <p className="text-lg font-bold">Aún no hay cultivos registrados</p>
           <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
-            Con eso puedo avisarte mejor cuándo le toca agua a tu tierra.
+            Registra la especie, la etapa y la superficie para recibir recomendaciones de riego precisas.
           </p>
           <button
             type="button"
             onClick={() => setEditando(true)}
             className="boton boton-primario boton-ancho"
             >
-            Registrar mi parcela
+            Registrar un cultivo
           </button>
         </section>
       ) : (
@@ -134,9 +134,9 @@ export default function PantallaParcela() {
             <span className="flex items-center gap-3">
               <FlaskConical size={18} style={{ color: 'var(--verde)' }} aria-hidden />
               <span className="flex flex-col">
-                Lo que le he puesto
+                Nutrientes aplicados
                 <span className="text-base font-normal" style={{ color: 'var(--tinta-suave)' }}>
-                  Anota lo que le echas y en qué etapa
+                  Registro de fertirriego por etapa
                 </span>
               </span>
             </span>

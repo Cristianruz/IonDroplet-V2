@@ -219,9 +219,13 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
           setIonizacion(estado.encendida)
         }
       } catch {}
-    } catch {
-    } finally {
       setCargandoParcela(false)
+    } catch {
+      // Una petición CANCELADA no es "ya se buscó y no hay": antes aquí se
+      // daba por terminada la carga y la pantalla enseñaba "no hay cultivo
+      // registrado" varios segundos, hasta la siguiente vuelta. Solo un error
+      // real (sin conexión) termina la carga, y entonces sale el aviso.
+      if (!signal?.aborted) setCargandoParcela(false)
     }
   }, [])
 

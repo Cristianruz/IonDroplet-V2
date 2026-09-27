@@ -232,7 +232,7 @@ export default function PanelOperacion() {
 
         {estadoBalance === 'sin_ubicacion' && (
           <p className="op-vacio">
-            Sin coordenadas de la parcela no hay pronóstico y, por lo tanto, no hay ET₀. Se captura
+            Sin coordenadas del cultivo no hay pronóstico y, por lo tanto, no hay ET₀. Se captura
             desde Modo campo → Clima.
           </p>
         )}
@@ -285,7 +285,7 @@ export default function PanelOperacion() {
 
             <p className="op-pie">
               ET₀ por el método FAO Penman-Monteith, entregada por Open-Meteo para{' '}
-              {balance.parcela.nombre ?? 'la parcela'}. Kc de las tablas FAO-56, repartido por
+              {balance.parcela.nombre ?? 'el cultivo'}. Kc de las tablas FAO-56, repartido por
               etapa fenológica en <code>guia-cultivos.js</code>; pendiente de revisión agronómica.
               Equivalencia de unidades: 1 mm sobre 1 ha = 10 000 L.
             </p>
@@ -341,7 +341,7 @@ export default function PanelOperacion() {
           <table className="op-tabla">
             <thead>
               <tr>
-                <th>Parcela</th>
+                <th>Cultivo</th>
                 <th>Cultivo</th>
                 <th>Etapa</th>
                 <th className="num">Superficie (ha)</th>

@@ -12,7 +12,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: 'IonDroplet — Riego Inteligente',
     short_name: 'IonDroplet',
-    description: 'Riego con agua ionizada: humedad, clima y avisos de la parcela.',
+    description: 'Riego con agua ionizada: humedad, clima y avisos del cultivo.',
     start_url: '/',
     scope: '/',
     display: 'standalone',
