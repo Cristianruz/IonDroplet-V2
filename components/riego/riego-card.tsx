@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Waves, Droplet, Square } from 'lucide-react'
+import { Waves, Droplet, Square, Bot } from 'lucide-react'
 import type { EstadoEsp } from '@/hooks/use-iondroplet'
 import { colorEstado } from '@/lib/estilo'
 
@@ -12,6 +12,9 @@ interface Props {
   umbral: number | null
   regarAhora: () => void
   terminarRiegoManual: () => void
+  /** Al detener el riego a mano, ¿vuelve a decidir el sistema? */
+  volverAAutomatico: boolean
+  activarAutomatico: () => void
 }
 
 // El sistema decide, siempre. Antes había un interruptor de "¿quién decide?"
@@ -28,13 +31,24 @@ export function RiegoCard({
   umbral,
   regarAhora,
   terminarRiegoManual,
+  volverAAutomatico,
+  activarAutomatico,
 }: Props) {
   const regando = estadoEsp.pumpState === 1
   const aMano = !estadoEsp.autoMode
   const [confirmando, setConfirmando] = useState(false)
 
   function razon() {
-    if (aMano && regando) return 'Lo pediste tú. Cuando lo detengas, el sistema retoma el control.'
+    if (aMano && regando) {
+      return volverAAutomatico
+        ? 'Lo pediste tú. Cuando lo detengas, el sistema retoma el control.'
+        : 'Lo pediste tú. Cuando lo detengas, queda apagado: el riego automático sigue desactivado.'
+    }
+    // En manual el sistema NO riega solo. Antes la tarjeta decía "tu tierra
+    // está arriba del punto de riego" como si estuviera vigilando, y no.
+    if (aMano) {
+      return 'El riego automático está apagado: el sistema no va a regar solo aunque la tierra se seque.'
+    }
     if (!sensorActivo || humedad === null) {
       return 'No tengo lectura del sensor, así que no puedo decidir por mi cuenta. Si hace falta, riega tú.'
     }
@@ -112,14 +126,22 @@ export function RiegoCard({
           </div>
         </div>
       ) : (
-        <button
-          type="button"
-          onClick={() => setConfirmando(true)}
-          className="boton boton-secundario boton-ancho"
-        >
-          <Droplet size={15} aria-hidden />
-          Regar ahora
-        </button>
+        <div className="flex flex-col gap-2">
+          {aMano && (
+            <button type="button" onClick={activarAutomatico} className="boton boton-primario boton-ancho">
+              <Bot size={15} aria-hidden />
+              Que el sistema decida
+            </button>
+          )}
+          <button
+            type="button"
+            onClick={() => setConfirmando(true)}
+            className="boton boton-secundario boton-ancho"
+          >
+            <Droplet size={15} aria-hidden />
+            Regar ahora
+          </button>
+        </div>
       )}
     </section>
   )

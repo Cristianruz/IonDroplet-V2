@@ -45,6 +45,8 @@ interface ValorDatos {
   cambiarBomba: (encender: boolean) => Promise<void>
   regarAhora: () => Promise<void>
   terminarRiegoManual: () => Promise<void>
+  /** Al detener el riego a mano, ¿vuelve a decidir el sistema? */
+  volverAAutomatico: boolean
   cambiarIonizacion: () => Promise<void>
   // Parcela y punto de riego
   parcela: Parcela | null
@@ -82,6 +84,11 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
   const [ultimaLectura, setUltimaLectura] = useState<Date | null>(null)
   const [conectado, setConectado] = useState(false)
   const [estadoEsp, setEstadoEsp] = useState<EstadoEsp>({ autoMode: true, pumpState: 0, espIp: null })
+  const estadoRef = useRef(estadoEsp)
+  estadoRef.current = estadoEsp
+  // A qué modo se regresa al detener un riego a mano. Si la app se recargó a
+  // media regada y no se sabe, se regresa al automático: es el modo normal.
+  const [volverAAutomatico, setVolverAAutomatico] = useState(true)
   const [historial, setHistorial] = useState<PuntoHistorial[]>([])
   const [ionizacion, setIonizacion] = useState(false)
 
@@ -97,6 +104,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
   const umbralesCompletos = useRef<Umbrales | null>(null)
   const idParcela = useRef<number | null>(null)
   const abortar = useRef<AbortController | null>(null)
+  const ultimoHistorial = useRef(0)
   // El ritmo se lee al momento de programar la siguiente vuelta. Va en una
   // referencia para que perder o recuperar la conexión no reinicie el ciclo:
   // si reiniciara, volvería a pedir la parcela y la gráfica sin necesidad.
@@ -147,6 +155,10 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
   }, [])
 
   const leerHistorial = useCallback(async (signal?: AbortSignal) => {
+    // Al abrir Inicio la piden a la vez la primera vuelta del ciclo y el
+    // aviso de "alguien quiere la gráfica". Con una basta.
+    if (Date.now() - ultimoHistorial.current < 3000) return
+    ultimoHistorial.current = Date.now()
     try {
       const res = await apiFetch(
         `/api/sensors/history?hours=24&max=${PUNTOS_GRAFICA}`,
@@ -308,33 +320,41 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
 
   // Riego a mano, como excepción. El backend solo obedece `bomba` cuando
   // autoMode es false, así que hay que pasar a manual y encender en la misma
-  // llamada.
+  // llamada. Se recuerda cómo estaba para regresar a eso al terminar.
   const regarAhora = useCallback(async () => {
+    setVolverAAutomatico(estadoRef.current.autoMode)
     await cambiarBomba(true)
   }, [cambiarBomba])
 
-  // Y al terminar, el sistema retoma el control. OJO CON EL ORDEN: si se
-  // mandara { bomba: 0, autoMode: true } de una sola vez, el backend pondría
-  // autoMode en true primero y luego ignoraría el bomba:0 — la bomba se
-  // quedaría encendida. Por eso son dos llamadas.
+  // Al terminar, se regresa al modo de antes: si decidía el sistema, lo
+  // retoma; si estaba en manual (por ejemplo, porque saltó el tope de la
+  // bomba), se queda en manual. Antes SIEMPRE pasaba a automático, y eso
+  // prendió la bomba el 13 de septiembre con el sensor marcando 45 % fijo.
+  //
+  // OJO CON EL ORDEN: si se mandara { bomba: 0, autoMode: true } de una sola
+  // vez, el backend pondría autoMode en true primero y luego ignoraría el
+  // bomba:0: la bomba se quedaría encendida. Por eso son dos llamadas.
   const terminarRiegoManual = useCallback(async () => {
+    const aAutomatico = volverAAutomatico
     ultimoComando.current = Date.now()
-    setEstadoEsp(prev => ({ ...prev, autoMode: true, pumpState: 0 }))
+    setEstadoEsp(prev => ({ ...prev, autoMode: aAutomatico, pumpState: 0 }))
     try {
-      await apiFetch(`/api/esp/control`, {
+      let res = await apiFetch(`/api/esp/control`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bomba: 0 }),
       })
-      const res = await apiFetch(`/api/esp/control`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ autoMode: true }),
-      })
+      if (aAutomatico) {
+        res = await apiFetch(`/api/esp/control`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ autoMode: true }),
+        })
+      }
       const json = await res.json()
       if (json.settings) setEstadoEsp(json.settings)
     } catch {}
-  }, [])
+  }, [volverAAutomatico])
 
   const cambiarIonizacion = useCallback(async () => {
     const nuevo = !ionizacion
@@ -437,6 +457,7 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
         cambiarBomba,
         regarAhora,
         terminarRiegoManual,
+        volverAAutomatico,
         cambiarIonizacion,
         parcela,
         umbralRiego,

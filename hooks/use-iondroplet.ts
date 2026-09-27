@@ -54,6 +54,7 @@ export function useIonDroplet(opciones: Opciones = {}) {
     cambiarBomba: datos.cambiarBomba,
     regarAhora: datos.regarAhora,
     terminarRiegoManual: datos.terminarRiegoManual,
+    volverAAutomatico: datos.volverAAutomatico,
     cambiarIonizacion: datos.cambiarIonizacion,
   }
 }

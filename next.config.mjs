@@ -11,6 +11,12 @@ const nextConfig = {
     return [{ source: '/api/:path*', destination: `${backend}/api/:path*` }]
   },
 
+  experimental: {
+    // Next corta a los 30 s lo que reenvía al backend. El diagnóstico por
+    // foto piensa a fondo sobre hasta tres imágenes y puede pasar de eso.
+    proxyTimeout: 180_000,
+  },
+
   // Cabeceras de seguridad en todas las páginas.
   // No hay Content-Security-Policy todavía: el backend vive en otro puerto con
   // una IP que cambia según la red, y una política mal puesta deja la app en

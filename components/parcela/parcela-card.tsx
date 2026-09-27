@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Pencil, ChevronRight, Bug } from 'lucide-react'
+import { Pencil, ChevronRight, Bug, Camera } from 'lucide-react'
 import { cultivoPorId, etapaPorId } from '@/lib/cultivos'
 import type { Parcela } from '@/hooks/use-parcela'
 
@@ -68,6 +68,17 @@ export function ParcelaCard({ parcela, onEditar }: Props) {
         <span className="flex items-center gap-3">
           <Bug size={16} aria-hidden />
           Plagas del cultivo
+        </span>
+        <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+      </Link>
+
+      <Link
+        href={`/diagnostico?parcela=${parcela.id}`}
+        className="fila-enlace"
+      >
+        <span className="flex items-center gap-3">
+          <Camera size={16} aria-hidden />
+          Diagnóstico por foto
         </span>
         <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>

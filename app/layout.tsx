@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { RegistrarSW } from '@/components/registrar-sw'
-import { GuardiaSesion } from '@/components/guardia-sesion'
+import { RegistrarSW } from '@/components/ui/registrar-sw'
+import { GuardiaSesion } from '@/components/ui/guardia-sesion'
 
 export const metadata: Metadata = {
   title: 'IonDroplet — Riego Inteligente',

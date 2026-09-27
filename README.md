@@ -26,7 +26,7 @@ backend, y **hay que hacerlo antes de exponerla a internet**.
 
 Lo único cerrado es lo que llama a Claude (asistente, análisis, consejo, foto y el agente):
 pide la llave del dueño, `CLAVE_DUENO` del `.env`, que se pega una sola vez en
-**Ajustes → Asistente con IA** en la computadora del dueño. Sin ella responde 403 y la
+**Ajustes → Opciones del técnico** en cada aparato del dueño. Sin ella responde 403 y la
 pantalla lo explica en vez de fallar.
 
 La app le pide la API a su misma dirección y Next la reenvía a `BACKEND_URL`
@@ -61,3 +61,44 @@ Si el backend corre en otra dirección, copia `.env.example` a `.env.local` y aj
 - Fase 2: recomendaciones de riego por días
 - Fase 4: avisos por WhatsApp (Twilio Sandbox)
 - Fase 5: comparación entre parcelas
+
+## Cómo está organizado (24 sep 2026)
+
+```
+app/            una carpeta por pantalla (Next.js app router)
+  diagnostico/  diagnóstico por foto
+components/
+  ui/           piezas de toda la app: barra de abajo, esqueletos, animaciones, sesión
+  riego/        humedad, bomba, punto de riego, gráficas, fertirriego, aparatos
+  parcela/      ficha, formulario, clima y la vista 3D (parcela/3d)
+  plagas/       tarjetas del catálogo de plagas
+  diagnostico/  fotos, reporte y la entrada desde otras pantallas
+  ia/           consejo, asistente en burbuja y agente
+hooks/          datos y llamadas a la API, uno por tema
+lib/            lógica pura y catálogos, con sus pruebas (*.test.ts)
+docs/           análisis, plan, pendientes, proyecto, setup y diseño
+public/         íconos y el service worker
+```
+
+En el backend (repo aparte) los módulos van por tema: `ia/` (agente agrónomo y
+diagnóstico por foto), `agronomia/` (guía de cultivos), `riego/` (frenos) y
+`seguridad/`. `server.js` sigue en la raíz.
+
+## Diagnóstico por foto
+
+Pantalla `/diagnostico`, a la que se entra desde Plagas o desde la ficha de la parcela. Se
+escoge la parcela u "Otra planta", qué parte se fotografía, y se mandan hasta 3 fotos, que el
+celular encoge a 2048 px. Sirve para cualquier planta, no solo el nogal.
+
+El backend (`ia/diagnostico-foto.js`) arma el contexto desde la base (cultivo, etapa, guía,
+humedad de la parcela y el catálogo de plagas como referencia) y le pide a Claude un reporte
+con esquema fijo:
+- si la foto sirve;
+- qué se observa;
+- de 1 a 3 causas posibles, con lo que las apoya, lo que no cuadra y cómo confirmarlas en campo;
+- severidad, urgencia y relación con el riego;
+- qué hacer ya y cuándo llamar a un técnico.
+
+Tarda de 30 a 90 segundos, porque analiza a fondo. Por eso Next reenvía al backend con un
+límite de 3 minutos (`proxyTimeout` en `next.config.mjs`). Es una función del dueño: pide la
+llave en Ajustes.

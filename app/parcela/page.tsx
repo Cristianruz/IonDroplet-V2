@@ -6,18 +6,18 @@ import { ChevronRight, FlaskConical, Sprout } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela, type DatosParcela } from '@/hooks/use-parcela'
 import { apiFetch } from '@/lib/api'
-import { VistaParcela } from '@/components/parcela-3d/vista-parcela'
-import { ParcelaCard } from '@/components/parcela-card'
-import { ParcelaForm } from '@/components/parcela-form'
-import { UmbralCard } from '@/components/umbral-card'
-import { PropuestaUmbral } from '@/components/propuesta-umbral'
-import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
-import { Aparece } from '@/components/aparece'
-import { ConsejoIA } from '@/components/consejo-ia'
-import { EsqueletoParcela, EsqueletoHumedad } from '@/components/esqueletos'
+import { VistaParcela } from '@/components/parcela/3d/vista-parcela'
+import { ParcelaCard } from '@/components/parcela/parcela-card'
+import { ParcelaForm } from '@/components/parcela/parcela-form'
+import { UmbralCard } from '@/components/riego/umbral-card'
+import { PropuestaUmbral } from '@/components/riego/propuesta-umbral'
+import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
+import { Aparece } from '@/components/ui/aparece'
+import { ConsejoIA } from '@/components/ia/consejo-ia'
+import { EsqueletoParcela, EsqueletoHumedad } from '@/components/ui/esqueletos'
 
 export default function PantallaParcela() {
-  const { humedad } = useIonDroplet({ conHistorial: false })
+  const { humedad, sensorActivo } = useIonDroplet({ conHistorial: false })
   const { parcela, umbralRiego, cargando, conectado, guardando, guardarParcela, guardarUmbral } = useParcela()
   const [editando, setEditando] = useState(false)
   const [agregando, setAgregando] = useState(false)
@@ -116,7 +116,8 @@ export default function PantallaParcela() {
             <Aparece><ParcelaCard parcela={parcela} onEditar={() => setEditando(true)} /></Aparece>
             <UmbralCard
               umbral={umbralRiego}
-              humedad={humedad}
+              // Una lectura vieja no se presenta como "tu tierra está en…".
+        humedad={sensorActivo ? humedad : null}
               guardando={guardando}
               onGuardar={guardarUmbral}
             />

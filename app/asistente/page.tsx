@@ -3,13 +3,14 @@
 import { useState, useEffect, useRef, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
-import { ArrowLeft, Send } from 'lucide-react'
+import { ArrowLeft, RotateCcw, Send } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { useAsistente } from '@/hooks/use-asistente'
+import { useAsistente, SUGERENCIAS } from '@/hooks/use-asistente'
+import { BotonAccionChat, VincularEnChat } from '@/components/ia/acciones-chat'
 
 function Asistente() {
   const { conectado } = useIonDroplet({ conHistorial: false })
-  const { burbujas, enviando, aviso, preguntar } = useAsistente()
+  const { burbujas, enviando, aviso, pendiente, preguntar, nuevaConversacion, marcarAccionHecha } = useAsistente()
   const [texto, setTexto] = useState('')
   const finLista = useRef<HTMLDivElement | null>(null)
   const yaPregunto = useRef(false)
@@ -64,13 +65,18 @@ function Asistente() {
 
       <section className="flex flex-col gap-4" aria-label="Conversación con el asistente">
         {burbujas.length === 0 && !enviando && (
-          <div
-            className="tarjeta"
-            >
+          <div className="tarjeta flex flex-col gap-3">
             <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
-              Buenos días. Pregúntame lo que necesites de tu riego — por ejemplo, si conviene regar
-              hoy o si aguanta hasta mañana.
+              Pregúntame lo que necesites de tu riego, tu cultivo, el clima o las plagas. Veo lo
+              que mide el sistema y el pronóstico de la semana.
             </p>
+            <div className="flex flex-wrap gap-2">
+              {SUGERENCIAS.map(s => (
+                <button key={s} type="button" className="pastilla text-left" onClick={() => preguntar(s)}>
+                  {s}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
@@ -79,15 +85,24 @@ function Asistente() {
             key={b.id}
             className={b.de === 'agricultor' ? 'flex justify-end' : 'flex justify-start'}
           >
-            <p
-              className={`rounded-lg px-4 py-2.5 text-base max-w-[85%] whitespace-pre-line globo ${
-                b.de === 'agricultor' ? 'globo-mio' : ''
-              }`}
-            >
-              {b.texto}
-            </p>
+            <div className={`flex flex-col gap-2 max-w-[85%] ${b.de === 'agricultor' ? 'items-end' : 'items-start'}`}>
+              <p
+                className={`rounded-lg px-4 py-2.5 text-base whitespace-pre-line globo ${
+                  b.de === 'agricultor' ? 'globo-mio' : ''
+                }`}
+              >
+                {b.texto}
+              </p>
+              {b.accion && (
+                <BotonAccionChat accion={b.accion} hecha={!!b.accionHecha} onHecha={() => marcarAccionHecha(b.id)} />
+              )}
+            </div>
           </div>
         ))}
+
+        {pendiente && !enviando && (
+          <VincularEnChat pendiente={pendiente} onVinculado={() => preguntar(pendiente)} />
+        )}
 
         {enviando && (
           <div className="flex justify-start">
@@ -111,6 +126,17 @@ function Asistente() {
           </div>
         )}
 
+        {burbujas.length > 0 && !enviando && (
+          <button
+            type="button"
+            onClick={nuevaConversacion}
+            className="boton boton-sutil w-fit self-center"
+          >
+            <RotateCcw size={15} aria-hidden />
+            Empezar otra conversación
+          </button>
+        )}
+
         <div ref={finLista} />
       </section>
 
@@ -128,7 +154,7 @@ function Asistente() {
           onKeyDown={e => { if (e.key === 'Enter') enviar() }}
           disabled={enviando}
           placeholder="Escribe tu pregunta…"
-          maxLength={500}
+          maxLength={1000}
           className="campo flex-1 min-w-0 text-base outline-none disabled:opacity-60"
         />
         <button

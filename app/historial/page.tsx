@@ -1,16 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { GraficaHumedad } from '@/components/grafica-humedad'
-import { RegistroAcciones } from '@/components/registro-acciones'
+import { GraficaHumedad } from '@/components/riego/grafica-humedad'
+import { RegistroAcciones } from '@/components/riego/registro-acciones'
 import { useHistorial, RANGOS, type RangoHistorial } from '@/hooks/use-historial'
 import { useRegistro } from '@/hooks/use-registro'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { duracionLarga } from '@/lib/tiempo'
-import { Aparece } from '@/components/aparece'
-import { ConsejoIA } from '@/components/consejo-ia'
-import { EsqueletoGrafica, EsqueletoCifras, EsqueletoLista } from '@/components/esqueletos'
-import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
+import { Aparece } from '@/components/ui/aparece'
+import { ConsejoIA } from '@/components/ia/consejo-ia'
+import { EsqueletoGrafica, EsqueletoCifras, EsqueletoLista } from '@/components/ui/esqueletos'
+import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 
 export default function PantallaHistorial() {
   const [rango, setRango] = useState<RangoHistorial>('hoy')

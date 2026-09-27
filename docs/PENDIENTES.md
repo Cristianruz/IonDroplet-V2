@@ -1,5 +1,57 @@
 # Pendientes de IonDroplet V2
 
+> **Al 27 de septiembre de 2026: revisión completa.** Se recorrieron las 14 pantallas en
+> celular y escritorio, sin llamadas fallidas ni desbordes, y se probaron riego, modo,
+> parcela, fertirriego, asistente y diagnóstico con un backend de prueba. Se corrigieron:
+> - **"Detener riego" siempre pasaba a automático**, aunque antes estuviera en manual (así se
+>   prendió la bomba el 13 sep). Ahora regresa al modo que había.
+> - **En manual, la tarjeta de riego hablaba como si el sistema vigilara.** Ahora dice que el
+>   automático está apagado y ofrece "Que el sistema decida".
+> - **La IA decía "automático" estando en manual:** leía el estado de una clave vacía y no el
+>   de la parcela.
+> - **La IA calculaba mal la antigüedad** ("más de dos semanas" por 13 días). Ahora recibe
+>   "hace 13 días" ya escrito, y el agente anota lo mismo.
+> - **Asteriscos de markdown** en las respuestas de la IA: se piden y se limpian a texto plano.
+> - **El cable USB no se reconectaba:** si el ESP32 se conectaba después de arrancar el backend,
+>   o se desconectaba, había que reiniciar. Ahora lo busca solo cada 10 s.
+> - **"Regar" podía tardar 10 s** si el ESP32 tenía IP y no contestaba. Tope de 3 s.
+> - **"Tu tierra está en 44 %"** en el punto de riego, con una lectura de hace 13 días. Ahora
+>   solo lo dice con lectura vigente.
+> - Diagnóstico: avisa antes, no después, si falta la llave del dueño. Tiene título propio.
+> - Página 404 en español, y la gráfica de Inicio ya no se pide dos veces.
+> - **Ajustes, solo para el agricultor:** conexión, punto de riego, aparatos y pantalla. El
+>   panel de operación y la llave del dueño quedan plegados en "Opciones del técnico"
+>   (`/ajustes#tecnico` los abre).
+> - **Asistente de chat nuevo** (`ia/asistente-chat.js`):
+>   - Recuerda la conversación: se le mandan los últimos 12 turnos, y pasa de la burbuja a la
+>     pantalla del asistente.
+>   - Piensa lo necesario y ve el pronóstico de 7 días, los avisos abiertos, el fertirriego y
+>     las demás parcelas.
+>   - Contesta como agrónomo, con el largo que pida la pregunta.
+>   - Trae preguntas sugeridas y un botón para empezar otra conversación.
+>   - Tarda unos 10 segundos por respuesta.
+> - **El chat no se podía usar en el celular:** la barra de abajo tapaba el campo para
+>   escribir. El panel ahora va encima y usa el alto real de la pantalla (dvh).
+> - **Vincular un aparato sin copiar la llave.** El celular pide un código, la ventana del
+>   backend lo muestra y se escribe en el celular. Vale 5 minutos, es de un solo uso y se
+>   anula con 5 intentos fallidos. Está en el chat, en el diagnóstico y en Ajustes
+>   (`seguridad/vincular.js`).
+> - **El chat propone acciones:** regar, detener, automático o manual. Aparecen como botón y
+>   el productor confirma con un toque; la IA nunca mueve la bomba sola.
+> - **Tono profesional en toda la IA**, definido en un solo lugar (`TONO` en `ia/texto.js`).
+>   Se quitaron también las expresiones coloquiales de la app.
+> - **Pendiente para después:** guía de inicio para quien abre la app por primera vez.
+
+> **Al 24 de septiembre de 2026:**
+>
+> - **Diagnóstico por foto nuevo** (`/diagnostico`). Recibe hasta 3 fotos de cualquier planta,
+>   con su parcela, la parte fotografiada y lo que notó el productor. Devuelve un reporte
+>   técnico con causas posibles, pruebas en campo y qué hacer. Se probó con una llamada real a
+>   la IA sobre imágenes dibujadas: detectó que no eran fotos reales y lo dijo. **Falta
+>   probarlo con fotos reales desde el celular.**
+> - **Carpetas reordenadas:** componentes por tema, documentos en `docs/` y módulos del
+>   backend en `ia/`, `agronomia/`, `riego/` y `seguridad/`. Ver el README.
+
 > **Al 20 de septiembre de 2026** (lo de abajo es de septiembre 3 y quedó viejo en varias filas):
 >
 > - **Quién entra.** Ya no se pide cuenta: cualquiera abre la app y ve todo, y también puede
@@ -77,7 +129,7 @@ Estado al 3 de septiembre de 2026. Fases terminadas: **las seis (0 a 6)**. Lo qu
 
 ### Ya resueltos
 
-- ~~Aviso de "INICIAR_SISTEMA.bat" duplicado~~ → ahora es `components/aviso-sin-conexion.tsx`.
+- ~~Aviso de "INICIAR_SISTEMA.bat" duplicado~~ → ahora es `components/ui/aviso-sin-conexion.tsx`.
 - ~~Mezcla de tú y usted~~ → todo en **tú**, como los wireframes.
 - ~~Sin `<title>` por pantalla~~ → cada ruta tiene su `layout.tsx` con su título.
 - ~~"Empezó a regar" para un riego en curso~~ → dice **"Regando ahora"** cuando la bomba sigue prendida.
@@ -184,7 +236,7 @@ que el costo crece lineal y un mes de operación continua con un solo sensor son
 - `pedirClima()`: se agregó `et0_fao_evapotranspiration` al `daily=`. No se tocó `past_days`
   para no correr los índices de los arreglos que ya consume el frontend.
 - Endpoint nuevo `GET /api/agua/balance?parcela_id=&dias=`. Ninguno existente se modificó.
-- `components/balance-card.tsx` en Inicio, y el detalle diario en el panel de operación.
+- `components/riego/balance-card.tsx` en Inicio, y el detalle diario en el panel de operación.
 
 **Va hacia adelante, no hacia atrás**: el pronóstico da los 7 días que vienen. El riego ya hecho
 se reporta aparte y en minutos, sin restarlo de la demanda futura.
@@ -305,7 +357,7 @@ que un cuaderno no hace, y es lo que permite cruzar dosis contra fenología.
 
 - `lib/nutrientes.ts` — catálogo con nombre completo primero ("Nitrógeno", no "N")
 - `hooks/use-fertirriego.ts`
-- `components/fertirriego-form.tsx` — los tres de siempre a la vista, los otros nueve detrás de
+- `components/riego/fertirriego-form.tsx` — los tres de siempre a la vista, los otros nueve detrás de
   un botón. **CE y pH escondidos tras "Tengo medidor de agua"**: hacen falta un aparato que casi
   nadie tiene, y a quien no lo tiene no le estorban ni lo hacen sentir que le falta llenar algo.
 - `app/fertirriego/page.tsx` — se entra desde Parcela, como a Plagas
@@ -469,7 +521,7 @@ la app no abría — pantalla en blanco.
 - `public/sw.js` — service worker con tres estrategias: caché primero para los estáticos de
   Next (llevan hash, nunca quedan viejos), red primero con respaldo de caché para las páginas,
   y red primero con respaldo para una lista **corta y elegida a mano** de endpoints.
-- `components/registrar-sw.tsx` — registro después de `load`, sin bloquear el pintado.
+- `components/ui/registrar-sw.tsx` — registro después de `load`, sin bloquear el pintado.
 
 ### La regla que mandó el diseño
 

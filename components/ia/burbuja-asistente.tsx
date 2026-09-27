@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { MessageCircle, X, Send } from 'lucide-react'
-import { useAsistente } from '@/hooks/use-asistente'
+import { MessageCircle, X, Send, RotateCcw } from 'lucide-react'
+import { useAsistente, SUGERENCIAS } from '@/hooks/use-asistente'
+import { BotonAccionChat, VincularEnChat } from '@/components/ia/acciones-chat'
 
 // El asistente, siempre a la mano.
 //
@@ -18,7 +19,7 @@ import { useAsistente } from '@/hooks/use-asistente'
 export function BurbujaAsistente() {
   const ruta = usePathname()
   const [abierto, setAbierto] = useState(false)
-  const { burbujas, enviando, aviso, preguntar } = useAsistente()
+  const { burbujas, enviando, aviso, pendiente, preguntar, nuevaConversacion, recargar, marcarAccionHecha } = useAsistente()
   const [texto, setTexto] = useState('')
   const finLista = useRef<HTMLDivElement | null>(null)
   const campo = useRef<HTMLInputElement | null>(null)
@@ -27,10 +28,13 @@ export function BurbujaAsistente() {
     if (abierto) finLista.current?.scrollIntoView({ behavior: 'smooth' })
   }, [burbujas, enviando, abierto])
 
-  // Al abrir, el cursor ya está en el campo: una cosa menos que tocar.
+  // Al abrir, el cursor ya está en el campo, y la plática se trae de la
+  // sesión por si siguió en la pantalla del asistente.
   useEffect(() => {
-    if (abierto) campo.current?.focus()
-  }, [abierto])
+    if (!abierto) return
+    recargar()
+    campo.current?.focus()
+  }, [abierto, recargar])
 
   // Cerrar con Escape, que es lo que espera cualquiera que use teclado.
   useEffect(() => {
@@ -80,8 +84,10 @@ export function BurbujaAsistente() {
       {abierto && (
         <>
           {/* Fondo que apaga lo de atrás y cierra al tocarlo. */}
+          {/* Por encima de la barra de abajo (z-50): antes la barra tapaba el
+              campo para escribir y en el celular no se podía preguntar nada. */}
           <div
-            className="fixed inset-0 z-40"
+            className="fixed inset-0 z-[55]"
             style={{ background: 'rgba(0,0,0,.35)' }}
             onClick={() => setAbierto(false)}
             aria-hidden
@@ -91,7 +97,7 @@ export function BurbujaAsistente() {
             role="dialog"
             aria-label="Asistente"
             aria-modal="true"
-            className="fixed z-50 flex flex-col panel-vidrio"
+            className="fixed z-[60] flex flex-col panel-vidrio"
             style={{
               right: 0,
               left: 0,
@@ -99,7 +105,8 @@ export function BurbujaAsistente() {
               maxWidth: 420,
               marginLeft: 'auto',
               marginRight: 'auto',
-              height: 'min(70vh, 560px)',
+              // dvh: el alto real que se ve, sin la barra del navegador del celular.
+              height: 'min(75dvh, 560px)',
               borderRadius: 'var(--radio) var(--radio) 0 0',
               paddingBottom: 'env(safe-area-inset-bottom)',
             }}
@@ -109,6 +116,19 @@ export function BurbujaAsistente() {
               style={{ borderBottom: '1px solid var(--borde)' }}
             >
               <span className="titulo-bloque">Asistente</span>
+              <span className="flex items-center gap-1">
+              {burbujas.length > 0 && (
+                <button
+                  type="button"
+                  onClick={nuevaConversacion}
+                  aria-label="Empezar otra conversación"
+                  title="Empezar otra conversación"
+                  className="boton boton-sutil"
+                  style={{ minHeight: 32, padding: '0 8px' }}
+                >
+                  <RotateCcw size={16} aria-hidden />
+                </button>
+              )}
               <button
                 type="button"
                 onClick={() => setAbierto(false)}
@@ -118,20 +138,30 @@ export function BurbujaAsistente() {
               >
                 <X size={16} aria-hidden />
               </button>
+              </span>
             </header>
 
             <div className="flex-1 overflow-y-auto px-4 py-3 flex flex-col gap-2.5">
               {burbujas.length === 0 && !enviando && (
-                <p className="text-sm texto-suave">
-                  Pregúntame lo que quieras de tu riego o de tu cultivo. Contesto con lo que el
-                  sistema está midiendo; si me falta un dato, te lo digo.
-                </p>
+                <>
+                  <p className="text-sm texto-suave">
+                    Pregúntame lo que quieras de tu riego, tu cultivo, el clima o las plagas.
+                    Contesto con lo que el sistema está midiendo; si me falta un dato, te lo digo.
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {SUGERENCIAS.map(s => (
+                      <button key={s} type="button" className="pastilla text-left" onClick={() => preguntar(s)}>
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </>
               )}
 
               {burbujas.map(b => (
                 <div
                   key={b.id}
-                  className="text-sm"
+                  className="text-sm whitespace-pre-line"
                   style={{
                     alignSelf: b.de === 'agricultor' ? 'flex-end' : 'flex-start',
                     maxWidth: '85%',
@@ -143,8 +173,17 @@ export function BurbujaAsistente() {
                   }}
                 >
                   {b.texto}
+                  {b.accion && (
+                    <div className="mt-2">
+                      <BotonAccionChat accion={b.accion} hecha={!!b.accionHecha} onHecha={() => marcarAccionHecha(b.id)} />
+                    </div>
+                  )}
                 </div>
               ))}
+
+              {pendiente && !enviando && (
+                <VincularEnChat pendiente={pendiente} onVinculado={() => preguntar(pendiente)} />
+              )}
 
               {enviando && (
                 <div
@@ -176,7 +215,7 @@ export function BurbujaAsistente() {
                 placeholder="Escribe tu pregunta"
                 aria-label="Tu pregunta"
                 className="campo"
-                maxLength={500}
+                maxLength={1000}
               />
               <button
                 type="button"

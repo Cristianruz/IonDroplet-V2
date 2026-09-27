@@ -180,7 +180,7 @@ const CICLOS: Record<CicloId, Etapa[]> = {
     { id: 'desarrollo_follaje', nombre: 'Desarrollo de follaje', explicacion: 'primero hace hoja; de ahí sale lo que va a engordar abajo', fase: 'crecimiento' },
     { id: 'formacion', nombre: 'Formación de bulbo o raíz', explicacion: 'empieza a engordar el producto; no debe faltar agua', fase: 'floracion' },
     { id: 'llenado', nombre: 'Engrosamiento', explicacion: 'máxima demanda; define el calibre y el rendimiento', fase: 'fruto' },
-    { id: 'maduracion', nombre: 'Maduración y cosecha', explicacion: 'se corta el riego para que la piel cure y aguante el manejo', fase: 'cosecha' },
+    { id: 'maduracion', nombre: 'Maduración y cosecha', explicacion: 'se corta el riego para que la piel cure y resista el manejo', fase: 'cosecha' },
     { id: 'fin_ciclo', nombre: 'Fin de ciclo', explicacion: 'terreno cosechado; no se riega', fase: 'descanso' },
   ],
   hortaliza_hoja: [

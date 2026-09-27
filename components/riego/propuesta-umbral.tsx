@@ -54,7 +54,7 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
             </p>
             {umbralActual !== null && (
               <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-                ahorita está en {umbralActual}%
+                actualmente está en {umbralActual}%
               </p>
             )}
           </div>

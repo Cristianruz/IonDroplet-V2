@@ -5,13 +5,13 @@ import Link from 'next/link'
 import { ArrowLeft, Sprout } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
-import { PlagaCard } from '@/components/plaga-card'
+import { PlagaCard } from '@/components/plagas/plaga-card'
 import { cultivoPorId } from '@/lib/cultivos'
 import { plagasDeCultivo, ordenarPorRiesgo } from '@/lib/plagas'
-import { RevisarFoto } from '@/components/revisar-foto'
-import { Aparece } from '@/components/aparece'
-import { ConsejoIA } from '@/components/consejo-ia'
-import { EsqueletoLista } from '@/components/esqueletos'
+import { EntradaDiagnostico } from '@/components/diagnostico/entrada-diagnostico'
+import { Aparece } from '@/components/ui/aparece'
+import { ConsejoIA } from '@/components/ia/consejo-ia'
+import { EsqueletoLista } from '@/components/ui/esqueletos'
 
 // Lo que el agricultor ya revisó vive en su teléfono: no hay tabla para esto
 // y no vale la pena inventarle una.
@@ -108,7 +108,7 @@ export default function PantallaPlagas() {
         </section>
       ) : (
         <>
-          <Aparece><RevisarFoto /></Aparece>
+          <Aparece><EntradaDiagnostico parcelaId={parcela.id} /></Aparece>
 
           {principal && (
             <Aparece><PlagaCard

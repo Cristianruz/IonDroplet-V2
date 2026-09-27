@@ -3,9 +3,9 @@
 import { RefreshCw, TriangleAlert, ListChecks, CloudSun, Info, Zap } from 'lucide-react'
 import { useAnalisis, type Nivel, type Confianza } from '@/hooks/use-analisis'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
-import { Aparece } from '@/components/aparece'
-import { AgenteCard } from '@/components/agente-card'
+import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
+import { Aparece } from '@/components/ui/aparece'
+import { AgenteCard } from '@/components/ia/agente-card'
 import { haceCuanto } from '@/lib/tiempo'
 import { colorEstado } from '@/lib/estilo'
 
@@ -241,7 +241,7 @@ export default function PantallaAnalisis() {
           {analisis?.ionizacion && (
             <p className="text-sm texto-suave">
               <strong style={{ color: analisis.ionizacion.recomendada ? 'var(--verde)' : 'var(--tinta)' }}>
-                {analisis.ionizacion.recomendada ? 'Conviene regar con agua ionizada.' : 'Ahorita no hace falta.'}
+                {analisis.ionizacion.recomendada ? 'Conviene regar con agua ionizada.' : 'Por ahora no es necesario.'}
               </strong>{' '}
               {analisis.ionizacion.porque}
             </p>

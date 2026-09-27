@@ -187,7 +187,7 @@ export const PLAGAS_POR_CULTIVO: Record<string, Plaga[]> = {
       nombre: 'Pulgón del cogollo',
       icono: '🪲',
       comoReconocerla: 'Bolas de bichitos verdes o negros en el cogollo y en la espiga, con miel pegajosa.',
-      queHacer: 'Con la planta bien regada aguanta bastante. Pega más cuando la milpa viene seca y con calor.',
+      queHacer: 'Una planta bien regada tolera mejor el daño. El ataque es más fuerte con el cultivo seco y en días de calor.',
       mesesActiva: [5, 6, 7],
       favorecidaPor: 'seco',
     },

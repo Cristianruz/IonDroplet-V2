@@ -1,18 +1,18 @@
 'use client'
 
 import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { HumedadCard } from '@/components/humedad-card'
-import { RiegoCard } from '@/components/riego-card'
-import { GraficaHumedad } from '@/components/grafica-humedad'
+import { HumedadCard } from '@/components/riego/humedad-card'
+import { RiegoCard } from '@/components/riego/riego-card'
+import { GraficaHumedad } from '@/components/riego/grafica-humedad'
 import Link from 'next/link'
 import { Sprout, Bell } from 'lucide-react'
-import { AvisoSinConexion } from '@/components/aviso-sin-conexion'
-import { ClimaCard } from '@/components/clima-card'
-import { BalanceCard } from '@/components/balance-card'
+import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
+import { ClimaCard } from '@/components/parcela/clima-card'
+import { BalanceCard } from '@/components/riego/balance-card'
 import { useParcela } from '@/hooks/use-parcela'
-import { Aparece } from '@/components/aparece'
-import { ConsejoIA } from '@/components/consejo-ia'
-import { EsqueletoHumedad, EsqueletoGrafica } from '@/components/esqueletos'
+import { Aparece } from '@/components/ui/aparece'
+import { ConsejoIA } from '@/components/ia/consejo-ia'
+import { EsqueletoHumedad, EsqueletoGrafica } from '@/components/ui/esqueletos'
 import { useResumenAlertas } from '@/hooks/use-alertas'
 
 export default function Dashboard() {
@@ -26,6 +26,8 @@ export default function Dashboard() {
     historial,
     regarAhora,
     terminarRiegoManual,
+    volverAAutomatico,
+    cambiarModo,
   } = useIonDroplet()
   const { resumen } = useResumenAlertas()
   const sinVer = resumen?.sinVer ?? 0
@@ -125,7 +127,7 @@ export default function Dashboard() {
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           <Aparece><HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} umbral={umbralRiego ?? 40} /></Aparece>
-          <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} humedad={humedad} sensorActivo={sensorActivo} umbral={umbralRiego} regarAhora={regarAhora} terminarRiegoManual={terminarRiegoManual} /></Aparece>
+          <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} humedad={humedad} sensorActivo={sensorActivo} umbral={umbralRiego} regarAhora={regarAhora} terminarRiegoManual={terminarRiegoManual} volverAAutomatico={volverAAutomatico} activarAutomatico={() => cambiarModo(true)} /></Aparece>
         </div>
       )}
 
