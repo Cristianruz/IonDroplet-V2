@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
-import { ChevronRight, Gauge, LogOut, RadioTower, Sparkles } from 'lucide-react'
+import { BookOpen, ChevronRight, Gauge, LogOut, RadioTower, Sparkles } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useParcela } from '@/hooks/use-parcela'
 import { UmbralCard } from '@/components/riego/umbral-card'
@@ -10,6 +10,7 @@ import { SelectorTema } from '@/components/ui/selector-tema'
 import { cerrarSesion, leerSesion } from '@/lib/sesion'
 import { guardarLlave, leerLlave } from '@/lib/dueno'
 import { VincularAparato } from '@/components/ia/vincular-aparato'
+import { EVENTO_ABRIR_GUIA } from '@/components/ui/guia-inicio'
 
 export default function PantallaAjustes() {
   const { conectado, humedad, sensorActivo } = useIonDroplet({ conHistorial: false })
@@ -88,6 +89,18 @@ export default function PantallaAjustes() {
         </span>
         <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </Link>
+
+      <button
+        type="button"
+        onClick={() => window.dispatchEvent(new Event(EVENTO_ABRIR_GUIA))}
+        className="fila-enlace w-full text-left"
+      >
+        <span className="flex items-center gap-3">
+          <BookOpen size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+          Ver la guía de inicio
+        </span>
+        <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
+      </button>
 
       <SelectorTema />
 

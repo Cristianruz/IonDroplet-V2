@@ -7,6 +7,7 @@ import { LogIn, X } from 'lucide-react'
 import { NavInferior } from '@/components/ui/nav-inferior'
 import { VolverArriba } from '@/components/ui/volver-arriba'
 import { BurbujaAsistente } from '@/components/ia/burbuja-asistente'
+import { GuiaInicio } from '@/components/ui/guia-inicio'
 import { ProveedorDatos } from '@/hooks/datos-provider'
 import { EVENTO_PIDE_SESION, leerSesion, olvidarSesion, sesionVigente } from '@/lib/sesion'
 
@@ -77,6 +78,7 @@ export function GuardiaSesion({ children }: { children: ReactNode }) {
       <BurbujaAsistente />
       <VolverArriba />
       <NavInferior />
+      <GuiaInicio />
     </ProveedorDatos>
   )
 }

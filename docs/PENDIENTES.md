@@ -40,7 +40,9 @@
 >   el productor confirma con un toque; la IA nunca mueve la bomba sola.
 > - **Tono profesional en toda la IA**, definido en un solo lugar (`TONO` en `ia/texto.js`).
 >   Se quitaron también las expresiones coloquiales de la app.
-> - **Pendiente para después:** guía de inicio para quien abre la app por primera vez.
+> - **Guía de inicio:** seis pasos que salen la primera vez en cada aparato (Inicio, Parcela,
+>   diagnóstico, asistente, avisos). Se puede saltar y se vuelve a ver en Ajustes. No sale en
+>   el panel de operación.
 
 > **Al 24 de septiembre de 2026:**
 >
