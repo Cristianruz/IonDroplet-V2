@@ -3,19 +3,9 @@ const nextConfig = {
   // Que la respuesta no anuncie con qué está hecha la app.
   poweredByHeader: false,
 
-  // La app y la API salen por la misma dirección: /api/* se reenvía al
-  // backend de la computadora del riego. BACKEND_URL se lee al CONSTRUIR
-  // (npm run build): si cambia, hay que reconstruir.
-  async rewrites() {
-    const backend = process.env.BACKEND_URL || 'http://localhost:3001'
-    return [{ source: '/api/:path*', destination: `${backend}/api/:path*` }]
-  },
-
-  experimental: {
-    // Next corta a los 30 s lo que reenvía al backend. El diagnóstico por
-    // foto piensa a fondo sobre hasta tres imágenes y puede pasar de eso.
-    proxyTimeout: 180_000,
-  },
+  // La app y la API salen por la misma dirección: /api/* lo reenvía al
+  // backend app/api/[...ruta]/route.ts, que lee BACKEND_URL al momento (en la
+  // computadora del riego, localhost:3001; en Vercel, el túnel).
 
   // La pantalla se llamaba "Mi parcela" en /parcela. Los enlaces viejos siguen
   // llegando.

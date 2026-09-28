@@ -7,6 +7,13 @@
 
 const CLAVE = 'iondroplet.llave-dueno'
 
+/** Operar desde internet sin aparato vinculado: la app ofrece vincularlo. */
+export const EVENTO_PIDE_VINCULO = 'iondroplet:pide-vinculo'
+
+export function pedirVinculo(): void {
+  window.dispatchEvent(new Event(EVENTO_PIDE_VINCULO))
+}
+
 export function leerLlave(): string | null {
   try {
     const v = localStorage.getItem(CLAVE)

@@ -10,6 +10,8 @@ import { BurbujaAsistente } from '@/components/ia/burbuja-asistente'
 import { GuiaInicio } from '@/components/ui/guia-inicio'
 import { ProveedorDatos } from '@/hooks/datos-provider'
 import { EVENTO_PIDE_SESION, leerSesion, olvidarSesion, sesionVigente } from '@/lib/sesion'
+import { EVENTO_PIDE_VINCULO } from '@/lib/dueno'
+import { VincularAparato } from '@/components/ia/vincular-aparato'
 
 // Por ahora no se pide login (decisión del usuario, 18 sep 2026): se entra
 // directo y el backend deja ver y operar. Si el backend vuelve a pedir la
@@ -23,6 +25,13 @@ export function GuardiaSesion({ children }: { children: ReactNode }) {
   const esEntrar = ruta === '/entrar'
   const [listo, setListo] = useState(false)
   const [pideSesion, setPideSesion] = useState(false)
+  const [pideVinculo, setPideVinculo] = useState(false)
+
+  useEffect(() => {
+    const alPedir = () => setPideVinculo(true)
+    window.addEventListener(EVENTO_PIDE_VINCULO, alPedir)
+    return () => window.removeEventListener(EVENTO_PIDE_VINCULO, alPedir)
+  }, [])
 
   useEffect(() => {
     if (esEntrar) return
@@ -70,6 +79,27 @@ export function GuardiaSesion({ children }: { children: ReactNode }) {
             <LogIn size={17} aria-hidden />
             Entrar
           </Link>
+        </div>
+      )}
+
+      {/* Desde internet, operar pide un aparato vinculado. */}
+      {pideVinculo && (
+        <div
+          role="alertdialog"
+          aria-label="Vincular este aparato"
+          className="fixed left-4 right-4 z-[65] panel-vidrio flex flex-col gap-3 mx-auto"
+          style={{ bottom: 'calc(92px + env(safe-area-inset-bottom))', maxWidth: 480, padding: 16, borderRadius: 'var(--radio)' }}
+        >
+          <div className="flex items-start justify-between gap-3">
+            <p className="text-[14.5px] font-bold">
+              Para operar el riego desde internet, vincula este aparato con la computadora del riego.
+            </p>
+            <button type="button" onClick={() => setPideVinculo(false)} aria-label="Cerrar" className="boton-sutil" style={{ padding: 4, minHeight: 0 }}>
+              <X size={18} aria-hidden />
+            </button>
+          </div>
+          <p className="text-[13px] texto-suave">Sin vincular puedes consultar todo, pero no cambiar nada.</p>
+          <VincularAparato compacto onVinculado={() => setTimeout(() => setPideVinculo(false), 1500)} />
         </div>
       )}
 

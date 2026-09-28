@@ -9,11 +9,11 @@
 // 'X-IonDroplet-Cache', y la aplicación la usa para decir "sin conexión" y
 // para enseñar la antigüedad del dato en vez de fingir que está al día.
 
-// v3: diagnóstico por foto y componentes reordenados. v2: diseño 2a, parcela
+// v4: la app sale en Vercel con https. v3: diagnóstico por foto y componentes reordenados. v2: diseño 2a, parcela
 // 3D, sin login. Al subir el
 // número, el service worker borra las copias viejas al activarse; si no, un
 // navegador que ya abrió la app seguiría enseñando la versión anterior.
-const VERSION = 'iondroplet-v3'
+const VERSION = 'iondroplet-v4'
 const CACHE_APP = `${VERSION}-app`
 const CACHE_API = `${VERSION}-api`
 

@@ -303,10 +303,18 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ autoMode: automatico }),
       })
+      // Si el servidor no obedeció (por ejemplo, desde internet sin aparato
+      // vinculado), se vuelve a leer el estado real en vez de dejar en pantalla
+      // lo que se supuso.
+      if (!res.ok) {
+        ultimoComando.current = 0
+        leerSensores()
+        return
+      }
       const json = await res.json()
       if (json.settings) setEstadoEsp(json.settings)
     } catch {}
-  }, [])
+  }, [leerSensores])
 
   const cambiarBomba = useCallback(async (encender: boolean) => {
     ultimoComando.current = Date.now()
@@ -317,10 +325,18 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ bomba: encender ? 1 : 0, autoMode: false }),
       })
+      // Si el servidor no obedeció (por ejemplo, desde internet sin aparato
+      // vinculado), se vuelve a leer el estado real en vez de dejar en pantalla
+      // lo que se supuso.
+      if (!res.ok) {
+        ultimoComando.current = 0
+        leerSensores()
+        return
+      }
       const json = await res.json()
       if (json.settings) setEstadoEsp(json.settings)
     } catch {}
-  }, [])
+  }, [leerSensores])
 
   // Riego a mano, como excepción. El backend solo obedece `bomba` cuando
   // autoMode es false, así que hay que pasar a manual y encender en la misma
@@ -355,10 +371,18 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
           body: JSON.stringify({ autoMode: true }),
         })
       }
+      // Si el servidor no obedeció (por ejemplo, desde internet sin aparato
+      // vinculado), se vuelve a leer el estado real en vez de dejar en pantalla
+      // lo que se supuso.
+      if (!res.ok) {
+        ultimoComando.current = 0
+        leerSensores()
+        return
+      }
       const json = await res.json()
       if (json.settings) setEstadoEsp(json.settings)
     } catch {}
-  }, [volverAAutomatico])
+  }, [volverAAutomatico, leerSensores])
 
   const cambiarIonizacion = useCallback(async () => {
     const nuevo = !ionizacion

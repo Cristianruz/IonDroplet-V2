@@ -1,5 +1,5 @@
 import { leerSesion, olvidarSesion, pedirSesion } from './sesion'
-import { leerLlave } from './dueno'
+import { leerLlave, pedirVinculo } from './dueno'
 
 // Dónde vive el backend.
 //
@@ -38,6 +38,11 @@ export async function apiFetch(ruta: string, init: RequestInit = {}): Promise<Re
   const llave = typeof window !== 'undefined' ? leerLlave() : null
   if (llave) cabeceras.set('x-iondroplet-dueno', llave)
   const res = await fetch(`${API_URL}${ruta}`, { ...init, headers: cabeceras })
+  // Desde internet (Vercel + túnel), operar pide un aparato vinculado: el
+  // backend contesta 403 con codigo "vincular" y aquí se ofrece hacerlo.
+  if (res.status === 403 && typeof window !== 'undefined' && (init.method ?? 'GET').toUpperCase() !== 'GET') {
+    res.clone().json().then(c => { if (c?.codigo === 'vincular') pedirVinculo() }).catch(() => {})
+  }
   if (res.status === 401 && typeof window !== 'undefined') {
     if (sesion) olvidarSesion()
     const metodo = (init.method ?? 'GET').toUpperCase()

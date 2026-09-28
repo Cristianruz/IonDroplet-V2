@@ -5,10 +5,11 @@ import { apiFetch } from '@/lib/api'
 import { MAX_FOTOS, type ParteId, type ReporteDiagnostico } from '@/lib/diagnostico'
 
 // Un celular saca fotos de 3 a 5 MB. Se encogen en el propio teléfono antes de
-// salir: 2048 px del lado largo conservan el detalle de un ácaro o de la orilla
-// de una mancha, y cada foto queda en ~0.5 MB.
-const LADO_MAXIMO = 2048
-const CALIDAD = 0.85
+// salir: 1600 px del lado largo conservan el detalle de un ácaro o de la orilla
+// de una mancha, y cada foto queda en ~300 KB. Así tres fotos caben de sobra
+// en el límite de 4.5 MB por petición de Vercel.
+const LADO_MAXIMO = 1600
+const CALIDAD = 0.82
 // Un análisis a fondo tarda de 30 a 90 s. Más de esto ya no va a llegar.
 const TIEMPO_MAXIMO_MS = 170_000
 
