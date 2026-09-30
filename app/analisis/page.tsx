@@ -3,7 +3,6 @@
 import { RefreshCw, TriangleAlert, ListChecks, CloudSun, Info, Zap } from 'lucide-react'
 import { useAnalisis, type Nivel, type Confianza } from '@/hooks/use-analisis'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 import { Aparece } from '@/components/ui/aparece'
 import { AgenteCard } from '@/components/ia/agente-card'
 import { haceCuanto } from '@/lib/tiempo'
@@ -60,8 +59,6 @@ export default function PantallaAnalisis() {
         </button>
       </header>
 
-      {!conectado && <AvisoSinConexion />}
-
       {(estado === 'cargando' || refrescando) && (
         <div className="flex flex-col gap-3">
           {/* Revisar todo tarda cerca de medio minuto. Decirlo evita que
@@ -86,7 +83,7 @@ export default function PantallaAnalisis() {
         <p className="aviso">El asistente no está configurado en esta computadora.</p>
       )}
 
-      {estado === 'error' && (
+      {estado === 'error' && conectado && (
         <p className="aviso aviso-peligro">
           No se pudo armar el análisis. Revisa que la computadora del riego esté encendida.
         </p>

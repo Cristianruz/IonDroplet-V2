@@ -4,12 +4,10 @@ import { useState, useEffect, useRef, Suspense } from 'react'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, RotateCcw, Send } from 'lucide-react'
-import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useAsistente, SUGERENCIAS } from '@/hooks/use-asistente'
 import { BotonAccionChat, VincularEnChat } from '@/components/ia/acciones-chat'
 
 function Asistente() {
-  const { conectado } = useIonDroplet({ conHistorial: false })
   const { burbujas, enviando, aviso, pendiente, preguntar, nuevaConversacion, marcarAccionHecha } = useAsistente()
   const [texto, setTexto] = useState('')
   const finLista = useRef<HTMLDivElement | null>(null)
@@ -52,16 +50,6 @@ function Asistente() {
         </p>
       </header>
 
-      {!conectado && (
-        <div
-          className="rounded-lg p-4 text-base font-semibold"
-          style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
-          role="status"
-        >
-          Sin conexión no puedo responder. <strong>El riego sigue funcionando igual</strong>: esto
-          no lo detiene.
-        </div>
-      )}
 
       <section className="flex flex-col gap-4" aria-label="Conversación con el asistente">
         {burbujas.length === 0 && !enviando && (

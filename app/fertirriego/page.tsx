@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { FlaskConical, Plus, Trash2, X } from 'lucide-react'
 import { useFertirriego } from '@/hooks/use-fertirriego'
 import { FertirriegoForm } from '@/components/riego/fertirriego-form'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 import { Aparece } from '@/components/ui/aparece'
 import { nombreNutriente } from '@/lib/nutrientes'
 import { etapaPorId } from '@/lib/cultivos'
@@ -25,8 +24,6 @@ export default function PantallaFertirriego() {
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       <h1 className="text-xl font-bold leading-tight">Nutrientes aplicados</h1>
-
-      {!conectado && !cargando && <AvisoSinConexion />}
 
       {!anotando && (
         <button

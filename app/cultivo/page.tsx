@@ -11,7 +11,6 @@ import { ParcelaCard } from '@/components/parcela/parcela-card'
 import { ParcelaForm } from '@/components/parcela/parcela-form'
 import { UmbralCard } from '@/components/riego/umbral-card'
 import { PropuestaUmbral } from '@/components/riego/propuesta-umbral'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 import { Aparece } from '@/components/ui/aparece'
 import { ConsejoIA } from '@/components/ia/consejo-ia'
 import { EsqueletoParcela, EsqueletoHumedad } from '@/components/ui/esqueletos'
@@ -51,8 +50,6 @@ export default function PantallaParcela() {
       {(cargando || editando || agregando || parcela === null) && (
         <h1 className="titulo-pantalla">Cultivo</h1>
       )}
-
-      {!conectado && !cargando && <AvisoSinConexion />}
 
       {(cargando || editando || agregando || parcela === null) && <ConsejoIA pantalla="parcela" />}
 

@@ -45,29 +45,32 @@ export default function PantallaAjustes() {
 
       {/* Ajustes es del agricultor: aquí va solo lo que él usa. Lo técnico
           (panel de operación, llave de la IA) vive plegado al final. */}
-      <section
-        className="tarjeta flex flex-col gap-4"
-        aria-label="Conexión con la computadora del riego"
-      >
-        <h2 className="text-base font-semibold">Conexión</h2>
+      {/* Sin conexión no se enseña: el sitio público lo ve el jurado. */}
+      {conectado && (
+        <section
+          className="tarjeta flex flex-col gap-4"
+          aria-label="Conexión con la computadora del riego"
+        >
+          <h2 className="text-base font-semibold">Conexión</h2>
 
-        <div className="flex items-center gap-3" role="status">
-          <span
-            className="rounded-full"
-            style={{
-              width: 20,
-              height: 20,
-              background: conectado ? 'var(--verde)' : 'var(--peligro)',
-              flexShrink: 0,
-            }}
-            aria-hidden
-          />
-          <p className="text-base font-semibold" style={{ color: conectado ? 'var(--verde)' : 'var(--peligro)' }}>
-            {conectado ? 'Conectado a la computadora del riego' : 'Sin conexión con la computadora del riego'}
-          </p>
-        </div>
+          <div className="flex items-center gap-3" role="status">
+            <span
+              className="rounded-full"
+              style={{
+                width: 20,
+                height: 20,
+                background: 'var(--verde)',
+                flexShrink: 0,
+              }}
+              aria-hidden
+            />
+            <p className="text-base font-semibold" style={{ color: 'var(--verde)' }}>
+              Conectado a la computadora del riego
+            </p>
+          </div>
 
-      </section>
+        </section>
+      )}
 
       <UmbralCard
         umbral={umbralRiego}

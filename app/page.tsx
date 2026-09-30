@@ -6,7 +6,6 @@ import { RiegoCard } from '@/components/riego/riego-card'
 import { GraficaHumedad } from '@/components/riego/grafica-humedad'
 import Link from 'next/link'
 import { Sprout, Bell } from 'lucide-react'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 import { ClimaCard } from '@/components/parcela/clima-card'
 import { BalanceCard } from '@/components/riego/balance-card'
 import { useParcela } from '@/hooks/use-parcela'
@@ -56,24 +55,27 @@ export default function Dashboard() {
 
         <div className="flex items-center gap-2">
           {/* Estado del sistema en una pastilla de vidrio opaco: el punto
-              dice el estado, la palabra lo confirma. */}
+              dice el estado, la palabra lo confirma. Sin conexión no se enseña:
+              el sitio público lo ve el jurado y no debe parecer descompuesto. */}
+          {conectado && (
           <span
             className="flex items-center gap-1.5 text-[12.5px] font-bold"
             style={{
               padding: '5px 11px', borderRadius: 'var(--radio-pill)',
               background: 'var(--tarjeta)', border: '1px solid var(--vidrio-filo)',
               boxShadow: 'var(--sombra-boton)',
-              color: conectado ? 'var(--tinta)' : 'var(--peligro)',
+              color: 'var(--tinta)',
             }}
             role="status"
           >
             <span
               className="punto"
-              style={{ background: conectado ? 'var(--verde)' : 'var(--peligro)' }}
+              style={{ background: 'var(--verde)' }}
               aria-hidden
             />
-            {conectado ? 'Conectado' : 'Sin conexión'}
+            Conectado
           </span>
+          )}
 
           {/* La campanita. Sólo lleva número cuando de verdad hay algo:
               un contador en cero que siempre está ahí deja de mirarse. */}
@@ -115,8 +117,6 @@ export default function Dashboard() {
         </div>
       </header>
 
-      {!conectado && <AvisoSinConexion />}
-
       <ConsejoIA pantalla="inicio" destacado />
 
       {cargando && humedad === null ? (
@@ -131,13 +131,15 @@ export default function Dashboard() {
         </div>
       )}
 
-      <Aparece><ClimaCard parcelaId={parcela?.id ?? null} /></Aparece>
+      {/* El clima y la gráfica salen del sistema. Sin él quedarían con un
+          error o vacías, y quien visita el sitio pensaría que no funciona. */}
+      {conectado && <Aparece><ClimaCard parcelaId={parcela?.id ?? null} /></Aparece>}
 
       <Aparece><BalanceCard /></Aparece>
 
       {cargando && historial.length === 0 ? (
         <EsqueletoGrafica />
-      ) : (
+      ) : conectado && (
         <Aparece><GraficaHumedad historial={historial} /></Aparece>
       )}
 

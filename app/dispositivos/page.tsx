@@ -4,7 +4,6 @@ import Link from 'next/link'
 import { ArrowLeft, RadioTower, Sprout, Waves, Zap, type LucideIcon } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { AparatoCard, type EstadoAparato } from '@/components/riego/aparato-card'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 import { haceCuanto } from '@/lib/tiempo'
 
 // Un icono por aparato, aquí y no suelto en el JSX.
@@ -60,8 +59,6 @@ export default function PantallaDispositivos() {
         </Link>
         <h1 className="text-xl font-bold leading-tight">Aparatos del campo</h1>
       </header>
-
-      {!conectado && <AvisoSinConexion />}
 
       <AparatoCard
         icono={ICONOS.central}

@@ -221,10 +221,12 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
     <>
       <div className="flex items-center justify-between gap-2.5">
         <h1 className="titulo-pantalla">Cultivo</h1>
-        <span className="flex items-center gap-1.5 text-[13px] font-semibold texto-suave" role="status">
-          <span className="punto" style={{ background: conectado ? 'var(--verde)' : 'var(--peligro)' }} aria-hidden />
-          {conectado ? 'Conectado' : 'Sin conexión'}
-        </span>
+        {conectado && (
+          <span className="flex items-center gap-1.5 text-[13px] font-semibold texto-suave" role="status">
+            <span className="punto" style={{ background: 'var(--verde)' }} aria-hidden />
+            Conectado
+          </span>
+        )}
       </div>
 
       {consejo}

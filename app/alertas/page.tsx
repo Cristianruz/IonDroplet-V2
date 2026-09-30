@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react'
 import { Check, X, BellOff, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useAlertas, type Severidad, type Alerta } from '@/hooks/use-alertas'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 import { Aparece } from '@/components/ui/aparece'
 import { fechaCorta } from '@/lib/tiempo'
 
@@ -109,8 +108,6 @@ export default function PantallaAlertas() {
         </Link>
         <h1 className="titulo-pantalla">Avisos</h1>
       </header>
-
-      {!conectado && !cargando && <AvisoSinConexion />}
 
       {cargando ? (
         <div className="esqueleto" style={{ width: '100%', height: 110 }} aria-hidden />

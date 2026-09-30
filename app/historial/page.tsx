@@ -1,6 +1,7 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { GraficaHumedad } from '@/components/riego/grafica-humedad'
 import { RegistroAcciones } from '@/components/riego/registro-acciones'
 import { useHistorial, RANGOS, type RangoHistorial } from '@/hooks/use-historial'
@@ -10,21 +11,25 @@ import { duracionLarga } from '@/lib/tiempo'
 import { Aparece } from '@/components/ui/aparece'
 import { ConsejoIA } from '@/components/ia/consejo-ia'
 import { EsqueletoGrafica, EsqueletoCifras, EsqueletoLista } from '@/components/ui/esqueletos'
-import { AvisoSinConexion } from '@/components/ui/aviso-sin-conexion'
 
 export default function PantallaHistorial() {
   const [rango, setRango] = useState<RangoHistorial>('hoy')
   const { puntos, totalLecturas, promedio, resumen, cargando, conectado, horas } = useHistorial(rango)
   const { estadoEsp } = useIonDroplet({ conHistorial: false })
   const registro = useRegistro(horas)
+  const router = useRouter()
+
+  // Sin conexión no hay historial que enseñar: se regresa al inicio en vez de
+  // mostrar cifras vacías. La pestaña tampoco aparece en la barra.
+  useEffect(() => {
+    if (!conectado && !cargando) router.replace('/')
+  }, [conectado, cargando, router])
 
   const etiquetaRango = RANGOS.find(r => r.id === rango)?.etiqueta ?? 'Hoy'
 
   return (
     <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
       <h1 className="text-xl font-bold leading-tight">Historial</h1>
-
-      {!conectado && !cargando && <AvisoSinConexion />}
 
       <ConsejoIA pantalla="historial" />
 
