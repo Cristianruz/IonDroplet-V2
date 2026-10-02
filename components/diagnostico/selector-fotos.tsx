@@ -44,7 +44,7 @@ export function SelectorFotos({ fotos, preparando, onAgregar, onQuitar }: Props)
                 type="button"
                 onClick={() => onQuitar(f.id)}
                 className="absolute top-1 right-1 flex items-center justify-center rounded-full"
-                style={{ width: 32, height: 32, background: 'rgba(0,0,0,.6)', color: '#fff' }}
+                style={{ width: 32, height: 32, background: 'rgba(19,40,61,.72)', color: '#fff' }}
                 aria-label={`Quitar la foto ${i + 1}`}
               >
                 <X size={16} aria-hidden />

@@ -120,7 +120,7 @@ export const TEXTO_URGENCIA: Record<Urgencia, string> = {
 export function colorDeUrgencia(u: Urgencia): string {
   if (u === 'alta') return 'var(--peligro)'
   if (u === 'media') return 'var(--alerta)'
-  if (u === 'baja') return 'var(--riesgo-medio)'
+  if (u === 'baja') return 'var(--alerta)'
   return 'var(--ok)'
 }
 

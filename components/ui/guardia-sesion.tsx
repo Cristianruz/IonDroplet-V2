@@ -72,7 +72,7 @@ export function GuardiaSesion({ children }: { children: ReactNode }) {
             <p className="text-[14.5px] font-bold">
               Para regar o cambiar algo tienes que entrar con tu cuenta.
             </p>
-            <button type="button" onClick={() => setPideSesion(false)} aria-label="Cerrar" className="boton-sutil" style={{ padding: 4, minHeight: 0 }}>
+            <button type="button" onClick={() => setPideSesion(false)} aria-label="Cerrar" className="boton boton-sutil" style={{ width: 44, height: 44, minHeight: 44, padding: 0, margin: -10, borderRadius: 999, flexShrink: 0 }}>
               <X size={18} aria-hidden />
             </button>
           </div>
@@ -96,7 +96,7 @@ export function GuardiaSesion({ children }: { children: ReactNode }) {
             <p className="text-[14.5px] font-bold">
               Para operar el riego desde internet, vincula este aparato con la computadora del riego.
             </p>
-            <button type="button" onClick={() => setPideVinculo(false)} aria-label="Cerrar" className="boton-sutil" style={{ padding: 4, minHeight: 0 }}>
+            <button type="button" onClick={() => setPideVinculo(false)} aria-label="Cerrar" className="boton boton-sutil" style={{ width: 44, height: 44, minHeight: 44, padding: 0, margin: -10, borderRadius: 999, flexShrink: 0 }}>
               <X size={18} aria-hidden />
             </button>
           </div>

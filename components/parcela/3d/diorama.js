@@ -550,7 +550,7 @@ class ParcelaDiorama extends HTMLElement {
 
     // El relámpago: una capa blanca encima que destella y se apaga.
     const destello = this.destello = document.createElement('div');
-    destello.style.cssText = 'position:absolute;inset:0;background:#f4f7ff;opacity:0;pointer-events:none';
+    destello.style.cssText = 'position:absolute;inset:0;background:#ffffff;opacity:0;pointer-events:none';
     this.appendChild(destello);
 
     const sc = this.scene = new THREE.Scene();
@@ -755,16 +755,16 @@ class ParcelaDiorama extends HTMLElement {
     cont.style.cssText = 'position:absolute;inset:0;display:flex;align-items:center;justify-content:center';
     const plato = document.createElement('div');
     plato.style.cssText = 'width:62%;aspect-ratio:3/2;background:' + tono +
-      ';transform:rotateX(58deg) rotateZ(-38deg);box-shadow:0 26px 40px rgba(22,60,45,.35);' +
+      ';transform:rotateX(58deg) rotateZ(-38deg);box-shadow:0 26px 40px rgba(19,40,61,.35);' +
       'display:grid;grid-template-rows:repeat(4,1fr);gap:6%;padding:8%;box-sizing:border-box';
     for (let i = 0; i < 4; i++) {
       const h = document.createElement('div');
-      h.style.cssText = 'background:rgba(0,0,0,.16);border-radius:3px';
+      h.style.cssText = 'background:rgba(19,40,61,.16);border-radius:4px;';
       plato.appendChild(h);
     }
     const nota = document.createElement('p');
     nota.textContent = 'Vista fija: este equipo no puede dibujar la parcela en 3D.';
-    nota.style.cssText = 'position:absolute;left:12px;right:12px;bottom:10px;margin:0;font:600 12.5px system-ui,sans-serif;color:#111418;background:rgba(255,255,255,.9);border-radius:10px;padding:8px 10px;text-align:center';
+    nota.style.cssText = 'position:absolute;left:12px;right:12px;bottom:10px;margin:0;font:600 12.5px system-ui,sans-serif;color:#13283d;background:rgba(255,255,255,.92);border-radius:14px;padding:8px 10px;text-align:center';
     cont.appendChild(plato);
     this.appendChild(cont);
     this.appendChild(nota);

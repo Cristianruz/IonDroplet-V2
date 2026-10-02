@@ -375,7 +375,7 @@ export function ParcelaForm({ parcela, umbralActual, guardando, onGuardar, onCan
           >
             <Minus size={34} aria-hidden />
           </button>
-          <p className="font-bold leading-none" style={{ fontSize: 'clamp(1.75rem, 10vw, 2.5rem)', color: 'var(--agua)' }} role="status">
+          <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.1rem, 10vw, 3.1rem)', color: 'var(--agua)' }} role="status">
             {umbral}
             <span className="text-xl">%</span>
           </p>

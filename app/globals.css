@@ -51,7 +51,6 @@
   --alerta: #a35c00;
   --alerta-texto: #8a4d00;
   --peligro: #b42a1f;
-  --riesgo-medio: #a35c00;
   --oro: #8a6512;
   --fondo-alerta: #fcf0dc;
   --fondo-peligro: #fbeae8;
@@ -106,7 +105,6 @@
     --alerta: #f2b54a;
     --alerta-texto: #f2b54a;
     --peligro: #f27a70;
-    --riesgo-medio: #f2b54a;
     --oro: #e2b64f;
     --fondo-alerta: rgba(242, 181, 74, .13);
     --fondo-peligro: rgba(242, 122, 112, .13);
@@ -142,7 +140,6 @@
   --alerta: #f2b54a;
   --alerta-texto: #f2b54a;
   --peligro: #f27a70;
-  --riesgo-medio: #f2b54a;
   --oro: #e2b64f;
   --fondo-alerta: rgba(242, 181, 74, .13);
   --fondo-peligro: rgba(242, 122, 112, .13);
@@ -250,7 +247,7 @@ a { text-underline-offset: 3px; }
   line-height: .9;
   font-variant-numeric: tabular-nums;
 }
-.dato-grande .dato-unidad { font-size: 22px; margin-left: 3px; }
+.dato-grande .dato-unidad { font-size: 1.5rem; margin-left: 3px; }
 
 /* Cápsula de estado: fondo teñido, letra fuerte. Se lee bajo el sol y no
    grita. El color se pasa con --c (style={{ '--c': 'var(--alerta)' }}). */
@@ -568,7 +565,8 @@ a { text-underline-offset: 3px; }
   flex: 1;
   min-height: 46px;
   border: 0;
-  border-radius: 11px;
+  /* Concéntrico con el contenedor: 14 px menos los 4 px de relleno. */
+  border-radius: 10px;
   background: transparent;
   color: var(--tinta-suave);
   font-size: 0.95rem;
@@ -649,7 +647,7 @@ a { text-underline-offset: 3px; }
   width: 100%;
   min-height: 60px;
   padding: 0 12px;
-  border-radius: 13px;
+  border-radius: var(--radio-sm);
   border: 1px solid var(--borde);
   background: var(--tarjeta);
   color: var(--tinta);
@@ -969,17 +967,17 @@ html[data-enmarcada]::-webkit-scrollbar { display: none; }
 }
 :root[data-tema="oscuro"] .presentacion-telefono {
   background: #050d15;
-  box-shadow: 0 0 0 1px #27394c, 0 40px 80px -24px rgba(0, 0, 0, .7);
+  box-shadow: 0 0 0 1px var(--borde), var(--sombra-elevada);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) .presentacion-telefono {
     background: #050d15;
-    box-shadow: 0 0 0 1px #27394c, 0 40px 80px -24px rgba(0, 0, 0, .7);
+    box-shadow: 0 0 0 1px var(--borde), var(--sombra-elevada);
   }
 }
 @media (max-height: 800px) {
   .presentacion { --relleno: 16px; }
-  .presentacion-titulo { font-size: clamp(2.1rem, 2.9vw, 2.6rem); }
+  .presentacion-titulo { font-size: clamp(2.1rem, 2.9vw, 3.1rem); }
   .presentacion-bajada { font-size: 1.05rem; }
 }
 /* Laptops angostas y bajitas (1024 a 1279 × 800 o menos): panel y QR van en
@@ -1081,6 +1079,8 @@ html[data-enmarcada]::-webkit-scrollbar { display: none; }
 .op-kpi-etiqueta { font-size: 11px; text-transform: uppercase; letter-spacing: .045em; color: var(--tinta-suave); }
 .op-kpi-valor { font-size: 23px; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -.02em; }
 .op-kpi-unidad { font-size: 13px; font-weight: 600; margin-left: 2px; }
+/* Sin dato se dice con palabras, más chico que la cifra que faltó. */
+.op-kpi-falta { font-size: 15px; font-weight: 650; letter-spacing: 0; }
 .op-kpi-nota { font-size: 11px; color: var(--apagado); }
 
 .op-tabla-envoltura {
@@ -1114,14 +1114,15 @@ html[data-enmarcada]::-webkit-scrollbar { display: none; }
 .op-pie { font-size: 12px; color: var(--tinta-suave); max-width: 96ch; }
 .op-pie code, .op-faltantes code, .op-ficha code {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11.5px; background: var(--pista); padding: 1px 4px; border-radius: 3px;
+  font-size: 11.5px; background: var(--pista); padding: 1px 4px; border-radius: 4px;
 }
 
 .op-vacio { font-size: 12.5px; color: var(--apagado); padding: 14px; border: 1px dashed var(--borde); border-radius: var(--radio-sm); }
 
 .op-faltantes {
-  border: 1px solid var(--borde); border-left: 3px solid var(--alerta);
-  border-radius: var(--radio-sm); padding: 10px 13px; background: var(--tarjeta);
+  border: 1px solid color-mix(in srgb, var(--alerta) 30%, var(--borde));
+  border-radius: var(--radio-sm); padding: 10px 13px;
+  background: color-mix(in srgb, var(--alerta) 7%, var(--tarjeta));
   display: flex; flex-direction: column; gap: 6px;
 }
 .op-faltantes-titulo {

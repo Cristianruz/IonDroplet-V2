@@ -360,7 +360,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo, ch
                       else if (i - 1 < 2) { setFoco(i - 1); escena.current?.enfocar(i - 1) }
                     }}
                   >
-                    <span className="text-[22px] leading-none" aria-hidden>{p.cultivo?.icono ?? '🌱'}</span>
+                    <span className="text-2xl leading-none" aria-hidden>{p.cultivo?.icono ?? '🌱'}</span>
                     <span className="flex-1 min-w-0 flex flex-col gap-0.5 text-left">
                       <span className="text-[15px] font-bold truncate">{p.nombre || 'Cultivo sin nombre'}</span>
                       <span className="text-[12.5px] texto-suave">{detalle}</span>
@@ -473,7 +473,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo, ch
 
               <div className="flex items-baseline gap-2 flex-wrap">
                 <span className="text-xl leading-none" aria-hidden>{cultivo?.icono ?? '🌱'}</span>
-                <span className="text-[19px] font-bold" style={{ letterSpacing: '-.02em', color: colorVista }}>
+                <span className="text-xl font-bold" style={{ letterSpacing: '-.02em', color: colorVista }}>
                   {FASES[iVis].nombre}
                 </span>
                 <span className="text-[13px] texto-suave">{RIEGO_ETAPA[iVis]}</span>

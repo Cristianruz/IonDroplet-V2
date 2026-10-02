@@ -117,7 +117,6 @@ export function BalanceCard() {
                       height: `${((d.etc_mm ?? 0) / maximo) * 100}%`,
                       background: 'var(--agua)',
                       borderRadius: '4px 4px 0 0',
-                      transition: 'height var(--lento) var(--curva)',
                     }}
                   />
                   <div
@@ -127,7 +126,6 @@ export function BalanceCard() {
                       minHeight: d.lluvia_mm > 0 ? 3 : 0,
                       background: 'var(--acento)',
                       borderRadius: '4px 4px 0 0',
-                      transition: 'height var(--lento) var(--curva)',
                     }}
                   />
                 </div>

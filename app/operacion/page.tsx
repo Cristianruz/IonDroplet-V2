@@ -29,11 +29,11 @@ import { CULTIVOS, etapaPorId } from '@/lib/cultivos'
 
 
 function nombreCultivo(id: string | null): string {
-  if (!id) return '—'
+  if (!id) return 'sin dato'
   return CULTIVOS.find(c => c.id === id)?.nombre ?? id
 }
 
-/** Una cifra del encabezado. Sin dato es una raya, nunca un cero inventado. */
+/** Una cifra del encabezado. Sin dato lo dice, nunca un cero inventado. */
 function Kpi({
   etiqueta,
   valor,
@@ -53,7 +53,7 @@ function Kpi({
     <div className="op-kpi">
       <span className="op-kpi-etiqueta">{etiqueta}</span>
       <span className="op-kpi-valor" style={{ color: valor === null ? 'var(--apagado)' : color }}>
-        {valor === null ? '—' : valor}
+        {valor === null ? <span className="op-kpi-falta">sin dato</span> : valor}
         {valor !== null && unidad && <span className="op-kpi-unidad">{unidad}</span>}
       </span>
       {nota && <span className="op-kpi-nota">{nota}</span>}
@@ -213,7 +213,7 @@ export default function PanelOperacion() {
               <strong>no se persiste</strong>: hoy no hay vía para que el aparato reporte.
             </li>
             <li>
-              No se mide ninguna propiedad del agua —<strong>ORP</strong>, pH ni conductividad—,
+              No se mide ninguna propiedad del agua (<strong>ORP</strong>, pH ni conductividad),
               de modo que <strong>el sistema no evidencia el efecto de la ionización</strong>.
             </li>
             <li>
@@ -258,12 +258,12 @@ export default function PanelOperacion() {
                   {balance.dias.map(d => (
                     <tr key={d.fecha}>
                       <td className="mono">{d.fecha}</td>
-                      <td className="num mono">{d.et0_mm ?? '—'}</td>
-                      <td className="num mono">{balance.kc ?? '—'}</td>
-                      <td className="num mono">{d.etc_mm ?? '—'}</td>
+                      <td className="num mono">{d.et0_mm ?? 'sin dato'}</td>
+                      <td className="num mono">{balance.kc ?? 'sin dato'}</td>
+                      <td className="num mono">{d.etc_mm ?? 'sin dato'}</td>
                       <td className="num mono">{d.lluvia_mm.toFixed(2)}</td>
                       <td className="num mono" style={{ color: 'var(--alerta)', fontWeight: 700 }}>
-                        {d.deficit_mm ?? '—'}
+                        {d.deficit_mm ?? 'sin dato'}
                       </td>
                     </tr>
                   ))}
@@ -272,11 +272,11 @@ export default function PanelOperacion() {
                   <tr>
                     <td>Acumulado</td>
                     <td className="num mono">{balance.totales.et0_mm}</td>
-                    <td className="num">—</td>
-                    <td className="num mono">{balance.totales.etc_mm ?? '—'}</td>
+                    <td className="num texto-apagado">no aplica</td>
+                    <td className="num mono">{balance.totales.etc_mm ?? 'sin dato'}</td>
                     <td className="num mono">{balance.totales.lluvia_mm.toFixed(2)}</td>
                     <td className="num mono" style={{ color: 'var(--alerta)' }}>
-                      {balance.totales.deficit_mm ?? '—'}
+                      {balance.totales.deficit_mm ?? 'sin dato'}
                     </td>
                   </tr>
                 </tfoot>
@@ -298,7 +298,7 @@ export default function PanelOperacion() {
                 <ul>
                   {balance.faltantes.map(f => (
                     <li key={f.dato}>
-                      <code>{f.dato}</code> — {f.porque}
+                      <code>{f.dato}</code>: {f.porque}
                     </li>
                   ))}
                 </ul>
@@ -355,14 +355,14 @@ export default function PanelOperacion() {
             <tbody>
               {parcela ? (
                 <tr>
-                  <td>{parcela.nombre ?? '—'}</td>
+                  <td>{parcela.nombre ?? 'sin dato'}</td>
                   <td>{nombreCultivo(parcela.cultivo)}</td>
-                  <td>{parcela.etapa ? (etapaPorId(parcela.etapa, parcela.cultivo)?.nombre ?? parcela.etapa) : '—'}</td>
-                  <td className="num mono">{parcela.area_ha ?? '—'}</td>
-                  <td className="num mono">{parcela.num_hileras ?? '—'}</td>
-                  <td>{parcela.tipo_sistema ?? '—'}</td>
-                  <td className="num mono">{umbralRiego ?? '—'}</td>
-                  <td className="mono">{parcela.device_id ?? '—'}</td>
+                  <td>{parcela.etapa ? (etapaPorId(parcela.etapa, parcela.cultivo)?.nombre ?? parcela.etapa) : 'sin dato'}</td>
+                  <td className="num mono">{parcela.area_ha ?? 'sin dato'}</td>
+                  <td className="num mono">{parcela.num_hileras ?? 'sin dato'}</td>
+                  <td>{parcela.tipo_sistema ?? 'sin dato'}</td>
+                  <td className="num mono">{umbralRiego ?? 'sin dato'}</td>
+                  <td className="mono">{parcela.device_id ?? 'sin dato'}</td>
                   <td>
                     <Estado ok={sensorActivo} texto={sensorActivo ? 'Activa' : 'Sin reportar'} />
                   </td>
@@ -443,11 +443,11 @@ export default function PanelOperacion() {
                   <tr key={e.id}>
                     <td className="mono">{e.cuando}</td>
                     <td className="num mono">{e.minutos}</td>
-                    <td className="num mono">{e.humedad_antes ?? '—'}</td>
-                    <td className="num mono">{e.humedad_despues ?? '—'}</td>
-                    <td className="num mono">{e.puntos_ganados ?? '—'}</td>
-                    <td className="num mono">{e.minutos_por_punto ?? '—'}</td>
-                    <td className="num mono">{e.litros_por_punto ?? '—'}</td>
+                    <td className="num mono">{e.humedad_antes ?? 'sin dato'}</td>
+                    <td className="num mono">{e.humedad_despues ?? 'sin dato'}</td>
+                    <td className="num mono">{e.puntos_ganados ?? 'sin dato'}</td>
+                    <td className="num mono">{e.minutos_por_punto ?? 'sin dato'}</td>
+                    <td className="num mono">{e.litros_por_punto ?? 'sin dato'}</td>
                   </tr>
                 ))}
               </tbody>
@@ -471,7 +471,7 @@ export default function PanelOperacion() {
             <ul>
               {eficiencia.faltantes.map(f => (
                 <li key={f.dato}>
-                  <code>{f.dato}</code> — {f.porque}
+                  <code>{f.dato}</code>: {f.porque}
                 </li>
               ))}
             </ul>
@@ -513,7 +513,7 @@ export default function PanelOperacion() {
                   <tr key={s.parcela_id}>
                     <td>{s.nombre ?? `Unidad ${s.parcela_id}`}</td>
                     <td>{nombreCultivo(s.cultivo)}</td>
-                    <td>{s.etapa ? (etapaPorId(s.etapa, s.cultivo)?.nombre ?? s.etapa) : '—'}</td>
+                    <td>{s.etapa ? (etapaPorId(s.etapa, s.cultivo)?.nombre ?? s.etapa) : 'sin dato'}</td>
                     <td className="num mono">{s.lecturas_en_ventana.toLocaleString('es-MX')}</td>
                     <td className="num mono">{s.riego.eventos}</td>
                     <td className="num mono">{s.riego.minutos}</td>
@@ -571,10 +571,10 @@ export default function PanelOperacion() {
                         texto={a.severidad}
                       />
                     </td>
-                    <td className="op-detalle">{a.dato ?? '—'}</td>
+                    <td className="op-detalle">{a.dato ?? 'sin dato'}</td>
                     <td className="mono">{a.estado}</td>
                     <td className="mono">
-                      {a.atendida_por ? `${a.atendida_por} · ${a.atendida_en ? fechaCorta(a.atendida_en) : ''}` : '—'}
+                      {a.atendida_por ? `${a.atendida_por} · ${a.atendida_en ? fechaCorta(a.atendida_en) : ''}` : 'sin dato'}
                     </td>
                   </tr>
                 ))}
@@ -587,7 +587,7 @@ export default function PanelOperacion() {
           Las reglas son deterministas y viven en el servidor: <strong>no interviene el modelo de
           lenguaje</strong>, de modo que una alerta de helada se emite aunque la capa de inferencia
           no esté disponible. Cada alerta persiste la condición numérica que la disparó y, al ser
-          atendida, el operador y la marca de tiempo — la traza exigible para rendición de cuentas.
+          atendida, el operador y la marca de tiempo: la traza exigible para rendición de cuentas.
           Una alerta atendida se silencia 6 h antes de poder reemitirse; si la condición
           desaparece, pasa a <code>resuelta</code> automáticamente.
         </p>
@@ -598,11 +598,11 @@ export default function PanelOperacion() {
           </span>
           <ul>
             <li>
-              <code>desviacion_entre_parcelas</code> — requiere más de una unidad de manejo; el
+              <code>desviacion_entre_parcelas</code>: requiere más de una unidad de manejo; el
               control mantiene un estado de bomba global.
             </li>
             <li>
-              <code>eficiencia_de_riego</code> — requiere el caudal de la bomba para convertir
+              <code>eficiencia_de_riego</code>: requiere el caudal de la bomba para convertir
               minutos a volumen.
             </li>
           </ul>
@@ -633,15 +633,15 @@ export default function PanelOperacion() {
                   {eventosFert.slice(0, 12).map(e => (
                     <tr key={e.id}>
                       <td className="mono">{e.aplicado.toISOString().slice(0, 10)}</td>
-                      <td>{e.etapa ? (etapaPorId(e.etapa)?.nombre ?? e.etapa) : '—'}</td>
+                      <td>{e.etapa ? (etapaPorId(e.etapa)?.nombre ?? e.etapa) : 'sin dato'}</td>
                       <td>
                         {e.nutrientes
                           .map(n => `${n.nutriente}${n.cantidad !== null ? ` ${n.cantidad}${n.unidad ?? ''}` : ''}`)
                           .join(' · ')}
                       </td>
-                      <td className="num mono">{e.volumen_litros ?? '—'}</td>
-                      <td className="num mono">{e.ec_ds_m ?? '—'}</td>
-                      <td className="num mono">{e.ph ?? '—'}</td>
+                      <td className="num mono">{e.volumen_litros ?? 'sin dato'}</td>
+                      <td className="num mono">{e.ec_ds_m ?? 'sin dato'}</td>
+                      <td className="num mono">{e.ph ?? 'sin dato'}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -662,7 +662,7 @@ export default function PanelOperacion() {
                     <tr key={n.nutriente + n.unidad}>
                       <td>{n.nutriente}</td>
                       <td className="num mono">
-                        {n.total === null ? '—' : n.total.toLocaleString('es-MX')} {n.unidad}
+                        {n.total === null ? 'sin dato' : n.total.toLocaleString('es-MX')} {n.unidad}
                       </td>
                       <td className="num mono">{n.eventos}</td>
                     </tr>
@@ -771,37 +771,37 @@ export default function PanelOperacion() {
               </tr>
               <tr>
                 <td>Potencial redox del agua (ORP)</td>
-                <td>—</td>
+                <td className="texto-apagado">sin dato</td>
                 <td>Sin instrumento instalado. Es la magnitud que evidenciaría la ionización</td>
                 <td><Estado ok={false} texto="No disponible" /></td>
               </tr>
               <tr>
                 <td>pH y conductividad del agua</td>
-                <td>—</td>
+                <td className="texto-apagado">sin dato</td>
                 <td>Sin instrumento instalado</td>
                 <td><Estado ok={false} texto="No disponible" /></td>
               </tr>
               <tr>
                 <td>Temperatura de suelo</td>
-                <td>—</td>
+                <td className="texto-apagado">sin dato</td>
                 <td>Sin instrumento instalado</td>
                 <td><Estado ok={false} texto="No disponible" /></td>
               </tr>
               <tr>
                 <td>Tensión y corriente</td>
-                <td>—</td>
+                <td className="texto-apagado">sin dato</td>
                 <td>Sin instrumento instalado</td>
                 <td><Estado ok={false} texto="No disponible" /></td>
               </tr>
               <tr>
                 <td>Lámina aplicada y volumen</td>
-                <td>—</td>
+                <td className="texto-apagado">sin dato</td>
                 <td>Requiere caudal de bomba y superficie</td>
                 <td><Estado ok={false} texto="No calculable" /></td>
               </tr>
               <tr>
                 <td>Perfil de humedad por profundidad</td>
-                <td>—</td>
+                <td className="texto-apagado">sin dato</td>
                 <td>Tablas y endpoints operativos; sin sondas instaladas</td>
                 <td><Estado ok={false} texto="Sin fuente" /></td>
               </tr>
@@ -843,11 +843,11 @@ export default function PanelOperacion() {
                   <tr key={a.id}>
                     <td className="mono">{fechaCorta(a.fecha)}</td>
                     <td>{a.tipo}</td>
-                    <td className="mono">{a.origen ?? '—'}</td>
+                    <td className="mono">{a.origen ?? 'sin dato'}</td>
                     <td className="num mono">
                       {a.duracion_seg === null ? 'abierto' : duracionLarga(a.duracion_seg)}
                     </td>
-                    <td className="op-detalle">{a.detalle ?? '—'}</td>
+                    <td className="op-detalle">{a.detalle ?? 'sin dato'}</td>
                   </tr>
                 ))
               )}

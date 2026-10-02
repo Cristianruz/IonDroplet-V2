@@ -6,7 +6,7 @@ import type { Plaga, Riesgo } from '@/lib/plagas'
 
 const COLOR_RIESGO: Record<Riesgo, string> = {
   alto: 'var(--alerta)',
-  medio: 'var(--riesgo-medio)',
+  medio: 'var(--alerta)',
   bajo: 'var(--apagado)',
 }
 

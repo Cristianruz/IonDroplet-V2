@@ -87,8 +87,7 @@ export function BurbujaAsistente() {
           {/* Por encima de la barra de abajo (z-50): antes la barra tapaba el
               campo para escribir y en el celular no se podía preguntar nada. */}
           <div
-            className="fixed inset-0 z-[55]"
-            style={{ background: 'rgba(0,0,0,.35)' }}
+            className="fixed inset-0 z-[55] hoja-velo"
             onClick={() => setAbierto(false)}
             aria-hidden
           />

@@ -27,7 +27,7 @@ export function IonizacionCard({ encendida, cambiar }: Props) {
         className="rounded-lg py-2.5 text-base font-bold border transition-colors"
         style={
           encendida
-            ? { background: 'var(--oro)', borderColor: 'var(--riesgo-medio)', color: 'var(--sobre-estado)' }
+            ? { background: 'var(--oro)', borderColor: 'var(--alerta)', color: 'var(--sobre-estado)' }
             : { background: 'var(--tarjeta)', borderColor: 'var(--borde)', color: 'var(--tinta-suave)' }
         }
         aria-pressed={encendida}

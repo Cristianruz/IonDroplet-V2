@@ -27,6 +27,7 @@ colors:
   franja-demo-fondo: "#13283d"
   franja-demo-tinta: "#f6f4ef"
   bisel-telefono: "#13283d"
+  escena-cielo: "#d8ebf3"
   escena-medido: "#11794a"
   escena-ojo: "#7a5004"
   escena-falta: "#3a4f45"
@@ -97,6 +98,30 @@ typography:
     lineHeight: 0.9
     letterSpacing: "-0.045em"
     fontFeature: "tnum"
+  title-lg:
+    fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "1.3rem"
+    fontWeight: 750
+    letterSpacing: "-0.02em"
+  lead:
+    fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "1.125rem"
+    fontWeight: 400
+    lineHeight: 1.5
+  op-titulo:
+    fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "20px"
+    fontWeight: 700
+    letterSpacing: "-0.02em"
+  op-kpi:
+    fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "23px"
+    fontWeight: 700
+    letterSpacing: "-0.02em"
+    fontFeature: "tnum"
+  op-eje:
+    fontFamily: "ui-monospace, SFMono-Regular, Menlo, Consolas, monospace"
+    fontSize: "10px"
   op-texto:
     fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "13.5px"
@@ -117,6 +142,8 @@ rounded:
   pill: "999px"
   telefono: "56px"
   pantalla-telefono: "44px"
+  segmento: "10px"
+  barra: "4px"
 spacing:
   pagina: "16px"
   pila: "16px"
