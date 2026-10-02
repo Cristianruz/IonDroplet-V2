@@ -51,7 +51,7 @@ test('cada tipo de causa tiene su texto', () => {
 
 test('la urgencia alta va en rojo y la ninguna en verde', () => {
   assert.equal(colorDeUrgencia('alta'), 'var(--peligro)')
-  assert.equal(colorDeUrgencia('ninguna'), 'var(--verde)')
+  assert.equal(colorDeUrgencia('ninguna'), 'var(--ok)')
 })
 
 test('la pregunta al asistente lleva la causa principal y las otras', () => {

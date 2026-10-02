@@ -92,7 +92,7 @@ export function PlagaCard({ plaga, riesgo, destacada = false, revisadaEl, onRevi
       </Link>
 
       {revisadaEl ? (
-        <p className="text-base font-bold flex items-center gap-3" style={{ color: 'var(--verde)' }} role="status">
+        <p className="text-base font-bold flex items-center gap-3" style={{ color: 'var(--ok)' }} role="status">
           <Check size={18} aria-hidden />
           La revisaste el {revisadaEl.toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })}
         </p>

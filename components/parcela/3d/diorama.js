@@ -29,12 +29,110 @@ const COL = {
   gris: 0xa3aca7, piedra: 0x9c958a,
 };
 
-const CIELO = {
-  soleado: 'linear-gradient(175deg,#8fd0f0 0%,#c6e7f5 48%,#e7f3e4 100%)',
-  nublado: 'linear-gradient(175deg,#9fb0bb 0%,#c2ccd2 50%,#dfe4e0 100%)',
-  lluvia: 'linear-gradient(175deg,#6e7f8d 0%,#93a3ad 50%,#bcc6c3 100%)',
-  noche: 'linear-gradient(175deg,#16233a 0%,#27384f 55%,#3d4a4a 100%)',
+// ── Cielo y clima ─────────────────────────────────────────────────────────
+// El cielo sale de la HORA del teléfono y del clima de ESTE momento que manda
+// Open-Meteo (código WMO, lluvia en mm, viento en km/h). Nada se inventa: si
+// no llegó el clima, queda un día despejado a la hora real.
+//
+// Tres paletas de tres paradas (arriba, en medio, horizonte) que se mezclan:
+// despejado ↔ nublado según las nubes, un tinte cálido al amanecer y al
+// atardecer, y la noche según qué tan arriba está el sol.
+const PALETA = {
+  dia:     [0x7cc4ec, 0xbfe3f5, 0xe9f4e6],
+  nublado: [0x8f9fab, 0xb7c2c9, 0xd9dedb],
+  ocaso:   [0x6a86b8, 0xf2b98c, 0xf8dcaa],
+  noche:   [0x0e1a2e, 0x1f2f47, 0x34433e],
 };
+const AMANECER = 6.6, ANOCHECER = 19.3; // horas, Chihuahua en otoño
+
+// Lo que dice el código WMO del clima de ahora.
+function leerClima(codigo, mm, viento) {
+  const c = Number.isFinite(codigo) ? codigo : -1;
+  const llueveCodigo = (c >= 51 && c <= 67) || (c >= 80 && c <= 82) || c >= 95;
+  const nubes = c < 0 ? (mm > 0.1 ? 1 : 0)
+    : c === 0 ? 0 : c === 1 ? 0.2 : c === 2 ? 0.5 : c === 3 ? 0.85 : 1;
+  // Intensidad 0..1: con milímetros manda el dato; sin ellos, el código dice
+  // si es llovizna (51-57) o lluvia de verdad.
+  const lluvia = mm > 0.1 ? clamp(0.18 + mm / 7, 0.18, 1)
+    : llueveCodigo ? (c <= 57 ? 0.22 : 0.45) : 0;
+  return {
+    nubes, lluvia,
+    niebla: c === 45 || c === 48,
+    tormenta: c >= 95,
+    viento: Number.isFinite(viento) ? Math.max(0, viento) : 6,
+  };
+}
+
+// Qué tan arriba está el sol (grados) a una hora decimal; negativo de noche.
+function alturaSol(hora) {
+  if (hora >= AMANECER && hora <= ANOCHECER) {
+    return 64 * Math.sin(Math.PI * (hora - AMANECER) / (ANOCHECER - AMANECER));
+  }
+  const fuera = hora < AMANECER ? AMANECER - hora : hora - ANOCHECER;
+  return -15 * Math.min(fuera, 6);
+}
+
+const hex = c => '#' + c.getHexString();
+
+function mezclaPaleta(nubes, ocaso, luz) {
+  return [0, 1, 2].map(i => {
+    const c = new THREE.Color(PALETA.dia[i]).lerp(new THREE.Color(PALETA.nublado[i]), nubes);
+    c.lerp(new THREE.Color(PALETA.ocaso[i]), ocaso * 0.8 * (1 - nubes * 0.65));
+    return new THREE.Color(PALETA.noche[i]).lerp(c, luz);
+  });
+}
+
+// Estrellas: puntitos de CSS sobre el degradado; solo de noche y sin nubes.
+const ESTRELLAS = [[12, 9], [27, 18], [41, 6], [58, 14], [72, 8], [86, 20], [19, 31], [64, 27], [93, 5], [50, 24], [8, 22], [35, 13]]
+  .map(([x, y], i) => `radial-gradient(${i % 3 ? 1 : 1.6}px ${i % 3 ? 1 : 1.6}px at ${x}% ${y}%, rgba(255,255,255,ALFA), transparent)`)
+  .join(',');
+
+// ── Texturas pintadas en un canvas (sin descargar imágenes) ──
+function texturaTerrones() {
+  const cv = document.createElement('canvas'); cv.width = cv.height = 256;
+  const x = cv.getContext('2d');
+  x.fillStyle = 'rgb(236,234,230)'; x.fillRect(0, 0, 256, 256);
+  for (let i = 0; i < 1600; i++) {
+    const v = 170 + Math.random() * 85, r = 0.5 + Math.random() * 2.2;
+    x.fillStyle = `rgba(${v},${v * 0.97},${v * 0.92},${0.35 + Math.random() * 0.4})`;
+    x.beginPath(); x.ellipse(Math.random() * 256, Math.random() * 256, r * 1.4, r, Math.random() * 3, 0, 7); x.fill();
+  }
+  // Terrones: manchas más oscuras, como tierra removida.
+  for (let i = 0; i < 70; i++) {
+    const v = 150 + Math.random() * 40;
+    x.fillStyle = `rgba(${v},${v * 0.95},${v * 0.88},0.45)`;
+    x.beginPath(); x.ellipse(Math.random() * 256, Math.random() * 256, 3 + Math.random() * 5, 2 + Math.random() * 3, Math.random() * 3, 0, 7); x.fill();
+  }
+  const t = new THREE.CanvasTexture(cv);
+  t.wrapS = t.wrapT = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+
+// El corte del suelo a los lados: capa de arriba más oscura y subsuelo con
+// piedritas. Es dibujo, no medición: no dice hasta dónde llegó el agua.
+function texturaCorte() {
+  const cv = document.createElement('canvas'); cv.width = 128; cv.height = 64;
+  const x = cv.getContext('2d');
+  const g = x.createLinearGradient(0, 0, 0, 64);
+  g.addColorStop(0, 'rgb(200,196,190)'); g.addColorStop(0.32, 'rgb(212,208,201)');
+  g.addColorStop(0.36, 'rgb(244,240,232)'); g.addColorStop(1, 'rgb(250,246,238)');
+  x.fillStyle = g; x.fillRect(0, 0, 128, 64);
+  for (let i = 0; i < 90; i++) {
+    const y = 26 + Math.random() * 38, v = 200 + Math.random() * 55;
+    x.fillStyle = `rgba(${v},${v * 0.97},${v * 0.92},0.8)`;
+    x.beginPath(); x.ellipse(Math.random() * 128, y, 0.8 + Math.random() * 1.8, 0.6 + Math.random(), 0, 0, 7); x.fill();
+  }
+  for (let i = 0; i < 6; i++) {
+    x.strokeStyle = 'rgba(160,150,140,0.25)'; x.lineWidth = 0.6;
+    const y = 30 + i * 6 + Math.random() * 3;
+    x.beginPath(); x.moveTo(0, y); x.bezierCurveTo(40, y + 2, 80, y - 2, 128, y + 1); x.stroke();
+  }
+  const t = new THREE.CanvasTexture(cv);
+  t.wrapS = THREE.RepeatWrapping;
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
 
 const mat = (color, o = {}) => new THREE.MeshStandardMaterial({
   color, roughness: o.roughness ?? 0.85, metalness: o.metalness ?? 0,
@@ -329,7 +427,7 @@ class ParcelaDiorama extends HTMLElement {
   static get observedAttributes() {
     return ['cultivo', 'etapa', 'preview', 'humedad', 'umbral', 'sistema', 'regando',
             'ionizando', 'clima', 'sensor', 'hileras', 'capturada', 'superficie',
-            'modo', 'vecinas', 'lectura'];
+            'modo', 'vecinas', 'lectura', 'codigo', 'lluvia', 'viento', 'hora'];
   }
 
   constructor() {
@@ -339,7 +437,14 @@ class ParcelaDiorama extends HTMLElement {
       sistema: 'goteo', regando: 'no', ionizando: 'no', clima: 'soleado',
       sensor: 'activo', hileras: 0, capturada: 'si', superficie: 'si',
       modo: 'parcela', vecinas: '[]', lectura: '',
+      // Clima de ESTE momento (Open-Meteo): código WMO, mm de lluvia, km/h.
+      // "hora" solo existe para probar; sin ella manda el reloj del teléfono.
+      codigo: '', lluvia: '', viento: '', hora: '',
     };
+    // Lo que el agua deja: se acumula al llover o regar y se seca despacio.
+    this.mojadoLluvia = 0; this.mojadoRiego = 0; this.avanceSurco = 0;
+    this.rayo = 0; this.siguienteRayo = 3;
+    this.visible = true;
     this.pulsoDesde = -99;
     this.tgtX = 0; this.tgtXObj = 0;
     this.sVis = 2; this.sObj = 2; this.tMorph = 1;
@@ -358,7 +463,7 @@ class ParcelaDiorama extends HTMLElement {
     if (n === 'lectura' && v) this.pulsoDesde = this.t || 0;
     if (n === 'capturada') this.grisear();
     if (n === 'etapa' || n === 'preview') this.pedirEtapa();
-    if (n === 'clima') this.cielo();
+    if (n === 'clima' || n === 'codigo' || n === 'lluvia' || n === 'viento' || n === 'hora') this.cielo();
     if (n === 'modo' || n === 'vecinas') this.aplicarModo();
     this.sucio = true;
     if (this.reducido) this.frame(0);
@@ -378,9 +483,14 @@ class ParcelaDiorama extends HTMLElement {
 
   disconnectedCallback() {
     cancelAnimationFrame(this._raf);
+    this._raf = 0;
     this.ro?.disconnect();
+    this.io?.disconnect();
+    if (this._alCambiarVista) document.removeEventListener('visibilitychange', this._alCambiarVista);
+    clearInterval(this._relojQuieto);
     this.scene?.traverse(o => { if (o.isMesh) o.geometry?.dispose(); });
-    if (this.M) Object.values(this.M).forEach(m => m.dispose?.());
+    if (this.M) Object.values(this.M).forEach(m => { m.map?.dispose(); m.dispose?.(); });
+    this.salpicones?.forEach(s => s.material.dispose());
     this.renderer?.dispose();
     this.renderer = null;
     this.scene = null;
@@ -391,8 +501,38 @@ class ParcelaDiorama extends HTMLElement {
     this.replaceChildren();
   }
 
+  // Hora decimal de ahora (o la de prueba, si se pasó "hora").
+  horaActual() {
+    const h = parseFloat(this.est.hora);
+    if (Number.isFinite(h)) return ((h % 24) + 24) % 24;
+    const d = new Date();
+    return d.getHours() + d.getMinutes() / 60;
+  }
+
+  climaActual() {
+    const E = this.est;
+    const mm = parseFloat(E.lluvia), codigo = parseInt(E.codigo, 10), viento = parseFloat(E.viento);
+    // Si solo llegó el atributo viejo "clima", se traduce a un código.
+    if (!Number.isFinite(codigo) && !Number.isFinite(mm)) {
+      return leerClima(E.clima === 'lluvia' ? 61 : E.clima === 'nublado' ? 3 : 0, 0, viento);
+    }
+    return leerClima(codigo, Number.isFinite(mm) ? mm : 0, viento);
+  }
+
+  // El cielo (degradado de CSS detrás del lienzo) y lo que necesitan las luces.
   cielo() {
-    this.style.background = CIELO[this.est.clima] || CIELO.soleado;
+    const hora = this.horaT = this.horaActual();
+    const cl = this.cl = this.climaActual();
+    const alt = this.altSol = alturaSol(hora);
+    const luz = this.luz = clamp((alt + 6) / 14, 0, 1);
+    const ocaso = clamp(1 - Math.abs(alt - 3) / 11, 0, 1);
+    const nubes = this.nubesEf = Math.max(cl.nubes, cl.lluvia > 0 ? 0.9 : 0, cl.niebla ? 1 : 0);
+    const [a, b, c] = mezclaPaleta(nubes, ocaso, luz);
+    this.colorHorizonte = c;
+    let fondo = `linear-gradient(175deg,${hex(a)} 0%,${hex(b)} 48%,${hex(c)} 100%)`;
+    const estrellas = (1 - luz * 1.6) * (1 - nubes);
+    if (estrellas > 0.05) fondo = ESTRELLAS.replaceAll('ALFA', (0.85 * estrellas).toFixed(2)) + ',' + fondo;
+    this.style.background = fondo;
   }
 
   init() {
@@ -403,22 +543,32 @@ class ParcelaDiorama extends HTMLElement {
     this.renderer = R;
     R.setPixelRatio(Math.min(1.75, devicePixelRatio || 1));
     R.shadowMap.enabled = true;
-    R.shadowMap.type = THREE.PCFShadowMap;
+    // Sombras de orilla suave: con el sol bajo se alargan y no se ven cortadas.
+    R.shadowMap.type = THREE.PCFSoftShadowMap;
     R.domElement.style.cssText = 'display:block;width:100%;height:100%;touch-action:none';
     this.appendChild(R.domElement);
+
+    // El relámpago: una capa blanca encima que destella y se apaga.
+    const destello = this.destello = document.createElement('div');
+    destello.style.cssText = 'position:absolute;inset:0;background:#f4f7ff;opacity:0;pointer-events:none';
+    this.appendChild(destello);
 
     const sc = this.scene = new THREE.Scene();
     this.cam = new THREE.OrthographicCamera(-7, 7, 5, -5, 0.1, 100);
 
-    sc.add(new THREE.HemisphereLight(0xdfefff, 0x6f5a3e, 1.5));
+    const hemi = this.hemi = new THREE.HemisphereLight(0xdfefff, 0x6f5a3e, 1.5);
+    sc.add(hemi);
     const sol = this.sol = new THREE.DirectionalLight(0xfff4de, 2.1);
     sol.position.set(6, 10, 5);
     sol.castShadow = true;
-    sol.shadow.mapSize.set(1024, 1024);
+    const fino = (this.clientWidth || 360) > 520;
+    sol.shadow.mapSize.set(fino ? 2048 : 1024, fino ? 2048 : 1024);
+    sol.shadow.radius = 3;
     const d = 9;
-    Object.assign(sol.shadow.camera, { left: -d, right: d, top: d, bottom: -d, near: 1, far: 30 });
-    sol.shadow.bias = -0.002;
+    Object.assign(sol.shadow.camera, { left: -d, right: d, top: d, bottom: -d, near: 1, far: 40 });
+    sol.shadow.bias = -0.0015;
     sc.add(sol);
+    this.cielo();
 
     this.M = {
       tierraTop: mat(COL.bienTop, { roughness: 1 }),
@@ -444,7 +594,30 @@ class ParcelaDiorama extends HTMLElement {
       gris: mat(COL.gris, { transparent: true, opacity: 0.42 }),
       piedra: mat(COL.piedra, { flat: true }),
       pulso: new THREE.MeshBasicMaterial({ color: COL.verde, transparent: true, opacity: 0 }),
+      // Pasto seco de la orilla (cada mata trae su propio tono).
+      pasto: mat(0xffffff, { flat: true, roughness: 0.9 }),
+      // La mancha de tierra mojada bajo cada gotero: más oscura y con brillo.
+      mancha: mat(0x2c2017, { roughness: 0.35, transparent: true, opacity: 0 }),
+      surcoAgua: mat(COL.agua, { roughness: 0.12, metalness: 0.05, transparent: true, opacity: 0 }),
+      lluvia: new THREE.MeshBasicMaterial({ color: 0xd9e8f3, transparent: true, opacity: 0.55, depthWrite: false }),
+      ledOn: new THREE.MeshBasicMaterial({ color: 0x5cff9a }),
+      ledOff: new THREE.MeshBasicMaterial({ color: 0x55605a }),
+      sombraNube: new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false }),
     };
+    this.M.mancha.depthWrite = false;
+    this.M.mancha.polygonOffset = true;
+    this.M.mancha.polygonOffsetFactor = -2;
+    // Terrones arriba y el corte del suelo a los lados: dibujo, no dato. El
+    // color que los tiñe sigue siendo la humedad medida.
+    const terrones = texturaTerrones();
+    this.M.tierraTop.map = terrones;
+    this.M.tierraTop.map.repeat.set(5, 3.4);
+    const camaTex = terrones.clone();
+    camaTex.repeat.set(9, 0.9); camaTex.needsUpdate = true;
+    this.M.bed.map = camaTex;
+    const corte = texturaCorte();
+    corte.repeat.set(7, 1);
+    this.M.tierraLado.map = corte;
 
     this.terreno();
     this.equipo();
@@ -460,8 +633,25 @@ class ParcelaDiorama extends HTMLElement {
     this.orbita();
     this.listo = true;
 
-    if (this.reducido) { this.frame(0); }
-    else {
+    if (this.reducido) {
+      this.frame(0);
+      // Sin animación, el cielo igual sigue a la hora: se redibuja cada minuto.
+      this._relojQuieto = setInterval(() => { this.cielo(); this.frame(0); }, 60000);
+    } else {
+      // Fuera de pantalla o con la pestaña oculta no se dibuja nada: el
+      // celular no gasta batería en una escena que nadie ve.
+      this.io = new IntersectionObserver(([e]) => { this.visible = e.isIntersecting; this.ritmo(); });
+      this.io.observe(this);
+      this._alCambiarVista = () => this.ritmo();
+      document.addEventListener('visibilitychange', this._alCambiarVista);
+      this.ritmo();
+    }
+  }
+
+  // Arranca o detiene el ciclo de dibujo según si alguien ve la escena.
+  ritmo() {
+    const ver = this.visible && !document.hidden && !!this.renderer;
+    if (ver && !this._raf) {
       let prev = performance.now();
       const loop = t => {
         this._raf = requestAnimationFrame(loop);
@@ -469,6 +659,9 @@ class ParcelaDiorama extends HTMLElement {
         this.frame(dt);
       };
       this._raf = requestAnimationFrame(loop);
+    } else if (!ver && this._raf) {
+      cancelAnimationFrame(this._raf);
+      this._raf = 0;
     }
   }
 
@@ -612,6 +805,60 @@ class ParcelaDiorama extends HTMLElement {
       this.charcos.add(m);
     }
     this.W = W; this.D = D;
+
+    // La orilla viva: matas de pasto seco y piedritas alrededor de la base.
+    // Un solo dibujo para todas (InstancedMesh): cuestan casi nada.
+    const puntoOrilla = () => {
+      const P = 2 * (W + D);
+      let s = Math.random() * P;
+      const fuera = 0.04 + Math.random() * 0.2;
+      if (s < W) return [s - W / 2, D / 2 + fuera];
+      s -= W; if (s < D) return [W / 2 + fuera, s - D / 2];
+      s -= D; if (s < W) return [W / 2 - s, -D / 2 - fuera];
+      s -= W; return [-W / 2 - fuera, D / 2 - s];
+    };
+    const mata = new THREE.ConeGeometry(0.05, 0.26, 4); mata.translate(0, 0.13, 0);
+    const N_MATAS = 170;
+    const matas = this.matas = new THREE.InstancedMesh(mata, this.M.pasto, N_MATAS);
+    this.matasBase = [];
+    const tono = new THREE.Color();
+    for (let i = 0; i < N_MATAS; i++) {
+      const [x, z] = puntoOrilla();
+      this.matasBase.push({ x, z, esc: 0.6 + Math.random() * 0.8, giro: Math.random() * 3, fase: Math.random() * 6 });
+      tono.setHSL(0.17 + Math.random() * 0.06, 0.32 + Math.random() * 0.15, 0.36 + Math.random() * 0.14);
+      matas.setColorAt(i, tono);
+    }
+    matas.castShadow = true;
+    g.add(matas);
+    this.moverMatas(0, 0);
+
+    const piedra = new THREE.IcosahedronGeometry(0.07, 0);
+    const piedras = new THREE.InstancedMesh(piedra, this.M.piedra, 44);
+    const o = new THREE.Object3D();
+    for (let i = 0; i < 44; i++) {
+      const [x, z] = puntoOrilla();
+      o.position.set(x, -0.6, z);
+      o.rotation.set(Math.random() * 3, Math.random() * 3, Math.random() * 3);
+      const e = 0.6 + Math.random() * 1.1; o.scale.set(e * 1.3, e * 0.6, e);
+      o.updateMatrix(); piedras.setMatrixAt(i, o.matrix);
+    }
+    piedras.receiveShadow = true;
+    g.add(piedras);
+  }
+
+  // El pasto se mece con el viento real (km/h); sin animación queda quieto.
+  moverMatas(t, viento) {
+    if (!this.matas) return;
+    const o = this._o ||= new THREE.Object3D();
+    const amp = 0.05 + viento * 0.006;
+    this.matasBase.forEach((m, i) => {
+      o.position.set(m.x, -0.62, m.z);
+      const balanceo = this.reducido ? 0 : Math.sin(t * (1.1 + viento * 0.05) + m.fase) * amp;
+      o.rotation.set(balanceo * 0.4, m.giro, balanceo);
+      o.scale.set(m.esc, m.esc * (0.8 + (i % 5) * 0.12), m.esc);
+      o.updateMatrix(); this.matas.setMatrixAt(i, o.matrix);
+    });
+    this.matas.instanceMatrix.needsUpdate = true;
   }
 
   cfg() {
@@ -700,6 +947,10 @@ class ParcelaDiorama extends HTMLElement {
     cab.position.y = 0.94; cab.castShadow = true; s.add(cab);
     const ring = this.pulso = new THREE.Mesh(new THREE.TorusGeometry(0.3, 0.035, 6, 20), this.M.pulso);
     ring.rotation.x = -Math.PI / 2; ring.position.y = 0.05; s.add(ring);
+    // El foquito del sensor: encendido mientras manda lecturas. De noche es
+    // lo único que brilla en el campo.
+    const led = this.ledSensor = new THREE.Mesh(new THREE.SphereGeometry(0.035, 8, 6), this.M.ledOn);
+    led.position.set(0.09, 0.98, 0.075); s.add(led);
     g.add(s);
 
     // Partículas de ionización (orden enviada, no confirmación).
@@ -714,17 +965,59 @@ class ParcelaDiorama extends HTMLElement {
     }
     this.ion.visible = false;
 
-    // Lluvia.
-    this.lluvia = new THREE.Group(); this.scene.add(this.lluvia);
-    this.gotasL = [];
-    const gl = new THREE.CylinderGeometry(0.012, 0.012, 0.42, 4);
-    const gm = new THREE.MeshBasicMaterial({ color: 0xbcd9ec, transparent: true, opacity: 0.6 });
-    for (let i = 0; i < 70; i++) {
-      const m = new THREE.Mesh(gl, gm);
-      m.position.set((Math.random() - 0.5) * 12, Math.random() * 7, (Math.random() - 0.5) * 8);
-      this.lluvia.add(m); this.gotasL.push(m);
+    // Lluvia: cientos de hilos en un solo dibujo. Cuántos caen depende de
+    // los milímetros de ahora; la inclinación, del viento.
+    this.N_LLUVIA = 520;
+    const hilo = new THREE.CylinderGeometry(0.0075, 0.0075, 0.5, 3);
+    const lluvia = this.lluviaIM = new THREE.InstancedMesh(hilo, this.M.lluvia, this.N_LLUVIA);
+    lluvia.frustumCulled = false;
+    lluvia.count = 0;
+    this.scene.add(lluvia);
+    this.gotasLl = Array.from({ length: this.N_LLUVIA }, () => ({
+      x: (Math.random() - 0.5) * 14, y: Math.random() * 8.5, z: (Math.random() - 0.5) * 9.4,
+      v: 10.5 + Math.random() * 4,
+    }));
+
+    // Salpicones: un anillo que se abre y se borra donde cae una gota (de la
+    // lluvia o del gotero).
+    this.salpicones = [];
+    const aro = new THREE.RingGeometry(0.03, 0.045, 14);
+    for (let i = 0; i < 40; i++) {
+      const m = new THREE.Mesh(aro, new THREE.MeshBasicMaterial({ color: 0xeaf4fb, transparent: true, opacity: 0, depthWrite: false }));
+      m.rotation.x = -Math.PI / 2; m.visible = false; m.userData.vida = 1;
+      this.scene.add(m); this.salpicones.push(m);
     }
-    this.lluvia.visible = false;
+
+    // Sombras de nubes que cruzan el campo con el viento. Las nubes no se
+    // dibujan (taparían la vista): solo proyectan su sombra.
+    this.nubesG = new THREE.Group(); this.scene.add(this.nubesG);
+    const bola = new THREE.SphereGeometry(1, 10, 7);
+    for (let i = 0; i < 7; i++) {
+      const n = new THREE.Group();
+      for (let j = 0; j < 4; j++) {
+        const b = new THREE.Mesh(bola, this.M.sombraNube);
+        b.scale.set(1.3 + Math.random() * 0.9, 0.3, 0.9 + Math.random() * 0.6);
+        b.position.set((j - 1.5) * 1.2, Math.random() * 0.25, (Math.random() - 0.5) * 1.1);
+        b.castShadow = true; n.add(b);
+      }
+      n.position.set(-17 + i * 5.3 + Math.random() * 2, 6.2, (Math.random() - 0.5) * 9);
+      n.userData.vel = 0.7 + Math.random() * 0.5;
+      this.nubesG.add(n);
+    }
+  }
+
+  // Altura de la tierra donde cae algo: arriba de una cama o entre camas.
+  alturaSuelo(z) {
+    const medio = (this.D / ((this.zs?.length || 1) + 0.6)) * 0.26;
+    return (this.zs || []).some(zc => Math.abs(z - zc) < medio) ? 0.165 : 0.006;
+  }
+
+  salpicar(x, y, z, tam = 1) {
+    const s = this.salpicones.find(m => m.userData.vida >= 1);
+    if (!s) return;
+    s.position.set(x, y + 0.004, z);
+    s.userData.vida = 0; s.userData.tam = tam;
+    s.visible = true;
   }
 
   // Tubería / aspersores / surcos según el sistema de riego.
@@ -732,7 +1025,7 @@ class ParcelaDiorama extends HTMLElement {
     if (this.riego) this.scene.remove(this.riego);
     const g = this.riego = new THREE.Group();
     this.scene.add(g);
-    this.emisores = []; this.gotas = []; this.flujo = []; this.surcos = [];
+    this.emisores = []; this.gotas = []; this.flujo = []; this.surcos = []; this.manchas = []; this.cabezas = [];
     const sis = sistemaDe(this.est.sistema);
     const zs = this.zs || [0];
 
@@ -744,16 +1037,25 @@ class ParcelaDiorama extends HTMLElement {
     }
 
     if (sis === 'goteo') {
+      const disco = new THREE.CircleGeometry(0.46, 22);
       zs.forEach(z => {
         for (let i = 0; i < 6; i++) {
           const x = -4.4 + i * 1.76;
           const e = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.05, 0.1, 6), this.M.metal);
           e.position.set(x, 0.22, z); g.add(e);
           this.emisores.push([x, 0.2, z]);
+          // La mancha de tierra mojada que crece bajo el gotero mientras riega.
+          const m = new THREE.Mesh(disco, this.M.mancha);
+          m.rotation.x = -Math.PI / 2; m.position.set(x, 0.1615, z);
+          m.scale.set(1, 0.72, 1); m.visible = false;
+          g.add(m); this.manchas.push(m);
         }
       });
-      for (let i = 0; i < 26; i++) {
-        const m = esfera(0.05, this.M.agua, 0);
+      // Una gota por gotero (y algunas de más, desfasadas): se hincha en la
+      // boquilla, cae y salpica.
+      const n = Math.max(1, this.emisores.length) * 2;
+      for (let i = 0; i < Math.min(48, n); i++) {
+        const m = esfera(0.045, this.M.agua, 1);
         m.visible = false; m.userData.t = Math.random(); g.add(m); this.gotas.push(m);
       }
     } else if (sis === 'aspersion') {
@@ -762,23 +1064,31 @@ class ParcelaDiorama extends HTMLElement {
           const x = -3.4 + i * 3.4;
           const p = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.04, 0.8, 6), this.M.palo);
           p.position.set(x, 0.62, z); g.add(p);
-          const c = new THREE.Mesh(new THREE.SphereGeometry(0.09, 8, 6), this.M.metal);
-          c.position.set(x, 1.02, z); g.add(c);
+          // Cabeza de aspersor de impacto: gira mientras riega.
+          const c = new THREE.Group(); c.position.set(x, 1.02, z);
+          c.add(new THREE.Mesh(new THREE.SphereGeometry(0.08, 8, 6), this.M.metal));
+          const brazo = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.018, 0.26, 5), this.M.metal);
+          brazo.rotation.z = Math.PI / 2 - 0.35; brazo.position.set(0.11, 0.04, 0); c.add(brazo);
+          g.add(c); this.cabezas.push(c);
           this.emisores.push([x, 1.02, z]);
         }
       });
-      for (let i = 0; i < 44; i++) {
-        const m = esfera(0.045, this.M.agua, 0);
+      for (let i = 0; i < 90; i++) {
+        const m = esfera(0.038, this.M.agua, 0);
         m.visible = false;
-        m.userData = { t: Math.random(), a: Math.random() * Math.PI * 2 };
+        m.userData = { t: Math.random(), chorro: i % 3, d: Math.random() };
         g.add(m); this.gotas.push(m);
       }
-    } else if (sis === 'gravedad') { // lámina de agua en los surcos
+    } else if (sis === 'gravedad') { // lámina de agua que avanza por el surco
       this.surcos = [];
+      const largo = this.W - 1.2;
       for (let i = 0; i < zs.length - 1; i++) {
         const z = (zs[i] + zs[i + 1]) / 2;
-        const s = new THREE.Mesh(new THREE.BoxGeometry(this.W - 1.2, 0.05, 0.4), this.M.agua);
-        s.position.set(0, 0.03, z); s.visible = false; g.add(s); this.surcos.push(s);
+        const caja = new THREE.BoxGeometry(largo, 0.05, 0.4);
+        caja.translate(largo / 2, 0, 0); // crece desde la bomba hacia el fondo
+        const s = new THREE.Mesh(caja, this.M.surcoAgua);
+        s.position.set(-largo / 2, 0.03, z); s.scale.x = 0.001; s.visible = false;
+        g.add(s); this.surcos.push(s);
       }
       for (let i = 0; i < 14; i++) {
         const m = esfera(0.07, this.M.agua, 0);
@@ -889,16 +1199,45 @@ class ParcelaDiorama extends HTMLElement {
     const hayHum = Number.isFinite(hum);
     const regando = E.regando === 'si';
     const sensorOn = E.sensor === 'activo';
+    const quieto = this.reducido;
+
+    this.t = (this.t || 0) + dt;
+    // El cielo sigue a la hora: se recalcula cada medio minuto.
+    this.tCielo = (this.tCielo || 0) + dt;
+    if (this.tCielo > 30) { this.tCielo = 0; this.cielo(); }
+    const cl = this.cl || leerClima(NaN, 0, NaN);
+    const nubes = this.nubesEf ?? 0;
+    const luz = this.luz ?? 1;
 
     // Cámara suave.
-    const k = this.reducido ? 1 : 1 - Math.pow(0.001, dt);
+    const k = quieto ? 1 : 1 - Math.pow(0.001, dt);
     this.az = lerp(this.az, this.azObj, k);
     this.el = lerp(this.el, this.elObj, k);
     this.zoom = lerp(this.zoom, this.zoomObj, k);
     this.tgtX = lerp(this.tgtX, this.tgtXObj, k * 0.55);
     this.aplicarCamara();
 
-    // Color de la tierra: dato medido.
+    // Lo que el agua deja en la superficie. Se moja rápido y se seca despacio.
+    const sis = sistemaDe(E.sistema);
+    if (quieto) {
+      this.mojadoLluvia = cl.lluvia > 0 ? 1 : 0;
+      this.mojadoRiego = regando ? 1 : 0;
+      this.avanceSurco = regando ? 1 : 0;
+    } else {
+      this.mojadoLluvia = cl.lluvia > 0
+        ? Math.min(1, this.mojadoLluvia + dt * (0.03 + cl.lluvia * 0.07))
+        : Math.max(0, this.mojadoLluvia - dt * 0.004);
+      this.mojadoRiego = regando
+        ? Math.min(1, this.mojadoRiego + dt * 0.22)
+        : Math.max(0, this.mojadoRiego - dt * 0.015);
+      this.avanceSurco = regando ? Math.min(1, this.avanceSurco + dt * 0.16) : this.avanceSurco;
+      if (!regando && this.mojadoRiego === 0) this.avanceSurco = 0;
+    }
+    // La aspersión moja todo el campo; el goteo, solo sus manchas.
+    const brillo = Math.max(this.mojadoLluvia, sis === 'aspersion' ? this.mojadoRiego * 0.8 : 0);
+
+    // Color de la tierra: dato medido. El agua de encima solo la oscurece un
+    // poco y le da brillo; el tono lo sigue mandando la humedad del sensor.
     const cSeca = new THREE.Color(COL.secaTop), cBien = new THREE.Color(COL.bienTop), cMoj = new THREE.Color(COL.mojTop);
     let top, lado, sequedad = 0, empape = 0;
     if (!hayHum) {
@@ -914,14 +1253,21 @@ class ParcelaDiorama extends HTMLElement {
       top = cBien.clone().lerp(cMoj, empape);
       lado = new THREE.Color(COL.bienLado).lerp(new THREE.Color(COL.mojLado), empape);
     }
-    const kc = this.reducido ? 1 : 1 - Math.pow(0.004, dt); // ~500 ms de transición
+    top.multiplyScalar(1 - 0.13 * brillo);
+    const kc = quieto ? 1 : 1 - Math.pow(0.004, dt); // ~500 ms de transición
     this.M.tierraTop.color.lerp(top, kc);
     this.M.bed.color.lerp(top.clone().multiplyScalar(0.93), kc);
     this.M.tierraLado.color.lerp(lado, kc);
-    this.M.grieta.opacity = lerp(this.M.grieta.opacity, sequedad * 0.85, kc);
+    this.M.tierraTop.roughness = this.M.bed.roughness = lerp(1, 0.5, brillo);
+    // Mojada por arriba, la tierra seca ya no se ve agrietada.
+    this.M.grieta.opacity = lerp(this.M.grieta.opacity, sequedad * 0.85 * (1 - brillo), kc);
     this.M.grieta.visible = this.M.grieta.opacity > 0.02;
-    this.M.charco.opacity = lerp(this.M.charco.opacity, empape * 0.8, kc);
+    // Charcos: tierra empapada (dato) o lluvia fuerte que ya se juntó.
+    const charcoLluvia = this.mojadoLluvia * clamp((cl.lluvia - 0.45) * 2.2, 0, 1) * 0.7;
+    this.M.charco.opacity = lerp(this.M.charco.opacity, Math.max(empape * 0.8, charcoLluvia), kc);
     this.M.charco.visible = this.M.charco.opacity > 0.02;
+    // Hojas con agua encima: más oscuras y con brillo.
+    for (const m of [this.M.hoja, this.M.hojaClara, this.M.otono]) m.roughness = lerp(0.85, 0.42, this.mojadoLluvia);
 
     // Morph de etapa.
     if (this.tMorph < 1) {
@@ -929,65 +1275,95 @@ class ParcelaDiorama extends HTMLElement {
       this.sVis = lerp(this.sDesde ?? this.sObj, this.sObj, easeIO(this.tMorph));
     } else this.sVis = this.sObj;
 
+    // Viento real: más fuerte, más rápido y más amplio el vaivén, con rachas.
+    const v = cl.viento;
+    const amp = quieto ? 0 : 0.008 + v * 0.0019;
+    const vel = 0.7 + v * 0.03;
+    const racha = 0.6 + 0.4 * Math.sin(this.t * 0.23 + 1.3) * Math.sin(this.t * 0.11);
     // Hojas caídas con tierra seca; se recuperan al regar.
     const caida = sequedad * 0.42 * (regando ? 0.45 : 1);
     this.plantas.forEach(p => {
       const esc = curva(p.userData.crec, this.sVis) * p.userData.esc;
       p.scale.setScalar(esc);
       p.userData.partes.forEach(({ g, kf }) => {
-        const v = curva(kf, this.sVis);
-        g.visible = v > 0.015;
-        g.scale.setScalar(v);
+        const val = curva(kf, this.sVis);
+        g.visible = val > 0.015;
+        g.scale.setScalar(val);
       });
-      const brisa = this.reducido ? 0 : Math.sin((this.t || 0) * 0.7 + p.position.x * 0.6 + p.position.z) * 0.018;
+      const fase = this.t * vel + p.position.x * 0.6 + p.position.z;
+      const brisa = amp * racha * Math.sin(fase);
+      const temblor = amp * 0.35 * Math.sin(fase * 2.7 + 1.1); // hojas sueltas
       p.userData.follaje.forEach(f => {
         f.position.y = -caida * 0.22;
-        f.rotation.z = caida * 0.12 + brisa;
-        f.rotation.x = brisa * 0.6;
+        f.rotation.z = caida * 0.12 + brisa + temblor;
+        f.rotation.x = brisa * 0.55;
       });
     });
+    this.moverMatas(this.t, quieto ? 0 : v);
 
-    this.t = (this.t || 0) + dt;
-
-    // Agua.
-    const vis = regando;
+    // ── Agua del riego ──
     this.flujo.forEach(m => {
-      m.visible = vis;
-      if (!vis) return;
+      m.visible = regando;
+      if (!regando) return;
       m.userData.t = (m.userData.t + dt * 0.55) % 1;
       m.position.set(this.madreX, this.madreY, lerp(2.9, -3.1, m.userData.t));
     });
-    const sis = sistemaDe(E.sistema);
     if (sis === 'goteo') {
+      const n = Math.max(1, this.emisores.length);
       this.gotas.forEach((m, i) => {
-        m.visible = vis;
-        if (!vis) return;
-        const e = this.emisores[i % Math.max(1, this.emisores.length)];
-        m.userData.t = (m.userData.t + dt * 1.5) % 1;
-        m.position.set(e[0], lerp(e[1], 0.19, m.userData.t), e[2]);
-        m.scale.setScalar(lerp(1, 0.3, Math.max(0, m.userData.t - 0.75) * 4));
+        m.visible = regando;
+        if (!regando) return;
+        const e = this.emisores[i % n];
+        const antes = m.userData.t;
+        m.userData.t = quieto ? 0.5 : (m.userData.t + dt * 0.7) % 1;
+        const t = m.userData.t;
+        if (t < 0.62) { // se hincha en la boquilla
+          m.position.set(e[0], e[1] - 0.012, e[2]);
+          m.scale.set(0.35 + t, 0.35 + t * 1.35, 0.35 + t);
+        } else {        // cae (con aceleración) hasta la cama
+          const f = (t - 0.62) / 0.38;
+          m.position.set(e[0], lerp(e[1] - 0.03, 0.17, f * f), e[2]);
+          m.scale.set(0.8, 1.35, 0.8);
+        }
+        if (!quieto && t < antes) this.salpicar(e[0], 0.165, e[2], 0.55);
       });
+      // La mancha crece mientras riega y se seca después.
+      const w = this.mojadoRiego;
+      this.manchas.forEach((m, i) => {
+        m.visible = w > 0.01;
+        const s = 0.32 + 0.68 * w + Math.sin(i * 1.7) * 0.05 * w;
+        m.scale.set(s, s * 0.72, s);
+      });
+      this.M.mancha.opacity = 0.55 * w;
     } else if (sis === 'aspersion') {
+      this.giroAsp = (this.giroAsp || 0) + (quieto ? 0 : dt * 1.15);
+      this.cabezas.forEach(c => { c.rotation.y = this.giroAsp; });
+      const n = Math.max(1, this.emisores.length);
       this.gotas.forEach((m, i) => {
-        m.visible = vis;
-        if (!vis) return;
-        const e = this.emisores[i % Math.max(1, this.emisores.length)];
-        m.userData.t = (m.userData.t + dt * 0.9) % 1;
-        const t = m.userData.t, a = m.userData.a + this.t * 0.8;
-        const rr = t * 1.5;
-        m.position.set(e[0] + Math.cos(a) * rr, e[1] + Math.sin(t * Math.PI) * 0.85 - t * 0.2,
-                       e[2] + Math.sin(a) * rr);
+        m.visible = regando;
+        if (!regando) return;
+        const e = this.emisores[Math.floor(i / 3) % n];
+        m.userData.t = quieto ? m.userData.d : (m.userData.t + dt * 0.85) % 1;
+        const t = m.userData.t;
+        // Tres chorros por cabeza que giran con ella; cada gota describe un
+        // arco que termina en la tierra.
+        const a = this.giroAsp + m.userData.chorro * (Math.PI * 2 / 3) - t * 0.35 + (m.userData.d - 0.5) * 0.25;
+        const r = t * (1.35 + m.userData.d * 0.45);
+        const x = e[0] + Math.cos(a) * r, z = e[2] + Math.sin(a) * r;
+        m.position.set(x, lerp(e[1] + 0.04, this.alturaSuelo(z), t) + Math.sin(t * Math.PI) * 0.5, z);
       });
     } else if (sis === 'gravedad') {
+      const w = this.mojadoRiego;
       (this.surcos || []).forEach((s, i) => {
-        s.visible = vis;
-        if (vis) s.scale.x = 0.6 + 0.4 * Math.min(1, this.t * 0.4 + i * 0.05);
+        s.visible = w > 0.01;
+        s.scale.x = Math.max(0.001, clamp(this.avanceSurco * 1.15 - i * 0.07, 0, 1));
       });
+      this.M.surcoAgua.opacity = 0.82 * Math.min(1, w * 1.4) * (0.94 + (quieto ? 0 : 0.06 * Math.sin(this.t * 3)));
       this.gotas.forEach(m => {
-        m.visible = vis;
-        if (!vis) return;
+        m.visible = regando;
+        if (!regando) return;
         m.userData.t = (m.userData.t + dt * 0.35) % 1;
-        m.position.set(lerp(-4.8, 4.8, m.userData.t), 0.1, this.zs?.[0] ?? 0);
+        m.position.set(lerp(-4.8, -4.8 + 9.6 * this.avanceSurco, m.userData.t), 0.1, this.zs?.[0] ?? 0);
       });
     }
     this.luzBomba.material.color.set(regando ? COL.agua : COL.apagado);
@@ -1004,25 +1380,106 @@ class ParcelaDiorama extends HTMLElement {
     }
 
     // Sensor: un pulso por cada lectura nueva que llega (1.1 s, ease-out),
-    // no un latido decorativo.
+    // no un latido decorativo. El foquito dice si está mandando lecturas.
     this.sensorCab.material = sensorOn ? this.M.verde : this.M.apagado;
-    const dp = (this.t || 0) - this.pulsoDesde;
-    if (sensorOn && !this.reducido && dp >= 0 && dp < 1.1) {
+    this.ledSensor.material = sensorOn ? this.M.ledOn : this.M.ledOff;
+    const dp = this.t - this.pulsoDesde;
+    if (sensorOn && !quieto && dp >= 0 && dp < 1.1) {
       const p = 1 - Math.pow(1 - dp / 1.1, 3);
       this.pulso.visible = true;
       this.pulso.scale.setScalar(1 + p * 2.4);
       this.M.pulso.opacity = (1 - p) * 0.55;
     } else { this.pulso.visible = false; }
 
-    // Clima.
-    const lluvia = E.clima === 'lluvia';
-    this.lluvia.visible = lluvia;
-    if (lluvia) this.gotasL.forEach(m => {
-      m.position.y -= dt * 9;
-      if (m.position.y < 0) m.position.y = 7 + Math.random() * 2;
+    // ── Lluvia ──
+    const activas = Math.round(this.N_LLUVIA * cl.lluvia);
+    const im = this.lluviaIM;
+    im.count = activas;
+    im.visible = activas > 0;
+    if (activas > 0) {
+      const vx = v * 0.085; // el viento empuja la gota de lado
+      const o = this._o2 ||= new THREE.Object3D();
+      const largo = 0.75 + cl.lluvia * 0.7;
+      this.M.lluvia.opacity = 0.32 + cl.lluvia * 0.3;
+      for (let i = 0; i < activas; i++) {
+        const d = this.gotasLl[i];
+        if (!quieto) {
+          d.y -= d.v * dt; d.x += vx * dt;
+          const piso = this.alturaSuelo(d.z);
+          if (d.y < piso) {
+            if (Math.abs(d.x) < this.W / 2 && Math.abs(d.z) < this.D / 2 && Math.random() < 0.3) this.salpicar(d.x, piso, d.z, 1);
+            d.y = 7.5 + Math.random() * 1.5;
+            d.x = (Math.random() - 0.5) * 14 - vx * 0.7;
+            d.z = (Math.random() - 0.5) * 9.4;
+          }
+        }
+        o.position.set(d.x, d.y, d.z);
+        o.rotation.set(0, 0, Math.atan2(vx, d.v));
+        o.scale.set(1, largo, 1);
+        o.updateMatrix();
+        im.setMatrixAt(i, o.matrix);
+      }
+      im.instanceMatrix.needsUpdate = true;
+    }
+    this.salpicones.forEach(s => {
+      if (s.userData.vida >= 1) return;
+      s.userData.vida = quieto ? 1 : s.userData.vida + dt / 0.42;
+      const vida = Math.min(1, s.userData.vida);
+      // Se abre rápido y se borra: una corona de agua, no un círculo fijo.
+      s.scale.setScalar((1 + Math.sqrt(vida) * 3.2) * s.userData.tam);
+      s.material.opacity = 0.42 * (1 - vida) * (1 - vida);
+      if (vida >= 1) s.visible = false;
     });
-    const nub = E.clima === 'soleado' ? 1 : E.clima === 'nublado' ? 0.55 : 0.4;
-    this.sol.intensity = lerp(this.sol.intensity, 2.1 * nub, this.reducido ? 1 : kc);
+
+    // ── Nubes: su sombra cruza el campo empujada por el viento ──
+    const nNubes = Math.round(this.nubesG.children.length * clamp(nubes * 1.15, 0, 1));
+    this.nubesG.children.forEach((n, i) => {
+      n.visible = i < nNubes && luz > 0.15;
+      if (quieto) return;
+      n.position.x += n.userData.vel * (0.18 + v * 0.028) * dt;
+      if (n.position.x > 17) n.position.x = -17;
+    });
+
+    // ── Luz: sol o luna según la hora; las nubes y la lluvia la apagan ──
+    const alt = this.altSol ?? 45;
+    const tDia = clamp(((this.horaT ?? 12) - AMANECER) / (ANOCHECER - AMANECER), 0, 1);
+    const kl = quieto ? 1 : 1 - Math.pow(0.02, dt);
+    const destino = this._dest ||= { pos: new THREE.Vector3(), color: new THREE.Color() };
+    let intensidad;
+    if (alt > -2) {
+      const elev = Math.max(alt, 5) * Math.PI / 180, R = 16;
+      destino.pos.set(Math.cos(Math.PI * tDia) * R * Math.cos(elev), R * Math.sin(elev), 6);
+      destino.color.set(0xffa860).lerp(new THREE.Color(0xfff4de), clamp(alt / 28, 0, 1));
+      intensidad = 2.3 * clamp(alt / 22, 0.14, 1) * (1 - 0.66 * nubes) * (1 - 0.2 * cl.lluvia) * clamp(luz * 1.4, 0, 1);
+    } else {
+      destino.pos.set(-5, 12, 7);
+      destino.color.set(0x9cb6ff);
+      // Luz de luna: de noche se ve que es de noche, pero el color de la
+      // tierra (el dato) se sigue distinguiendo.
+      intensidad = 0.8 * (1 - 0.5 * nubes) * (1 - luz);
+    }
+    this.sol.position.lerp(destino.pos, kl);
+    this.sol.color.lerp(destino.color, kl);
+    this.sol.intensity = lerp(this.sol.intensity, intensidad, kl);
+    this.hemi.color.lerp(new THREE.Color(0x5a72a3).lerp(new THREE.Color(0xdfefff), luz).lerp(new THREE.Color(0xc5ced4), nubes * luz * 0.7), kl);
+    this.hemi.groundColor.lerp(new THREE.Color(0x3a332a).lerp(new THREE.Color(0x6f5a3e), luz), kl);
+    let hemiI = lerp(1.05, 1.45 + 0.32 * nubes, luz);
+
+    // Tormenta: un relámpago de vez en cuando (nunca con movimiento reducido).
+    if (cl.tormenta && !quieto) {
+      this.siguienteRayo -= dt;
+      if (this.siguienteRayo < 0) { this.rayo = 1; this.siguienteRayo = 5 + Math.random() * 9; }
+    }
+    this.rayo = Math.max(0, this.rayo - dt * 3.5);
+    hemiI += this.rayo * 2.6;
+    this.hemi.intensity = lerp(this.hemi.intensity, hemiI, this.rayo > 0 ? 1 : kl);
+    if (this.destello) this.destello.style.opacity = (this.rayo * 0.4).toFixed(3);
+
+    // Niebla: el fondo del campo se pierde en el color del horizonte.
+    if (cl.niebla) {
+      if (!this.scene.fog) this.scene.fog = new THREE.Fog(0xd5dbdc, 11, 33);
+      if (this.colorHorizonte) this.scene.fog.color.copy(this.colorHorizonte);
+    } else if (this.scene.fog) this.scene.fog = null;
 
     this.renderer.render(this.scene, this.cam);
   }

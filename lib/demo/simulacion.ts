@@ -35,6 +35,9 @@ const ATRASO_VAR = 2
 /** En vivo sube rápido, para que en la demostración un riego se vea en segundos. */
 export const SUBE_POR_SEG_VIVO = 0.3
 export const TOPE_HUMEDAD = 88
+/** Mientras llueve en la demostración: milímetros por hora y cuánto sube la tierra. */
+export const LLUVIA_MM_HORA = 4.6
+const SUBE_POR_SEG_LLUVIA = 0.06
 export const PISO_HUMEDAD = 8
 /** Un riego a mano se corta solo a los 20 minutos, como el freno del backend. */
 export const RIEGO_MANUAL_MAXIMO_MS = 20 * MIN
@@ -153,6 +156,8 @@ export interface Estado {
    * el automático no decide. Es opcional para no invalidar visitas guardadas.
    */
   sensorMudoDesde?: number | null
+  /** Hasta cuándo llueve (el escenario "Que llueva"). Opcional por lo mismo. */
+  lluviaHasta?: number | null
 }
 
 // --- Utilidades ---
@@ -641,7 +646,9 @@ function paso(e: Estado, t: number, dt: number): void {
   const principal = e.parcelas.find(p => p.id === 1)
 
   // El cultivo principal: el que tiene la bomba que se ve en pantalla.
+  const llueve = lloviendo(e, t)
   if (e.bomba) e.h[1] = Math.min(TOPE_HUMEDAD, e.h[1] + SUBE_POR_SEG_VIVO * segundos)
+  else if (llueve) e.h[1] = Math.min(TOPE_HUMEDAD, e.h[1] + SUBE_POR_SEG_LLUVIA * segundos)
   else e.h[1] = Math.max(PISO_HUMEDAD, e.h[1] - secadoPorHora(t, principal?.cultivo ?? 'nogal') * (segundos / 3600))
 
   // Sin lecturas el automático no sabe cómo está la tierra: no decide.
@@ -688,6 +695,11 @@ function recortarHistoria(e: Estado, ahora: number): void {
       e.lecturas[Number(id)] = lista.filter(l => l.t >= limite)
     }
   }
+}
+
+/** ¿Está lloviendo en la demostración en este momento? */
+export function lloviendo(e: Estado, t: number): boolean {
+  return typeof e.lluviaHasta === 'number' && t < e.lluviaHasta
 }
 
 /** ¿El sensor del cultivo principal dejó de mandar lecturas? */

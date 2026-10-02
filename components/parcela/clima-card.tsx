@@ -86,7 +86,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
       aria-label="Clima y pronóstico"
     >
       <div className="flex items-center gap-2">
-        <Sun size={17} style={{ color: 'var(--alerta)' }} aria-hidden />
+        <Sun size={17} style={{ color: 'var(--acento)' }} aria-hidden />
         <h2 className="text-[15px] font-bold">Clima en tu cultivo</h2>
       </div>
 
@@ -110,7 +110,8 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
             <p
               key={i}
               className="franja-estado"
-              style={colorEstado(a.nivel === 'peligro' ? 'var(--peligro)' : 'var(--alerta)')}
+              // Mismos colores que el resumen de Inicio: la lluvia es agua, no un "ojo".
+              style={colorEstado(a.nivel === 'peligro' ? 'var(--peligro)' : a.tipo === 'lluvia' ? 'var(--agua)' : 'var(--alerta)')}
               role={a.nivel === 'peligro' ? 'alert' : 'status'}
             >
               {(() => { const Icono = ICONO_AVISO[a.tipo]; return <Icono size={15} aria-hidden style={{ flexShrink: 0, marginTop: 1 }} /> })()}

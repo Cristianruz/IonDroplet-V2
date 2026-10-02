@@ -19,6 +19,12 @@ export interface AtributosDiorama {
   regando: boolean
   ionizando: boolean
   clima: 'soleado' | 'nublado' | 'lluvia' | 'noche'
+  /** El clima de ESTE momento (Open-Meteo). Sin dato, la escena queda despejada. */
+  codigo: number | null
+  /** Milímetros de lluvia de ahora. */
+  lluvia: number | null
+  /** Viento de ahora, en km/h: mueve las plantas y ladea la lluvia. */
+  viento: number | null
   sensorActivo: boolean
   capturada: boolean
   superficie: boolean
@@ -55,6 +61,9 @@ function aTexto(a: AtributosDiorama): Record<string, string> {
     regando: a.regando ? 'si' : 'no',
     ionizando: a.ionizando ? 'si' : 'no',
     clima: a.clima,
+    codigo: a.codigo === null ? '' : String(a.codigo),
+    lluvia: a.lluvia === null ? '' : String(a.lluvia),
+    viento: a.viento === null ? '' : String(a.viento),
     sensor: a.sensorActivo ? 'activo' : 'callado',
     capturada: a.capturada ? 'si' : 'no',
     superficie: a.superficie ? 'si' : 'no',

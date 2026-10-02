@@ -28,7 +28,7 @@ export function BotonAccionChat({ accion, hecha, onHecha }: PropsAccion) {
   const { texto, hecho, Icono, color } = BOTON[accion]
 
   if (hecha) {
-    return <p className="text-sm font-semibold" style={{ color: 'var(--verde)' }} role="status">✓ {hecho}</p>
+    return <p className="text-sm font-semibold" style={{ color: 'var(--ok)' }} role="status">✓ {hecho}</p>
   }
 
   async function ejecutar() {

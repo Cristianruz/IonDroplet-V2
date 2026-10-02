@@ -14,6 +14,7 @@ import {
   apagarBomba,
   avanzar,
   humedadActual,
+  lloviendo,
   redondear,
   registrar,
   sensorMudo,
@@ -22,7 +23,7 @@ import {
   type Estado,
 } from './simulacion.ts'
 
-export type Escenario = 'secar' | 'sensor' | 'porque'
+export type Escenario = 'secar' | 'sensor' | 'porque' | 'llover'
 
 /** Cuánto queda la tierra abajo del punto de riego al secarla: el riego dura unos 25 segundos. */
 const BAJO_EL_PUNTO = 7
@@ -90,6 +91,14 @@ export function desconectarSensor(e: Estado, ahora: number): void {
   })
 }
 
+/** Tres minutos de lluvia: la tierra se moja sola y el riego no hace falta. */
+export const DURACION_LLUVIA = 3 * MIN
+
+export function llover(e: Estado, ahora: number): void {
+  avanzar(e, ahora)
+  e.lluviaHasta = ahora + DURACION_LLUVIA
+}
+
 /** Las lecturas vuelven y el automático vuelve a decidir. */
 export function reconectarSensor(e: Estado, ahora: number): void {
   avanzar(e, ahora)
@@ -110,6 +119,7 @@ export interface ResumenDemo {
   regando: boolean
   automatico: boolean
   sensor: boolean
+  lloviendo: boolean
 }
 
 export function resumen(e: Estado): ResumenDemo {
@@ -119,5 +129,6 @@ export function resumen(e: Estado): ResumenDemo {
     regando: e.bomba === 1,
     automatico: e.auto,
     sensor: !sensorMudo(e),
+    lloviendo: lloviendo(e, e.t),
   }
 }

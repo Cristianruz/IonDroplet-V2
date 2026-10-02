@@ -27,6 +27,10 @@ colors:
   franja-demo-fondo: "#13283d"
   franja-demo-tinta: "#f6f4ef"
   bisel-telefono: "#13283d"
+  escena-medido: "#11794a"
+  escena-ojo: "#7a5004"
+  escena-falta: "#3a4f45"
+  escena-lluvia: "#1d4f8a"
   fondo-noche: "#0e1a26"
   tarjeta-noche: "#15232f"
   elevado-noche: "#1a2a38"
@@ -69,6 +73,11 @@ typography:
     fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.5
+  body-sm:
+    fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
+    fontSize: "15px"
+    fontWeight: 400
+    lineHeight: 1.45
   label:
     fontFamily: "Figtree Variable, system-ui, -apple-system, Segoe UI, Roboto, sans-serif"
     fontSize: "0.8rem"
@@ -343,6 +352,7 @@ Táctiles y claros: grandes, de un toque, con un solo protagonista por tarjeta.
 ### Chips
 - **Cápsula de estado:** píldora teñida con el color del estado (13 % de fondo, 28 % de filo), punto de 8 px a la izquierda, 0.875 rem a 700. Cuando dice "Regando", solo late el punto y la letra se oscurece un cuarto hacia la tinta para pasar 4.5:1. La variante de nivel es más chica (0.75 rem) y sin punto.
 - **Pastilla de selección:** píldora blanca con filo, 42 px de alto; elegida, se tiñe de turquesa agua clara con filo turquesa y texto turquesa hondo. Nunca un bloque sólido.
+- **Chip de escena (3D):** píldora blanca casi opaca encima del cultivo en 3D, igual en los dos temas porque la escena siempre es clara. Por eso su letra no usa los tokens del tema sino los suyos, oscurecidos para pasar 4.5:1 sobre blanco: `escena-medido` (color de la tierra medido), `escena-ojo` (superficie sin capturar, ionizador), `escena-falta` (sin lectura) y `escena-lluvia` ("Lloviendo ahora: X mm", la lluvia que se ve es la del pronóstico de este momento).
 - **Procedencia del dato:** píldora de 11 px que dice de dónde sale cada cifra: medido (verde), calculado (azul), pronosticado (ámbar), registrado (surco) y falta (punteada, transparente).
 
 ### Cards / Containers
@@ -377,6 +387,14 @@ Sube desde abajo sobre un velo marino al 42 %, con fondo crema, esquinas superio
 
 ### Vista de presentación
 Panel (logo, H1 display, bajada, escenarios en lista, franja que narra en vivo), el celular con bisel marino y pantalla real de la app, y el código QR en marino sobre blanco con radio de 14 px (blanco también en modo noche, para que se escanee). El celular entra subiendo en 600 ms.
+
+### Escena 3D del cultivo
+Diorama de juguete en three.js (`components/parcela/3d/diorama.js`): bloque de tierra con terrones pintados arriba y el corte del suelo en capas a los lados, pasto seco y piedritas en la orilla, sombras suaves. Todo lo que se mueve sale de un dato; el movimiento explica el estado, no adorna.
+- **Luz:** sigue la hora del teléfono. Sol que cruza de este a oeste, cálido y con sombras largas al amanecer y al atardecer, blanco al mediodía; de noche luz de luna, estrellas si está despejado, y los foquitos de la bomba y del sensor encendidos. De noche el color de la tierra se sigue distinguiendo.
+- **Clima de ahora (Open-Meteo):** el código WMO pone las nubes (cielo gris y sombras de nubes que cruzan el campo con el viento), la lluvia (hilos inclinados por el viento, salpicones en la tierra, brillo de mojado en tierra y hojas, charcos si es fuerte), la niebla y los relámpagos de tormenta. El viento en km/h mece plantas y pasto con rachas.
+- **Riego:** goteo, la gota se hincha en la boquilla, cae, salpica y deja una mancha oscura que crece mientras riega y se seca en un minuto; aspersión, cabezas que giran con tres chorros en arco hasta la tierra; gravedad, la lámina de agua avanza por el surco desde la bomba.
+- **Verdad del dato:** el tono de la tierra sigue siendo la humedad medida; el agua de encima solo la oscurece hasta 13 % y le da brillo. La lluvia que se ve lo dice en un chip de escena.
+- **Costo:** la lluvia y el pasto son un solo dibujo cada uno (InstancedMesh). Fuera de pantalla o con la pestaña oculta no se dibuja. Con movimiento reducido la escena queda quieta mostrando el mismo estado (lluvia, manchas, luz de la hora) y se redibuja cada minuto.
 
 ## Do's and Don'ts
 

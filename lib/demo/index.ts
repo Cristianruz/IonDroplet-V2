@@ -10,7 +10,7 @@
 
 import { VERSION_ESTADO, avanzar, crearEstado, sensorMudo, type Estado } from './simulacion.ts'
 import { responder } from './api-demo.ts'
-import { desconectarSensor, reconectarSensor, resumen, secarTierra, type ResumenDemo } from './escenarios.ts'
+import { desconectarSensor, llover, reconectarSensor, resumen, secarTierra, type ResumenDemo } from './escenarios.ts'
 
 const CLAVE = 'iondroplet.demo'
 /** Si la pestaña se quedó abierta días, mejor empezar de nuevo. */
@@ -73,6 +73,13 @@ export function escenarioSensor(): void {
   const e = cargar(ahora)
   if (sensorMudo(e)) reconectarSensor(e, ahora)
   else desconectarSensor(e, ahora)
+  guardar()
+}
+
+/** Que llueva tres minutos sobre el cultivo. */
+export function escenarioLlover(): void {
+  const ahora = Date.now()
+  llover(cargar(ahora), ahora)
   guardar()
 }
 

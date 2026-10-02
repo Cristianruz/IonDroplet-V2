@@ -14,6 +14,7 @@ export function HojaPruebas({ alCerrar }: { alCerrar: () => void }) {
   const router = useRouter()
   const [sensorConectado, setSensorConectado] = useState(true)
   const [regando, setRegando] = useState(false)
+  const [lloviendo, setLloviendo] = useState(false)
   const cerrar = useRef<HTMLButtonElement | null>(null)
 
   useEffect(() => {
@@ -23,6 +24,7 @@ export function HojaPruebas({ alCerrar }: { alCerrar: () => void }) {
       const r = resumenDemo()
       setSensorConectado(r.sensor)
       setRegando(r.regando && r.automatico)
+      setLloviendo(r.lloviendo)
     })
     return () => {
       vivo = false
@@ -88,7 +90,7 @@ export function HojaPruebas({ alCerrar }: { alCerrar: () => void }) {
             detalle,
             Icono,
             onClick: () => elegir(id),
-            enCurso: id === 'secar' && regando ? 'Regando' : undefined,
+            enCurso: id === 'secar' && regando ? 'Regando' : id === 'llover' && lloviendo ? 'Lloviendo' : undefined,
           }))}
         />
 

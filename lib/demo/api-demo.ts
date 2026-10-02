@@ -19,6 +19,8 @@ import {
   kcDe,
   redondear,
   registrar,
+  LLUVIA_MM_HORA,
+  lloviendo,
   sensorMudo,
   sqlTs,
   ultimaLectura,
@@ -432,7 +434,9 @@ export function responder(
   }
 
   // --- Clima y agua ---
-  if (GET && ruta === 'clima') return ok(clima(ahora, principal(e).ubicacion_fecha ?? sqlTs(ahora)))
+  if (GET && ruta === 'clima') {
+    return ok(clima(ahora, principal(e).ubicacion_fecha ?? sqlTs(ahora), lloviendo(e, ahora) ? LLUVIA_MM_HORA : 0))
+  }
   if (GET && ruta === 'agua/balance') return ok(balance(e, ahora, Math.min(numero(consulta.get('dias'), 7), 7)))
 
   // --- Alertas ---

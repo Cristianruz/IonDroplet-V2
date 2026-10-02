@@ -52,7 +52,7 @@ export function ResumenSemana({ parcelaId }: { parcelaId: number | null }) {
   return (
     <section className="tarjeta flex flex-col gap-4" aria-label="El clima y el agua de la semana">
       <div className="flex items-center gap-4">
-        <span className="icono-redondo" style={{ width: 52, height: 52, background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}>
+        <span className="icono-redondo" style={{ width: 52, height: 52 }}>
           <IconoHoy size={28} aria-hidden />
         </span>
         <div>
@@ -84,7 +84,7 @@ export function ResumenSemana({ parcelaId }: { parcelaId: number | null }) {
           return (
             <div key={fecha} className="flex flex-col items-center gap-1 rounded-[14px] py-2.5" style={{ background: 'var(--cristal-suave)' }}>
               <span className="text-xs font-semibold texto-suave capitalize">{nombreDelDia(fecha, i)}</span>
-              <Icono size={20} aria-hidden style={{ color: lluvia >= 30 ? 'var(--agua)' : 'var(--alerta)' }} />
+              <Icono size={20} aria-hidden style={{ color: lluvia >= 30 ? 'var(--agua)' : 'var(--tinta-suave)' }} />
               <span className="text-[15px] font-bold">{Math.round(dias.temperature_2m_max[i])}°</span>
               <span className="text-xs font-semibold" style={{ color: lluvia >= 30 ? 'var(--agua)' : 'var(--apagado)' }}>
                 {lluvia}% lluvia

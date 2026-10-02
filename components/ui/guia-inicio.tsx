@@ -255,9 +255,9 @@ export function GuiaInicio() {
 
         {!enGuia ? (
           // --- La bienvenida: qué es IonDroplet ---
-          <div key="bienvenida" className="flex-1 flex flex-col gap-7 py-4" style={{ animation: 'subir-hoja var(--lento) var(--curva)' }}>
+          <div key="bienvenida" className="flex-1 flex flex-col gap-5 py-3" style={{ animation: 'subir-hoja var(--lento) var(--curva)' }}>
             <div className="flex flex-col items-center text-center gap-4">
-              <Logo tamano={84} />
+              <Logo tamano={72} />
               <div className="flex flex-col gap-2">
                 <h2 id="guia-titulo" className="font-extrabold" style={{ fontSize: 28, letterSpacing: '-.025em', lineHeight: 1.15 }}>
                   Bienvenido a IonDroplet
@@ -354,7 +354,7 @@ export function GuiaInicio() {
                       height: 9,
                       borderRadius: 5,
                       background: i <= paso ? 'var(--acento)' : 'var(--pista)',
-                      transition: 'width var(--normal) var(--curva), background-color var(--normal)',
+                      transition: 'background-color var(--normal)',
                     }}
                   />
                 ))}

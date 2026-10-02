@@ -168,13 +168,14 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
             {punto && (
               <g>
                 <line x1={punto.x} x2={punto.x} y1={MARGEN.arriba} y2={ALTO - MARGEN.abajo} stroke="var(--apagado)" strokeWidth={1} strokeDasharray="4 3" />
-                <circle cx={punto.x} cy={punto.y} r={6} fill="var(--agua)" stroke="white" strokeWidth={2} />
+                <circle cx={punto.x} cy={punto.y} r={6} fill="var(--agua)" stroke="var(--tarjeta)" strokeWidth={2} />
                 <g transform={`translate(${Math.min(Math.max(punto.x - 60, MARGEN.izquierda), ANCHO - MARGEN.derecha - 120)}, ${MARGEN.arriba})`}>
-                  <rect width={120} height={52} rx={10} fill="var(--tinta)" opacity={0.92} />
-                  <text x={60} y={22} textAnchor="middle" fontSize={17} fontWeight={700} fill="white">
+                  {/* Tinta de fondo y letra del color del fondo: se invierte sola en modo noche. */}
+                  <rect width={120} height={52} rx={10} fill="var(--tinta)" opacity={0.94} />
+                  <text x={60} y={22} textAnchor="middle" fontSize={17} fontWeight={700} fill="var(--fondo)">
                     {Math.round(punto.humedad)}% humedad
                   </text>
-                  <text x={60} y={42} textAnchor="middle" fontSize={14} fill="#c8d4c8">
+                  <text x={60} y={42} textAnchor="middle" fontSize={14} fill="color-mix(in srgb, var(--fondo) 78%, var(--tinta))">
                     {etiquetaEje(punto.fecha)}
                   </text>
                 </g>

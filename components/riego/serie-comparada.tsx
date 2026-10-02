@@ -11,7 +11,7 @@ import type { SerieParcela } from '@/hooks/use-comparar'
 // hace tres meses y otra de ayer, ponerlas en el mismo eje sin decirlo haría
 // creer que se midieron a la vez. El eje es común y el pie lo dice.
 
-const COLORES = ['var(--agua)', 'var(--verde)', 'var(--alerta)', 'var(--oro)', 'var(--peligro)']
+const COLORES = ['var(--agua)', 'var(--ok)', 'var(--alerta)', 'var(--oro)', 'var(--peligro)']
 
 const MARGEN = { arriba: 8, derecha: 8, abajo: 22, izquierda: 30 }
 

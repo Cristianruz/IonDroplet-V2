@@ -59,12 +59,12 @@ export default function PantallaAjustes() {
               style={{
                 width: 20,
                 height: 20,
-                background: 'var(--verde)',
+                background: 'var(--ok)',
                 flexShrink: 0,
               }}
               aria-hidden
             />
-            <p className="text-base font-semibold" style={{ color: 'var(--verde)' }}>
+            <p className="text-base font-semibold" style={{ color: 'var(--ok)' }}>
               Conectado a la computadora del riego
             </p>
           </div>
@@ -163,7 +163,7 @@ export default function PantallaAjustes() {
 
             {llaveGuardada ? (
               <>
-                <p className="text-base font-semibold" style={{ color: 'var(--verde)' }} role="status">
+                <p className="text-base font-semibold" style={{ color: 'var(--ok)' }} role="status">
                   Este aparato ya puede usar el asistente.
                 </p>
                 <button

@@ -18,6 +18,7 @@ import {
   kcDe,
   puntoIdeal,
   redondear,
+  lloviendo,
   sensorMudo,
   textoDuracion,
   ultimaLectura,
@@ -104,6 +105,9 @@ export function consejo(e: Estado, pantalla: string, ahora: number): string {
 function loQueViene(e: Estado, ahora: number): string {
   if (sensorMudo(e)) {
     return 'Casi siempre es un cable flojo o el aparato sin corriente. En cuanto vuelvan las lecturas, el riego sigue decidiendo solo.'
+  }
+  if (lloviendo(e, ahora) && !e.bomba) {
+    return 'Está lloviendo: la tierra se está mojando sola y el riego no tiene que entrar. Cuando pare, el sistema la sigue vigilando.'
   }
   const h = humedadActual(e)
   const tarde = new Date(ahora).getHours() >= 7 && new Date(ahora).getHours() < 16

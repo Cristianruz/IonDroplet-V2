@@ -69,7 +69,7 @@ export function VincularAparato({ onVinculado, compacto = false }: Props) {
 
   if (paso === 'listo') {
     return (
-      <p className="text-base font-semibold" style={{ color: 'var(--verde)' }} role="status">
+      <p className="text-base font-semibold" style={{ color: 'var(--ok)' }} role="status">
         Listo: este aparato ya puede usar el asistente, el análisis y el diagnóstico.
       </p>
     )

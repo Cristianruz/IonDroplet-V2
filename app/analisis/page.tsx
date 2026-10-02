@@ -17,7 +17,7 @@ import { colorEstado } from '@/lib/estilo'
 const COLOR_NIVEL: Record<Nivel, string> = {
   alto: 'var(--peligro)',
   medio: 'var(--alerta)',
-  bajo: 'var(--verde)',
+  bajo: 'var(--ok)',
 }
 
 const TEXTO_NIVEL: Record<Nivel, string> = {
@@ -33,7 +33,7 @@ const TEXTO_CONFIANZA: Record<Confianza, string> = {
 }
 
 const COLOR_CONFIANZA: Record<Confianza, string> = {
-  alta: 'var(--verde)',
+  alta: 'var(--ok)',
   media: 'var(--alerta)',
   baja: 'var(--peligro)',
 }

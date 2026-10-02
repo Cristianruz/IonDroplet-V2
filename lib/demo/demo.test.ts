@@ -2,7 +2,7 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { DIA, HORA, MIN, crearEstado, humedadActual, sqlTs, type Estado } from './simulacion.ts'
 import { responder } from './api-demo.ts'
-import { desconectarSensor, reconectarSensor, resumen, secarTierra } from './escenarios.ts'
+import { desconectarSensor, llover, reconectarSensor, resumen, secarTierra } from './escenarios.ts'
 
 const AHORA = Date.UTC(2026, 9, 1, 18, 0, 0)
 
@@ -199,4 +199,21 @@ test('sensor desconectado: la lectura envejece, avisa y el automático no decide
   assert.ok(!e.alertas.some(a => a.regla === 'sensor_mudo' && a.estado === 'nueva'))
   pedir(e, 'GET', 'esp/status', {}, AHORA + 5 * MIN + 3_000)
   assert.equal(e.bomba, 1)
+})
+
+test('que llueva: el clima dice que llueve, la tierra se moja sola y luego para', () => {
+  const e = crearEstado(AHORA)
+  const antes = humedadActual(e)
+  llover(e, AHORA)
+  const c = pedir(e, 'GET', 'clima', {}, AHORA + 1_000).cuerpo as { ahora: { precipitation: number; weather_code: number }; avisos: Array<{ texto: string }> }
+  assert.ok(c.ahora.precipitation > 0)
+  assert.equal(c.ahora.weather_code, 63)
+  assert.match(c.avisos[0].texto, /lloviendo ahora/)
+  pedir(e, 'GET', 'esp/status', {}, AHORA + 2 * MIN)
+  assert.ok(humedadActual(e) > antes, `subió de ${antes}% a ${humedadActual(e)}%`)
+  assert.equal(resumen(e).lloviendo, true)
+  // Pasados los tres minutos deja de llover.
+  const despues = pedir(e, 'GET', 'clima', {}, AHORA + 4 * MIN).cuerpo as { ahora: { precipitation: number } }
+  assert.equal(despues.ahora.precipitation, 0)
+  assert.equal(resumen(e).lloviendo, false)
 })

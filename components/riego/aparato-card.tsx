@@ -6,7 +6,7 @@ import { ChevronDown, type LucideIcon } from 'lucide-react'
 export type EstadoAparato = 'bien' | 'tarde' | 'nunca' | 'apagado' | 'activo'
 
 const COLOR: Record<EstadoAparato, string> = {
-  bien: 'var(--verde)',
+  bien: 'var(--ok)',
   activo: 'var(--agua)',
   tarde: 'var(--alerta)',
   nunca: 'var(--peligro)',

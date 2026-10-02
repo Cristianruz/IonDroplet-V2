@@ -61,7 +61,7 @@ function factorDelDia(ms: number): number {
   return 0.5 + 0.5 * Math.cos((2 * Math.PI * (hora - 16)) / 24)
 }
 
-export function clima(ahora: number, desde: string) {
+export function clima(ahora: number, desde: string, lluviaAhora = 0) {
   const dias = diasDeClima(ahora)
   const f = factorDelDia(ahora)
   const temperatura = redondear(dias.temperature_2m_min[0] + (dias.temperature_2m_max[0] - dias.temperature_2m_min[0]) * f)
@@ -84,14 +84,17 @@ export function clima(ahora: number, desde: string) {
     ahora: {
       time: new Date(ahora).toISOString().slice(0, 16),
       interval: 900,
-      temperature_2m: temperatura,
-      relative_humidity_2m: Math.round(70 - 38 * f),
-      precipitation: 0,
-      wind_speed_10m: redondear(9 + 8 * f),
-      weather_code: dias.weather_code[0],
+      temperature_2m: lluviaAhora > 0 ? redondear(temperatura - 3) : temperatura,
+      relative_humidity_2m: lluviaAhora > 0 ? 94 : Math.round(70 - 38 * f),
+      precipitation: lluviaAhora,
+      wind_speed_10m: lluviaAhora > 0 ? 24 : redondear(9 + 8 * f),
+      weather_code: lluviaAhora > 0 ? 63 : dias.weather_code[0],
     },
     dias,
-    avisos,
+    // Si está lloviendo, es lo primero que se avisa.
+    avisos: lluviaAhora > 0
+      ? [{ tipo: 'lluvia', nivel: 'aviso', dia: dias.time[0], texto: `Está lloviendo ahora: unos ${lluviaAhora} mm por hora.` }, ...avisos]
+      : avisos,
   }
 }
 

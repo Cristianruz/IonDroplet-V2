@@ -48,7 +48,7 @@ function Kpi({
   tono?: 'agua' | 'alerta' | 'verde'
 }) {
   const color =
-    tono === 'agua' ? 'var(--agua)' : tono === 'alerta' ? 'var(--alerta)' : tono === 'verde' ? 'var(--verde)' : 'var(--tinta)'
+    tono === 'agua' ? 'var(--agua)' : tono === 'alerta' ? 'var(--alerta)' : tono === 'verde' ? 'var(--ok)' : 'var(--tinta)'
   return (
     <div className="op-kpi">
       <span className="op-kpi-etiqueta">{etiqueta}</span>
@@ -63,7 +63,7 @@ function Kpi({
 
 /** Punto de estado: color y texto, sin fondo de semáforo. */
 function Estado({ ok, texto }: { ok: boolean | null; texto: string }) {
-  const color = ok === null ? 'var(--apagado)' : ok ? 'var(--verde)' : 'var(--peligro)'
+  const color = ok === null ? 'var(--apagado)' : ok ? 'var(--ok)' : 'var(--peligro)'
   return (
     <span className="op-estado">
       <span className="op-punto" style={{ background: color }} aria-hidden />

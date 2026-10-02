@@ -14,8 +14,6 @@ export type Pantalla = 'inicio' | 'parcela' | 'historial' | 'plagas'
 
 interface Props {
   pantalla: Pantalla
-  /** Como tarjeta propia, con título; si no, una línea discreta. */
-  destacado?: boolean
   /** Una línea dentro de un recuadro turquesa claro (Inicio). */
   enCaja?: boolean
   /**
@@ -26,7 +24,7 @@ interface Props {
   clave?: string
 }
 
-export function ConsejoIA({ pantalla, destacado = false, enCaja = false, clave }: Props) {
+export function ConsejoIA({ pantalla, enCaja = false, clave }: Props) {
   const [consejo, setConsejo] = useState<string | null>(null)
   const [pensando, setPensando] = useState(true)
   const [fallo, setFallo] = useState(false)
@@ -62,15 +60,7 @@ export function ConsejoIA({ pantalla, destacado = false, enCaja = false, clave }
   if (fallo) return null
 
   if (pensando) {
-    return destacado ? (
-      <div className="tarjeta flex flex-col gap-3">
-        <div className="esqueleto" style={{ width: '40%', height: 20 }} aria-hidden />
-        <div className="esqueleto" style={{ width: '100%', height: 18 }} aria-hidden />
-        <div className="esqueleto" style={{ width: '75%', height: 18 }} aria-hidden />
-      </div>
-    ) : (
-      <div className="esqueleto" style={{ width: '85%', height: 18 }} aria-hidden />
-    )
+    return <div className="esqueleto" style={{ width: '85%', height: 18 }} aria-hidden />
   }
 
   if (!consejo) return null
@@ -86,24 +76,10 @@ export function ConsejoIA({ pantalla, destacado = false, enCaja = false, clave }
     )
   }
 
-  if (!destacado) {
-    return (
-      <p className="text-[15px] flex items-start gap-2 texto-suave" role="status">
-        <Sparkles size={16} style={{ color: 'var(--acento)', flexShrink: 0, marginTop: 3 }} aria-hidden />
-        {consejo}
-      </p>
-    )
-  }
-
   return (
-    <section className="tarjeta flex flex-col gap-2" aria-label="Lo que ve el sistema">
-      <span className="etiqueta flex items-center gap-1.5" style={{ color: 'var(--acento)' }}>
-        <Sparkles size={13} aria-hidden />
-        Lo que veo hoy
-      </span>
-      <p className="text-[14.5px] leading-relaxed" role="status">
-        {consejo}
-      </p>
-    </section>
+    <p className="text-[15px] flex items-start gap-2 texto-suave" role="status">
+      <Sparkles size={16} style={{ color: 'var(--acento)', flexShrink: 0, marginTop: 3 }} aria-hidden />
+      {consejo}
+    </p>
   )
 }

@@ -121,7 +121,7 @@ export function colorDeUrgencia(u: Urgencia): string {
   if (u === 'alta') return 'var(--peligro)'
   if (u === 'media') return 'var(--alerta)'
   if (u === 'baja') return 'var(--riesgo-medio)'
-  return 'var(--verde)'
+  return 'var(--ok)'
 }
 
 /**

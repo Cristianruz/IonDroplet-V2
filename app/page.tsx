@@ -52,8 +52,8 @@ export default function Inicio() {
           <button
             type="button"
             onClick={() => window.dispatchEvent(new Event(EVENTO_ABRIR_GUIA))}
-            className="boton-sutil flex items-center justify-center rounded-full"
-            style={{ width: 44, height: 44, padding: 0 }}
+            className="boton boton-sutil flex items-center justify-center"
+            style={{ width: 44, height: 44, minHeight: 44, padding: 0, borderRadius: 999 }}
             aria-label="Ver la guía rápida"
           >
             <CircleHelp size={23} aria-hidden />
@@ -61,8 +61,8 @@ export default function Inicio() {
           <Link
             href="/alertas"
             aria-label={sinVer > 0 ? `Avisos, ${sinVer} sin ver` : 'Avisos'}
-            className="boton-sutil relative flex items-center justify-center rounded-full"
-            style={{ width: 44, height: 44, padding: 0 }}
+            className="boton boton-sutil relative flex items-center justify-center"
+            style={{ width: 44, height: 44, minHeight: 44, padding: 0, borderRadius: 999 }}
           >
             <Bell size={23} aria-hidden />
             {sinVer > 0 && (

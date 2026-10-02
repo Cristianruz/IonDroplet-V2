@@ -85,13 +85,13 @@ function TarjetaHipotesis({ h, orden }: { h: Hipotesis; orden: number }) {
         <div className="flex flex-wrap items-center gap-2 mt-1">
           <BarraProbabilidad h={h} />
           {h.delCatalogo && <span className="marca">En tu lista de plagas</span>}
-          {benefico && <span className="capsula capsula-nivel" style={colorEstado('var(--verde)')}>Te ayuda: no lo combatas</span>}
+          {benefico && <span className="capsula capsula-nivel" style={colorEstado('var(--ok)')}>Te ayuda: no lo combatas</span>}
         </div>
       </div>
 
       {h.aFavor.length > 0 && (
         <div>
-          <p className="text-sm font-bold flex items-center gap-1.5" style={{ color: 'var(--verde)' }}>
+          <p className="text-sm font-bold flex items-center gap-1.5" style={{ color: 'var(--ok)' }}>
             <CheckCircle2 size={15} aria-hidden /> Lo que apunta a esto
           </p>
           <Lista elementos={h.aFavor} />

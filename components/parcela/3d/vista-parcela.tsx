@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useRef, useState, type PointerEvent, type ReactNode } from 'react'
-import { ChevronLeft, ChevronRight, Crosshair, Minus, Plus } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Crosshair, Minus, Plus, CloudRain } from 'lucide-react'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { useClima, type Clima } from '@/hooks/use-clima'
 import { useComparar } from '@/hooks/use-comparar'
@@ -39,7 +39,7 @@ function semaforo(h: number | null, umbral: number) {
   if (h === null) return { texto: 'Sin lectura', color: 'var(--apagado)' }
   if (h < umbral) return { texto: 'Tierra seca', color: 'var(--alerta)' }
   if (h > 75) return { texto: 'Muy húmeda', color: 'var(--agua)' }
-  return { texto: 'Humedad bien', color: 'var(--verde)' }
+  return { texto: 'Humedad bien', color: 'var(--ok)' }
 }
 
 // El cielo de la escena. Open-Meteo no manda nubosidad en lo que pedimos, así
@@ -90,6 +90,12 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo, ch
   const previsualizando = preview !== null && preview !== iReal
 
   const regando = estadoEsp.pumpState === 1
+  // ¿Está lloviendo en este momento? Milímetros de ahora o código de lluvia.
+  const codigoAhora = clima?.ahora.weather_code
+  const llueveAhora = !!clima && (
+    clima.ahora.precipitation > 0.1 ||
+    (codigoAhora !== undefined && ((codigoAhora >= 51 && codigoAhora <= 67) || (codigoAhora >= 80 && codigoAhora <= 82) || codigoAhora >= 95))
+  )
   // Un solo relé prende la bomba y las varillas: si riega, se le pidió ionizar.
   const ionizando = regando
   const sinDato = humedad === null
@@ -121,6 +127,9 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo, ch
     regando,
     ionizando,
     clima: cieloDe(clima),
+    codigo: clima?.ahora.weather_code ?? null,
+    lluvia: clima?.ahora.precipitation ?? null,
+    viento: clima?.ahora.wind_speed_10m ?? null,
     sensorActivo,
     capturada,
     superficie,
@@ -261,6 +270,15 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo, ch
               <span className="chip-escena" style={{ color: '#7a5004' }}>
                 <span className="punto" style={{ background: 'currentColor' }} aria-hidden />
                 Ionizador: se le pidió encender
+              </span>
+            )}
+            {/* La lluvia que se ve es la de ahora según el pronóstico, y lo dice. */}
+            {llueveAhora && (
+              <span className="chip-escena" style={{ color: '#1d4f8a' }}>
+                <CloudRain size={13} aria-hidden />
+                {clima!.ahora.precipitation > 0.1
+                  ? `Lloviendo ahora: ${clima!.ahora.precipitation.toFixed(1)} mm`
+                  : 'Llovizna ahora'}
               </span>
             )}
           </div>

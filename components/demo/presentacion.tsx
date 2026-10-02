@@ -103,7 +103,8 @@ export function Presentacion() {
               detalle,
               Icono,
               onClick: () => pedir(id),
-              enCurso: id === 'secar' && estado?.regando && estado.automatico ? 'Regando' : undefined,
+              enCurso: id === 'secar' && estado?.regando && estado.automatico ? 'Regando'
+                : id === 'llover' && estado?.lloviendo ? 'Lloviendo' : undefined,
             }))}
           />
           <p className="franja-estado presentacion-narra" style={colorEstado(estado ? colorDe(estado) : 'var(--apagado)')} role="status" aria-live="polite">

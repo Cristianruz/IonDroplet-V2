@@ -57,12 +57,6 @@
   --fondo-peligro: #fbeae8;
   --sobre-estado: #ffffff;
 
-  /* Nombres viejos. "verde" era a la vez el acento y el "bien"; ahora es
-     solo el "bien", y las pantallas usan --acento para lo demás. */
-  --verde: var(--ok);
-  --verde-fuerte: #1d5f3a;
-  --verde-suave: var(--ok-suave);
-
   /* Relieve: casi nada. Lo separa el filo, no la sombra. */
   --vidrio-filo: var(--borde);
   --vidrio-brillo: none;
@@ -117,7 +111,6 @@
     --fondo-alerta: rgba(242, 181, 74, .13);
     --fondo-peligro: rgba(242, 122, 112, .13);
     --sobre-estado: #0b1620;
-    --verde-fuerte: #84dba8;
     --sombra-color: rgba(0, 0, 0, .35);
     --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .25);
     --sombra-boton: 0 1px 2px rgba(0, 0, 0, .25);
@@ -154,7 +147,6 @@
   --fondo-alerta: rgba(242, 181, 74, .13);
   --fondo-peligro: rgba(242, 122, 112, .13);
   --sobre-estado: #0b1620;
-  --verde-fuerte: #84dba8;
   --sombra-color: rgba(0, 0, 0, .35);
   --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .25);
   --sombra-boton: 0 1px 2px rgba(0, 0, 0, .25);
@@ -849,7 +841,7 @@ a:active {
 .franja-demo-boton:active { opacity: 1; transform: scale(.97); }
 .franja-demo-boton:focus-visible { outline-color: var(--franja-tinta); }
 @media (hover: hover) and (pointer: fine) {
-  .franja-demo-boton:hover { background: #ffffff; }
+  .franja-demo-boton:hover { background: color-mix(in srgb, var(--franja-tinta), white 45%); }
 }
 
 /* Adentro del celular de la vista de presentación: sin franja (la dice el
@@ -990,6 +982,12 @@ html[data-enmarcada]::-webkit-scrollbar { display: none; }
   .presentacion-titulo { font-size: clamp(2.1rem, 2.9vw, 2.6rem); }
   .presentacion-bajada { font-size: 1.05rem; }
 }
+/* Laptops angostas y bajitas (1024 a 1279 × 800 o menos): panel y QR van en
+   la misma columna; sin la bajada (el título ya lo dice) todo cabe. */
+@media (max-width: 1279px) and (max-height: 820px) {
+  .presentacion-bajada { display: none; }
+  .presentacion-panel { gap: 14px; }
+}
 @media (min-width: 1280px) {
   .presentacion {
     --qr: 220px;
@@ -1052,7 +1050,7 @@ html[data-enmarcada]::-webkit-scrollbar { display: none; }
   color: var(--tinta-suave); text-transform: uppercase;
   width: fit-content;
 }
-.op-volver:hover { color: var(--verde); }
+.op-volver:hover { color: var(--acento); }
 
 .op-titulo { font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
 .op-sub { font-size: 12.5px; color: var(--tinta-suave); max-width: 62ch; }

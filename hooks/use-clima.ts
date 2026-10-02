@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { apiFetch } from '@/lib/api'
+import { EVENTO_REFRESCAR } from '@/lib/modo'
 
 export interface AvisoClima {
   tipo: 'helada' | 'lluvia' | 'viento' | 'calor'
@@ -17,6 +18,8 @@ export interface Clima {
     relative_humidity_2m: number
     precipitation: number
     wind_speed_10m: number
+    /** Código del tiempo de ESTE momento (WMO): despejado, nublado, lluvia, niebla, tormenta. */
+    weather_code?: number
   }
   dias: {
     time: string[]
@@ -63,7 +66,11 @@ export function useClima(parcelaId: number | null) {
     cargar()
     // El clima cambia despacio: media hora es de sobra.
     const id = setInterval(cargar, 30 * 60 * 1000)
-    return () => clearInterval(id)
+    window.addEventListener(EVENTO_REFRESCAR, cargar)
+    return () => {
+      clearInterval(id)
+      window.removeEventListener(EVENTO_REFRESCAR, cargar)
+    }
   }, [cargar])
 
   // Mientras el aparato no traiga GPS, la ubicación la da el teléfono del
