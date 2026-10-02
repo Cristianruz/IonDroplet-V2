@@ -103,7 +103,7 @@ export default function PantallaDiagnostico() {
         <Link
           href="/plagas"
           className="flex items-center gap-2 text-base font-semibold w-fit"
-          style={{ color: 'var(--verde)' }}
+          style={{ color: 'var(--acento)' }}
         >
           <ArrowLeft size={18} aria-hidden />
           Plagas
@@ -116,7 +116,7 @@ export default function PantallaDiagnostico() {
 
       {d.estado === 'analizando' && (
         <section className="tarjeta flex flex-col items-center gap-4 py-10 text-center" role="status" aria-live="polite">
-          <ScanSearch size={36} className="regando" style={{ color: 'var(--verde)' }} aria-hidden />
+          <ScanSearch size={36} className="regando" style={{ color: 'var(--acento)' }} aria-hidden />
           <p className="text-lg font-bold">{etapaMensaje}</p>
           <p className="text-sm texto-suave">
             {d.segundos} s · Un análisis a fondo tarda entre medio minuto y un minuto y medio. Mantén la pantalla encendida y la app abierta.

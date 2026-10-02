@@ -10,7 +10,7 @@ export const CLAVE_TEMA = 'iondroplet.tema'
 const OPCIONES: Array<{ id: Tema; etiqueta: string; Icono: typeof Sun }> = [
   { id: 'claro', etiqueta: 'Claro', Icono: Sun },
   { id: 'oscuro', etiqueta: 'Oscuro', Icono: Moon },
-  { id: 'sistema', etiqueta: 'Como el teléfono', Icono: SunMoon },
+  { id: 'sistema', etiqueta: 'Automático', Icono: SunMoon },
 ]
 
 export function aplicarTema(tema: Tema) {
@@ -44,9 +44,9 @@ export function SelectorTema() {
       className="tarjeta flex flex-col gap-4"
       aria-label="Cómo se ve la pantalla"
     >
-      <h2 className="text-base font-semibold">¿Cómo se ve la pantalla?</h2>
+      <h2 className="titulo-bloque">¿Cómo se ve la pantalla?</h2>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3" role="group">
+      <div className="segmentado" role="group" aria-label="Tema">
         {OPCIONES.map(({ id, etiqueta, Icono }) => {
           const activo = tema === id
           return (
@@ -55,9 +55,9 @@ export function SelectorTema() {
               type="button"
               onClick={() => escoger(id)}
               aria-pressed={activo}
-              className="opcion py-3 px-4 text-base flex items-center justify-center gap-3"
+              className="flex items-center justify-center gap-1.5"
             >
-              <Icono size={18} aria-hidden />
+              <Icono size={17} aria-hidden />
               {etiqueta}
             </button>
           )
@@ -65,7 +65,8 @@ export function SelectorTema() {
       </div>
 
       <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-        Bajo el sol se lee mejor el claro. El oscuro es para la noche o el galerón.
+        Bajo el sol se lee mejor el claro. El oscuro es para la noche o el galerón. Automático
+        sigue lo que tenga puesto el teléfono.
       </p>
     </section>
   )

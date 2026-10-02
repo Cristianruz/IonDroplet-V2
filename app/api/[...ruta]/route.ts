@@ -1,4 +1,5 @@
 import type { NextRequest } from 'next/server'
+import { MODO_DEMO } from '@/lib/modo'
 
 // Todo /api/* de la app pasa por aquí hacia el backend de la computadora del
 // riego.
@@ -29,6 +30,13 @@ function esLocal(url: string): boolean {
 }
 
 async function reenviar(req: NextRequest, { params }: { params: Promise<{ ruta: string[] }> }) {
+  // La demostración pública contesta desde el navegador y nunca llega aquí.
+  // Si alguien llama a /api a mano, no se le abre la puerta a la computadora
+  // del riego aunque BACKEND_URL siga puesta en Vercel.
+  if (MODO_DEMO) {
+    return Response.json({ error: 'Esta es la demostración: no está conectada a ningún sistema de riego.' }, { status: 404 })
+  }
+
   const { ruta } = await params
   const camino = ruta.map(encodeURIComponent).join('/')
   const base = backend()

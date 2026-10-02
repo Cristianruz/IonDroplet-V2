@@ -125,7 +125,7 @@ export function BalanceCard() {
                       width: '42%',
                       height: `${(d.lluvia_mm / maximo) * 100}%`,
                       minHeight: d.lluvia_mm > 0 ? 3 : 0,
-                      background: 'var(--verde)',
+                      background: 'var(--acento)',
                       borderRadius: '4px 4px 0 0',
                       transition: 'height var(--lento) var(--curva)',
                     }}
@@ -144,7 +144,7 @@ export function BalanceCard() {
               Lo que pide
             </span>
             <span className="flex items-center gap-1.5">
-              <span style={{ width: 12, height: 12, background: 'var(--verde)', borderRadius: 3 }} />
+              <span style={{ width: 12, height: 12, background: 'var(--acento)', borderRadius: 3 }} />
               Lluvia esperada
             </span>
           </div>

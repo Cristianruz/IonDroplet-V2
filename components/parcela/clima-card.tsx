@@ -49,7 +49,7 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
         aria-label="Falta la ubicación del cultivo"
       >
         <div className="flex items-center gap-3">
-          <MapPin size={18} style={{ color: 'var(--verde)' }} aria-hidden />
+          <MapPin size={18} style={{ color: 'var(--acento)' }} aria-hidden />
           <h2 className="text-base font-semibold">¿Dónde está tu cultivo?</h2>
         </div>
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>

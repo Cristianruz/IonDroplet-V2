@@ -10,7 +10,8 @@ interface Props {
 }
 
 // La IA propone; el agricultor decide. Mientras no toque el botón, la bomba
-// sigue con el punto de riego que ya tenía.
+// sigue con el punto de riego que ya tenía. Va dentro de la tarjeta del punto
+// de riego, como ayuda para escoger el número, no como otra tarjeta más.
 export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
   const { propuesta, pensando, aviso, pedirPropuesta, aplicar, descartar } = usePropuestaUmbral()
 
@@ -20,82 +21,49 @@ export function PropuestaUmbral({ umbralActual, onAplicado }: Props) {
   }
 
   return (
-    <section
-      className="tarjeta flex flex-col gap-4"
-      aria-label="Recomendación del asistente sobre el punto de riego"
-    >
-      <div className="flex items-center gap-3">
-        <Sparkles size={18} style={{ color: 'var(--verde)' }} aria-hidden />
-        <h2 className="text-base font-semibold">¿Le pregunto al asistente?</h2>
-      </div>
-
+    <div className="flex flex-col gap-3 pt-4" style={{ borderTop: '1px solid var(--borde)' }} aria-label="Recomendación del asistente">
       {propuesta === null ? (
-        <>
-          <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
-            Puede revisar tu cultivo, la humedad de los últimos días y la temporada, y decirte en
-            qué punto conviene que riegue solo.
-          </p>
-          <button
-            type="button"
-            onClick={pedirPropuesta}
-            disabled={pensando}
-            className="rounded-lg py-2.5 text-base font-bold border disabled:opacity-60"
-            style={{ borderColor: 'var(--verde)', color: 'var(--verde)' }}
-          >
-            {pensando ? 'Pensando…' : 'Que me recomiende un punto de riego'}
-          </button>
-        </>
+        <button
+          type="button"
+          onClick={pedirPropuesta}
+          disabled={pensando}
+          className="boton boton-secundario boton-ancho"
+          style={{ color: 'var(--acento-fuerte)' }}
+        >
+          <Sparkles size={17} aria-hidden />
+          {pensando ? 'Pensando…' : '¿Qué número me recomiendas?'}
+        </button>
       ) : (
-        <>
-          <div className="flex items-baseline gap-3">
-            <p className="font-bold leading-none" style={{ fontSize: 'clamp(2.25rem, 12vw, 3.25rem)', color: 'var(--agua)' }}>
-              {propuesta.sugerido}
-              <span style={{ fontSize: '0.6em' }}>%</span>
-            </p>
-            {umbralActual !== null && (
-              <p className="text-sm" style={{ color: 'var(--tinta-suave)' }}>
-                actualmente está en {umbralActual}%
-              </p>
+        <div className="flex flex-col gap-3 rounded-[14px] p-4" style={{ background: 'var(--acento-suave)' }}>
+          <p className="flex items-center gap-2 flex-wrap font-semibold">
+            <Sparkles size={17} style={{ color: 'var(--acento)' }} aria-hidden />
+            Te recomiendo {propuesta.sugerido}%
+            {umbralActual !== null && umbralActual !== propuesta.sugerido && (
+              <span className="font-normal texto-suave">(ahora está en {umbralActual}%)</span>
             )}
-          </div>
-
-          <p className="text-base">{propuesta.razon}</p>
+          </p>
+          <p className="text-[15px]">{propuesta.razon}</p>
 
           {propuesta.confianza !== null && propuesta.confianza < 50 && (
-            <p className="text-sm font-semibold" style={{ color: 'var(--alerta)' }}>
+            <p className="text-sm font-semibold" style={{ color: 'var(--alerta-texto)' }}>
               Va con poca seguridad: le faltan datos frescos del sensor. Tómalo como una idea,
               no como una orden.
             </p>
           )}
 
-          <button
-            type="button"
-            onClick={aceptar}
-            className="boton boton-primario boton-ancho"
-            >
-            <Check size={18} aria-hidden />
-            Usar este punto
-          </button>
-          <button
-            type="button"
-            onClick={descartar}
-            className="boton boton-secundario"
-            style={{ color: 'var(--tinta-suave)' }}
-          >
-            Dejarlo como está
-          </button>
-        </>
+          <div className="grid grid-cols-2 gap-2">
+            <button type="button" onClick={aceptar} className="boton boton-primario">
+              <Check size={18} aria-hidden />
+              Usarlo
+            </button>
+            <button type="button" onClick={descartar} className="boton boton-secundario">
+              Dejarlo así
+            </button>
+          </div>
+        </div>
       )}
 
-      {aviso && (
-        <p
-          className="text-base font-semibold rounded-lg p-4"
-          style={{ background: 'var(--fondo-alerta)', color: 'var(--alerta)' }}
-          role="alert"
-        >
-          {aviso}
-        </p>
-      )}
-    </section>
+      {aviso && <p className="aviso" role="alert">{aviso}</p>}
+    </div>
   )
 }

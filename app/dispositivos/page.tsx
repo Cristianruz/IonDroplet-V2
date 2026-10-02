@@ -47,17 +47,17 @@ export default function PantallaDispositivos() {
       : `Midió ${Math.round(humedad ?? 0)}% ${haceCuanto(ultimaLectura)}`
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/ajustes"
           className="flex items-center gap-2 text-base font-semibold w-fit"
-          style={{ color: 'var(--verde)' }}
+          style={{ color: 'var(--acento)' }}
         >
           <ArrowLeft size={18} aria-hidden />
           Ajustes
         </Link>
-        <h1 className="text-xl font-bold leading-tight">Aparatos del campo</h1>
+        <h1 className="titulo-pantalla">Aparatos del campo</h1>
       </header>
 
       <AparatoCard

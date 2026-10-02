@@ -115,9 +115,9 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
   }
 
   const estiloChip = (activo: boolean) => ({
-    background: activo ? 'var(--verde)' : 'var(--tarjeta)',
-    color: activo ? 'var(--sobre-estado)' : 'var(--tinta)',
-    borderColor: activo ? 'var(--verde)' : 'var(--borde)',
+    background: activo ? 'var(--acento-suave)' : 'var(--tarjeta)',
+    color: activo ? 'var(--acento-fuerte)' : 'var(--tinta)',
+    borderColor: activo ? 'var(--acento)' : 'var(--borde)',
   })
 
   return (
@@ -170,7 +170,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
             type="button"
             onClick={() => setVerTodos(true)}
             className="mt-3 text-sm font-semibold flex items-center gap-1.5"
-            style={{ color: 'var(--verde)' }}
+            style={{ color: 'var(--acento)' }}
           >
             <Plus size={16} aria-hidden />
             Ver los demás
@@ -240,7 +240,7 @@ export function FertirriegoForm({ guardando, onGuardar, onListo }: Props) {
           type="button"
           onClick={() => setVerMasDatos(true)}
           className="text-sm font-semibold flex items-center gap-1.5 self-start"
-          style={{ color: 'var(--verde)' }}
+          style={{ color: 'var(--acento)' }}
         >
           <ChevronDown size={16} aria-hidden />
           Tengo medidor de agua

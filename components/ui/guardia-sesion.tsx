@@ -22,7 +22,9 @@ const CADA_CUANTO_REVISAR_MS = 60_000
 
 export function GuardiaSesion({ children }: { children: ReactNode }) {
   const ruta = usePathname()
-  const esEntrar = ruta === '/entrar'
+  // Entrar y la vista de presentación no llevan la app alrededor: la
+  // presentación la enseña adentro de su propio celular.
+  const esEntrar = ruta === '/entrar' || (ruta?.startsWith('/presentacion') ?? false)
   const [listo, setListo] = useState(false)
   const [pideSesion, setPideSesion] = useState(false)
   const [pideVinculo, setPideVinculo] = useState(false)

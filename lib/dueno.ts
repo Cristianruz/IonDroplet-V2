@@ -5,6 +5,8 @@
 // dueño y en ningún otro lado: el teléfono de quien venga a ver el sistema
 // no la tiene, y por eso no puede gastar créditos.
 
+import { MODO_DEMO } from './modo'
+
 const CLAVE = 'iondroplet.llave-dueno'
 
 /** Operar desde internet sin aparato vinculado: la app ofrece vincularlo. */
@@ -15,6 +17,9 @@ export function pedirVinculo(): void {
 }
 
 export function leerLlave(): string | null {
+  // En la demostración no hay IA de verdad ni créditos que cuidar: cualquier
+  // aparato cuenta como vinculado y nadie ve la ventana de vincular.
+  if (MODO_DEMO) return 'demostracion'
   try {
     const v = localStorage.getItem(CLAVE)
     return v && v.trim() !== '' ? v : null

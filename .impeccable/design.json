@@ -1,0 +1,775 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-02T05:04:32.238Z",
+  "title": "Design System: IonDroplet",
+  "extensions": {
+    "colorMeta": {
+      "fondo": {
+        "role": "neutral",
+        "displayName": "Papel Crema",
+        "canonical": "oklch(96.7% 0.007 88.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.007 88.6)",
+          "oklch(26.4% 0.007 88.6)",
+          "oklch(37.9% 0.007 88.6)",
+          "oklch(49.3% 0.007 88.6)",
+          "oklch(60.7% 0.007 88.6)",
+          "oklch(72.1% 0.007 88.6)",
+          "oklch(83.6% 0.007 88.6)",
+          "oklch(95.0% 0.007 88.6)"
+        ]
+      },
+      "tarjeta": {
+        "role": "neutral",
+        "displayName": "Hoja Blanca",
+        "canonical": "oklch(100.0% 0.000 89.9)",
+        "tonalRamp": [
+          "oklch(15.0% 0.000 89.9)",
+          "oklch(26.4% 0.000 89.9)",
+          "oklch(37.9% 0.000 89.9)",
+          "oklch(49.3% 0.000 89.9)",
+          "oklch(60.7% 0.000 89.9)",
+          "oklch(72.1% 0.000 89.9)",
+          "oklch(83.6% 0.000 89.9)",
+          "oklch(95.0% 0.000 89.9)"
+        ]
+      },
+      "cristal-suave": {
+        "role": "neutral",
+        "displayName": "Crema Rozada",
+        "canonical": "oklch(97.9% 0.004 91.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.004 91.4)",
+          "oklch(26.4% 0.004 91.4)",
+          "oklch(37.9% 0.004 91.4)",
+          "oklch(49.3% 0.004 91.4)",
+          "oklch(60.7% 0.004 91.4)",
+          "oklch(72.1% 0.004 91.4)",
+          "oklch(83.6% 0.004 91.4)",
+          "oklch(95.0% 0.004 91.4)"
+        ]
+      },
+      "pista": {
+        "role": "neutral",
+        "displayName": "Surco",
+        "canonical": "oklch(94.0% 0.010 87.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.010 87.5)",
+          "oklch(26.4% 0.010 87.5)",
+          "oklch(37.9% 0.010 87.5)",
+          "oklch(49.3% 0.010 87.5)",
+          "oklch(60.7% 0.010 87.5)",
+          "oklch(72.1% 0.010 87.5)",
+          "oklch(83.6% 0.010 87.5)",
+          "oklch(95.0% 0.010 87.5)"
+        ]
+      },
+      "tinta": {
+        "role": "neutral",
+        "displayName": "Tinta Marina",
+        "canonical": "oklch(27.1% 0.048 250.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.048 250.0)",
+          "oklch(26.4% 0.048 250.0)",
+          "oklch(37.9% 0.048 250.0)",
+          "oklch(49.3% 0.048 250.0)",
+          "oklch(60.7% 0.048 250.0)",
+          "oklch(72.1% 0.048 250.0)",
+          "oklch(83.6% 0.048 250.0)",
+          "oklch(95.0% 0.048 250.0)"
+        ]
+      },
+      "tinta-suave": {
+        "role": "neutral",
+        "displayName": "Tinta Lavada",
+        "canonical": "oklch(46.0% 0.033 248.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.033 248.5)",
+          "oklch(26.4% 0.033 248.5)",
+          "oklch(37.9% 0.033 248.5)",
+          "oklch(49.3% 0.033 248.5)",
+          "oklch(60.7% 0.033 248.5)",
+          "oklch(72.1% 0.033 248.5)",
+          "oklch(83.6% 0.033 248.5)",
+          "oklch(95.0% 0.033 248.5)"
+        ]
+      },
+      "etiqueta": {
+        "role": "neutral",
+        "displayName": "Gris Etiqueta",
+        "canonical": "oklch(50.8% 0.029 252.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.029 252.1)",
+          "oklch(26.4% 0.029 252.1)",
+          "oklch(37.9% 0.029 252.1)",
+          "oklch(49.3% 0.029 252.1)",
+          "oklch(60.7% 0.029 252.1)",
+          "oklch(72.1% 0.029 252.1)",
+          "oklch(83.6% 0.029 252.1)",
+          "oklch(95.0% 0.029 252.1)"
+        ]
+      },
+      "apagado": {
+        "role": "neutral",
+        "displayName": "Gris Apagado",
+        "canonical": "oklch(51.5% 0.027 250.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.027 250.3)",
+          "oklch(26.4% 0.027 250.3)",
+          "oklch(37.9% 0.027 250.3)",
+          "oklch(49.3% 0.027 250.3)",
+          "oklch(60.7% 0.027 250.3)",
+          "oklch(72.1% 0.027 250.3)",
+          "oklch(83.6% 0.027 250.3)",
+          "oklch(95.0% 0.027 250.3)"
+        ]
+      },
+      "borde": {
+        "role": "neutral",
+        "displayName": "Filo",
+        "canonical": "oklch(91.0% 0.013 86.8)",
+        "tonalRamp": [
+          "oklch(15.0% 0.013 86.8)",
+          "oklch(26.4% 0.013 86.8)",
+          "oklch(37.9% 0.013 86.8)",
+          "oklch(49.3% 0.013 86.8)",
+          "oklch(60.7% 0.013 86.8)",
+          "oklch(72.1% 0.013 86.8)",
+          "oklch(83.6% 0.013 86.8)",
+          "oklch(95.0% 0.013 86.8)"
+        ]
+      },
+      "acento": {
+        "role": "primary",
+        "displayName": "Turquesa del Logo",
+        "canonical": "oklch(51.8% 0.097 226.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 226.4)",
+          "oklch(26.4% 0.084 226.4)",
+          "oklch(37.9% 0.097 226.4)",
+          "oklch(49.3% 0.097 226.4)",
+          "oklch(60.7% 0.097 226.4)",
+          "oklch(72.1% 0.097 226.4)",
+          "oklch(83.6% 0.084 226.4)",
+          "oklch(95.0% 0.053 226.4)"
+        ]
+      },
+      "acento-fuerte": {
+        "role": "primary",
+        "displayName": "Turquesa Hondo",
+        "canonical": "oklch(44.0% 0.082 226.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 226.4)",
+          "oklch(26.4% 0.082 226.4)",
+          "oklch(37.9% 0.082 226.4)",
+          "oklch(49.3% 0.082 226.4)",
+          "oklch(60.7% 0.082 226.4)",
+          "oklch(72.1% 0.082 226.4)",
+          "oklch(83.6% 0.082 226.4)",
+          "oklch(95.0% 0.053 226.4)"
+        ]
+      },
+      "acento-suave": {
+        "role": "primary",
+        "displayName": "Turquesa Agua Clara",
+        "canonical": "oklch(94.9% 0.016 221.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.016 221.1)",
+          "oklch(26.4% 0.016 221.1)",
+          "oklch(37.9% 0.016 221.1)",
+          "oklch(49.3% 0.016 221.1)",
+          "oklch(60.7% 0.016 221.1)",
+          "oklch(72.1% 0.016 221.1)",
+          "oklch(83.6% 0.016 221.1)",
+          "oklch(95.0% 0.016 221.1)"
+        ]
+      },
+      "agua": {
+        "role": "secondary",
+        "displayName": "Azul Riego",
+        "canonical": "oklch(55.7% 0.172 259.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 259.7)",
+          "oklch(26.4% 0.084 259.7)",
+          "oklch(37.9% 0.114 259.7)",
+          "oklch(49.3% 0.145 259.7)",
+          "oklch(60.7% 0.145 259.7)",
+          "oklch(72.1% 0.114 259.7)",
+          "oklch(83.6% 0.084 259.7)",
+          "oklch(95.0% 0.053 259.7)"
+        ]
+      },
+      "agua-suave": {
+        "role": "secondary",
+        "displayName": "Azul Riego Suave",
+        "canonical": "oklch(95.0% 0.018 258.4)",
+        "tonalRamp": [
+          "oklch(15.0% 0.018 258.4)",
+          "oklch(26.4% 0.018 258.4)",
+          "oklch(37.9% 0.018 258.4)",
+          "oklch(49.3% 0.018 258.4)",
+          "oklch(60.7% 0.018 258.4)",
+          "oklch(72.1% 0.018 258.4)",
+          "oklch(83.6% 0.018 258.4)",
+          "oklch(95.0% 0.018 258.4)"
+        ]
+      },
+      "ok": {
+        "role": "tertiary",
+        "displayName": "Verde Bien",
+        "canonical": "oklch(51.4% 0.109 154.5)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 154.5)",
+          "oklch(26.4% 0.084 154.5)",
+          "oklch(37.9% 0.109 154.5)",
+          "oklch(49.3% 0.109 154.5)",
+          "oklch(60.7% 0.109 154.5)",
+          "oklch(72.1% 0.109 154.5)",
+          "oklch(83.6% 0.084 154.5)",
+          "oklch(95.0% 0.053 154.5)"
+        ]
+      },
+      "ok-suave": {
+        "role": "tertiary",
+        "displayName": "Verde Bien Suave",
+        "canonical": "oklch(94.9% 0.017 159.1)",
+        "tonalRamp": [
+          "oklch(15.0% 0.017 159.1)",
+          "oklch(26.4% 0.017 159.1)",
+          "oklch(37.9% 0.017 159.1)",
+          "oklch(49.3% 0.017 159.1)",
+          "oklch(60.7% 0.017 159.1)",
+          "oklch(72.1% 0.017 159.1)",
+          "oklch(83.6% 0.017 159.1)",
+          "oklch(95.0% 0.017 159.1)"
+        ]
+      },
+      "alerta": {
+        "role": "tertiary",
+        "displayName": "Ámbar Ojo",
+        "canonical": "oklch(54.5% 0.126 61.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 61.6)",
+          "oklch(26.4% 0.084 61.6)",
+          "oklch(37.9% 0.114 61.6)",
+          "oklch(49.3% 0.126 61.6)",
+          "oklch(60.7% 0.126 61.6)",
+          "oklch(72.1% 0.114 61.6)",
+          "oklch(83.6% 0.084 61.6)",
+          "oklch(95.0% 0.053 61.6)"
+        ]
+      },
+      "alerta-texto": {
+        "role": "tertiary",
+        "displayName": "Ámbar Ojo (texto)",
+        "canonical": "oklch(48.3% 0.111 61.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 61.6)",
+          "oklch(26.4% 0.084 61.6)",
+          "oklch(37.9% 0.111 61.6)",
+          "oklch(49.3% 0.111 61.6)",
+          "oklch(60.7% 0.111 61.6)",
+          "oklch(72.1% 0.111 61.6)",
+          "oklch(83.6% 0.084 61.6)",
+          "oklch(95.0% 0.053 61.6)"
+        ]
+      },
+      "fondo-alerta": {
+        "role": "tertiary",
+        "displayName": "Ámbar Ojo Suave",
+        "canonical": "oklch(95.9% 0.029 80.7)",
+        "tonalRamp": [
+          "oklch(15.0% 0.029 80.7)",
+          "oklch(26.4% 0.029 80.7)",
+          "oklch(37.9% 0.029 80.7)",
+          "oklch(49.3% 0.029 80.7)",
+          "oklch(60.7% 0.029 80.7)",
+          "oklch(72.1% 0.029 80.7)",
+          "oklch(83.6% 0.029 80.7)",
+          "oklch(95.0% 0.029 80.7)"
+        ]
+      },
+      "peligro": {
+        "role": "tertiary",
+        "displayName": "Rojo Peligro",
+        "canonical": "oklch(50.7% 0.176 29.3)",
+        "tonalRamp": [
+          "oklch(15.0% 0.053 29.3)",
+          "oklch(26.4% 0.084 29.3)",
+          "oklch(37.9% 0.114 29.3)",
+          "oklch(49.3% 0.145 29.3)",
+          "oklch(60.7% 0.145 29.3)",
+          "oklch(72.1% 0.114 29.3)",
+          "oklch(83.6% 0.084 29.3)",
+          "oklch(95.0% 0.053 29.3)"
+        ]
+      },
+      "fondo-peligro": {
+        "role": "tertiary",
+        "displayName": "Rojo Peligro Suave",
+        "canonical": "oklch(95.0% 0.019 25.6)",
+        "tonalRamp": [
+          "oklch(15.0% 0.019 25.6)",
+          "oklch(26.4% 0.019 25.6)",
+          "oklch(37.9% 0.019 25.6)",
+          "oklch(49.3% 0.019 25.6)",
+          "oklch(60.7% 0.019 25.6)",
+          "oklch(72.1% 0.019 25.6)",
+          "oklch(83.6% 0.019 25.6)",
+          "oklch(95.0% 0.019 25.6)"
+        ]
+      },
+      "sobre-estado": {
+        "role": "neutral",
+        "displayName": "Sobre Estado"
+      },
+      "franja-demo-fondo": {
+        "role": "neutral",
+        "displayName": "Marino de la Franja",
+        "canonical": "oklch(27.1% 0.048 250.0)",
+        "tonalRamp": [
+          "oklch(15.0% 0.048 250.0)",
+          "oklch(26.4% 0.048 250.0)",
+          "oklch(37.9% 0.048 250.0)",
+          "oklch(49.3% 0.048 250.0)",
+          "oklch(60.7% 0.048 250.0)",
+          "oklch(72.1% 0.048 250.0)",
+          "oklch(83.6% 0.048 250.0)",
+          "oklch(95.0% 0.048 250.0)"
+        ]
+      },
+      "franja-demo-tinta": {
+        "role": "neutral",
+        "displayName": "Crema de la Franja"
+      },
+      "bisel-telefono": {
+        "role": "neutral",
+        "displayName": "Bisel"
+      },
+      "fondo-noche": {
+        "role": "neutral",
+        "displayName": "Papel Crema (noche)",
+        "theme": "oscuro"
+      },
+      "tarjeta-noche": {
+        "role": "neutral",
+        "displayName": "Hoja Blanca (noche)",
+        "theme": "oscuro"
+      },
+      "elevado-noche": {
+        "role": "neutral",
+        "displayName": "Crema Rozada (noche)",
+        "theme": "oscuro"
+      },
+      "pista-noche": {
+        "role": "neutral",
+        "displayName": "Surco (noche)",
+        "theme": "oscuro"
+      },
+      "tinta-noche": {
+        "role": "neutral",
+        "displayName": "Tinta Marina (noche)",
+        "theme": "oscuro"
+      },
+      "tinta-suave-noche": {
+        "role": "neutral",
+        "displayName": "Tinta Lavada (noche)",
+        "theme": "oscuro"
+      },
+      "etiqueta-noche": {
+        "role": "neutral",
+        "displayName": "Gris Etiqueta (noche)",
+        "theme": "oscuro"
+      },
+      "apagado-noche": {
+        "role": "neutral",
+        "displayName": "Gris Apagado (noche)",
+        "theme": "oscuro"
+      },
+      "borde-noche": {
+        "role": "neutral",
+        "displayName": "Filo (noche)",
+        "theme": "oscuro"
+      },
+      "acento-noche": {
+        "role": "primary",
+        "displayName": "Turquesa del Logo (noche)",
+        "theme": "oscuro"
+      },
+      "acento-fuerte-noche": {
+        "role": "primary",
+        "displayName": "Turquesa Hondo (noche)",
+        "theme": "oscuro"
+      },
+      "acento-suave-noche": {
+        "role": "primary",
+        "displayName": "Turquesa Agua Clara (noche)",
+        "theme": "oscuro"
+      },
+      "ok-noche": {
+        "role": "tertiary",
+        "displayName": "Verde Bien (noche)",
+        "theme": "oscuro"
+      },
+      "agua-noche": {
+        "role": "secondary",
+        "displayName": "Azul Riego (noche)",
+        "theme": "oscuro"
+      },
+      "alerta-noche": {
+        "role": "tertiary",
+        "displayName": "Ámbar Ojo (noche)",
+        "theme": "oscuro"
+      },
+      "peligro-noche": {
+        "role": "tertiary",
+        "displayName": "Rojo Peligro (noche)",
+        "theme": "oscuro"
+      },
+      "sobre-estado-noche": {
+        "role": "neutral",
+        "displayName": "Sobre Estado (noche)",
+        "theme": "oscuro"
+      },
+      "franja-demo-fondo-noche": {
+        "role": "neutral",
+        "displayName": "Marino de la Franja (noche)",
+        "theme": "oscuro"
+      },
+      "bisel-telefono-noche": {
+        "role": "neutral",
+        "displayName": "Bisel (noche)",
+        "theme": "oscuro"
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "Solo el H1 del panel de la vista de presentación (demostración)."
+      },
+      "headline": {
+        "displayName": "Título de pantalla",
+        "purpose": "Uno por pantalla."
+      },
+      "title": {
+        "displayName": "Título de bloque",
+        "purpose": "Encabezado de tarjeta o bloque."
+      },
+      "body": {
+        "displayName": "Texto",
+        "purpose": "Texto corrido; 16 px de base para leer bajo el sol."
+      },
+      "label": {
+        "displayName": "Etiqueta",
+        "purpose": "La etiqueta chiquita encima de un dato, sin mayúsculas."
+      },
+      "dato": {
+        "displayName": "Dato",
+        "purpose": "Cifras de tarjeta, tabulares."
+      },
+      "dato-grande": {
+        "displayName": "Dato grande",
+        "purpose": "La cifra protagonista de una pantalla."
+      },
+      "op-texto": {
+        "displayName": "Operación: texto",
+        "purpose": "Base densa, solo bajo el contenedor de Operación."
+      },
+      "op-etiqueta": {
+        "displayName": "Operación: etiqueta",
+        "purpose": "Encabezados de tabla, KPI y sección en mayúsculas, solo en Operación."
+      },
+      "op-mono": {
+        "displayName": "Operación: mono",
+        "purpose": "Códigos, sellos de tiempo y ejes de gráfica en Operación."
+      }
+    },
+    "shadows": [
+      {
+        "name": "sombra-tarjeta",
+        "value": "0 1px 2px rgba(19, 40, 61, .04), 0 2px 10px rgba(19, 40, 61, .04)",
+        "valueDark": "0 1px 2px rgba(0, 0, 0, .25)",
+        "purpose": "Toda tarjeta."
+      },
+      {
+        "name": "sombra-boton",
+        "value": "0 1px 2px rgba(19, 40, 61, .06)",
+        "valueDark": "0 1px 2px rgba(0, 0, 0, .25)",
+        "purpose": "Botón secundario."
+      },
+      {
+        "name": "sombra-acento",
+        "value": "0 2px 8px rgba(11, 115, 147, .22)",
+        "valueDark": "0 2px 10px rgba(78, 193, 223, .22)",
+        "purpose": "Halo del botón primario."
+      },
+      {
+        "name": "sombra-elevada",
+        "value": "0 12px 40px rgba(19, 40, 61, .18)",
+        "valueDark": "0 14px 44px rgba(0, 0, 0, .5)",
+        "purpose": "Hojas, paneles y ventanas que flotan sobre la pantalla."
+      },
+      {
+        "name": "segmento-elegido",
+        "value": "0 1px 3px rgba(19, 40, 61, .12)",
+        "purpose": "Opción levantada en el control segmentado."
+      },
+      {
+        "name": "bisel-telefono",
+        "value": "inset 0 1px 0 rgba(255, 255, 255, .08), 0 12px 24px -12px rgba(19, 40, 61, .35), 0 40px 80px -24px rgba(19, 40, 61, .45)",
+        "valueDark": "0 0 0 1px #27394c, 0 40px 80px -24px rgba(0, 0, 0, .7)",
+        "purpose": "Solo el celular de la vista de presentación."
+      },
+      {
+        "name": "velo-hoja",
+        "value": "rgba(19, 40, 61, .42)",
+        "purpose": "Fondo detrás de la hoja \"Pruébalo\"."
+      }
+    ],
+    "motion": [
+      {
+        "name": "curva",
+        "value": "cubic-bezier(.2, .6, .35, 1)",
+        "purpose": "Curva única de toda transición y entrada."
+      },
+      {
+        "name": "rapido",
+        "value": "120ms",
+        "purpose": "Hover, presión y cambios de color de controles."
+      },
+      {
+        "name": "normal",
+        "value": "200ms",
+        "purpose": "Entrada de pantalla, velo, píldora de la pestaña."
+      },
+      {
+        "name": "lento",
+        "value": "340ms",
+        "purpose": "Aparición escalonada y subida de la hoja."
+      },
+      {
+        "name": "subir-telefono",
+        "value": "600ms",
+        "purpose": "Entrada del celular en la presentación."
+      },
+      {
+        "name": "pulso-riego",
+        "value": "1.6s ease-in-out infinite",
+        "purpose": "Late solo el punto de la cápsula mientras riega."
+      },
+      {
+        "name": "onda-agua",
+        "value": "1.9s linear infinite",
+        "purpose": "Franjas que corren en la banda de riego de la vista 3D."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "0.01ms",
+        "purpose": "Con prefers-reduced-motion toda animación y transición se anula."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px",
+        "purpose": "Relleno de tarjeta a 22 px; Operación compacta por debajo."
+      },
+      {
+        "name": "md",
+        "value": "768px",
+        "purpose": "Escena 3D a 380 px de alto."
+      },
+      {
+        "name": "franja-sin-icono",
+        "value": "max-width 399px",
+        "purpose": "La franja demo pierde su ícono."
+      },
+      {
+        "name": "franja-sin-frase",
+        "value": "max-width 384px",
+        "purpose": "La franja demo pierde su frase secundaria."
+      },
+      {
+        "name": "presentacion",
+        "value": "1024px",
+        "purpose": "Desde aquí la demostración se enseña dentro del celular."
+      },
+      {
+        "name": "presentacion-ancha",
+        "value": "1280px",
+        "purpose": "Tres columnas: panel, celular y QR de 220 px."
+      },
+      {
+        "name": "presentacion-baja",
+        "value": "max-height 800px",
+        "purpose": "Encoge rellenos y el H1 de la presentación."
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botón primario",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "La única acción turquesa de un bloque (\"Que el sistema decida\").",
+      "html": "<button class=\"ds-boton-primario\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 8V4H8\"/><rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\"/><path d=\"M2 14h2M20 14h2M15 13v2M9 13v2\"/></svg>Que el sistema decida</button>",
+      "css": ".ds-boton-primario{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:var(--radio-sm,14px);border:1px solid transparent;font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background-color 120ms cubic-bezier(.2,.6,.35,1),border-color 120ms cubic-bezier(.2,.6,.35,1),box-shadow 120ms cubic-bezier(.2,.6,.35,1),transform 120ms cubic-bezier(.2,.6,.35,1);background:var(--acento,#0b7393);color:var(--sobre-estado,#fff);box-shadow:var(--sombra-acento,0 2px 8px rgba(11,115,147,.22));}.ds-boton-primario:hover{background:var(--acento-fuerte,#075b75);}.ds-boton-primario:active{transform:scale(.98);}.ds-boton-primario:focus-visible{outline:2px solid var(--acento,#0b7393);outline-offset:2px;}"
+    },
+    {
+      "name": "Botón secundario",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Acción alternativa: blanco con filo (\"Regar ahora\", \"Mejor no\").",
+      "html": "<button class=\"ds-boton-secundario\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z\"/></svg>Regar ahora</button>",
+      "css": ".ds-boton-secundario{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:var(--radio-sm,14px);border:1px solid transparent;font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background-color 120ms cubic-bezier(.2,.6,.35,1),border-color 120ms cubic-bezier(.2,.6,.35,1),box-shadow 120ms cubic-bezier(.2,.6,.35,1),transform 120ms cubic-bezier(.2,.6,.35,1);background:var(--tarjeta,#fff);border-color:var(--borde,#e5e1d8);color:var(--tinta,#13283d);box-shadow:var(--sombra-boton,0 1px 2px rgba(19,40,61,.06));}.ds-boton-secundario:hover{background:var(--cristal-suave,#f9f8f5);}.ds-boton-secundario:active{transform:scale(.98);}.ds-boton-secundario:focus-visible{outline:2px solid var(--acento,#0b7393);outline-offset:2px;}"
+    },
+    {
+      "name": "Botón sutil",
+      "kind": "button",
+      "refersTo": "button-subtle",
+      "description": "Acción de bajo peso (\"Ver más detalles\", \"Empezar de nuevo\").",
+      "html": "<button class=\"ds-boton-sutil\">Ver más detalles</button>",
+      "css": ".ds-boton-sutil{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 18px;border-radius:var(--radio-sm,14px);border:1px solid transparent;font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:1rem;font-weight:700;cursor:pointer;transition:background-color 120ms cubic-bezier(.2,.6,.35,1),border-color 120ms cubic-bezier(.2,.6,.35,1),box-shadow 120ms cubic-bezier(.2,.6,.35,1),transform 120ms cubic-bezier(.2,.6,.35,1);min-height:40px;padding:0 10px;font-weight:650;background:transparent;color:var(--tinta-suave,#4a5a6a);}.ds-boton-sutil:hover{background:var(--pista,#eeebe4);color:var(--tinta,#13283d);}.ds-boton-sutil:focus-visible{outline:2px solid var(--acento,#0b7393);outline-offset:2px;}"
+    },
+    {
+      "name": "Campo",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "Campo de texto de 48 px con foco turquesa.",
+      "html": "<input class=\"ds-campo\" placeholder=\"Nombre del cultivo\">",
+      "css": ".ds-campo{width:100%;min-height:48px;padding:10px 14px;background:var(--tarjeta,#fff);color:var(--tinta,#13283d);border:1px solid var(--borde,#e5e1d8);border-radius:var(--radio-sm,14px);font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:1rem;transition:border-color 120ms cubic-bezier(.2,.6,.35,1),box-shadow 120ms cubic-bezier(.2,.6,.35,1);}.ds-campo::placeholder{color:var(--apagado,#5c6977);}.ds-campo:focus,.ds-campo:focus-visible{outline:none;border-color:var(--acento,#0b7393);box-shadow:0 0 0 3px var(--acento-suave,#e3f1f6);}"
+    },
+    {
+      "name": "Cápsula de estado",
+      "kind": "chip",
+      "refersTo": "capsule",
+      "description": "Estado teñido con punto; el color sale de --c (ok, agua, alerta, peligro).",
+      "html": "<span class=\"ds-capsula\" style=\"--c:var(--ok,#26794a)\">Tu tierra está bien</span> <span class=\"ds-capsula\" style=\"--c:var(--agua,#2f6fd6)\">Regando</span> <span class=\"ds-capsula\" style=\"--c:var(--alerta,#a35c00)\">Falta agua</span>",
+      "css": ".ds-capsula{--c:var(--ok,#26794a);display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--c) 13%,var(--tarjeta,#fff));border:1px solid color-mix(in srgb,var(--c) 28%,transparent);color:var(--c);font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:.875rem;font-weight:700;line-height:1.2;white-space:nowrap;}.ds-capsula::before{content:\"\";width:8px;height:8px;border-radius:50%;background:currentColor;flex-shrink:0;}"
+    },
+    {
+      "name": "Pastilla de selección",
+      "kind": "chip",
+      "refersTo": "pill",
+      "description": "Opción entre varias; la elegida se tiñe de turquesa, no se rellena.",
+      "html": "<button class=\"ds-pastilla\" aria-pressed=\"true\">Tomate</button> <button class=\"ds-pastilla\" aria-pressed=\"false\">Chile</button>",
+      "css": ".ds-pastilla{display:inline-flex;align-items:center;gap:6px;min-height:42px;padding:0 16px;border-radius:999px;border:1px solid var(--borde,#e5e1d8);background:var(--tarjeta,#fff);color:var(--tinta,#13283d);font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:.95rem;font-weight:650;cursor:pointer;transition:background-color 120ms cubic-bezier(.2,.6,.35,1),border-color 120ms cubic-bezier(.2,.6,.35,1),color 120ms cubic-bezier(.2,.6,.35,1);}.ds-pastilla[aria-pressed=\"true\"]{background:var(--acento-suave,#e3f1f6);border-color:var(--acento,#0b7393);color:var(--acento-fuerte,#075b75);}.ds-pastilla[aria-pressed=\"false\"]:hover{background:var(--cristal-suave,#f9f8f5);}.ds-pastilla:focus-visible{outline:2px solid var(--acento,#0b7393);outline-offset:2px;}"
+    },
+    {
+      "name": "Tarjeta-lista de acciones",
+      "kind": "card",
+      "refersTo": "list-row",
+      "description": "Tarjeta blanca de 20 px con renglones de 64 px, círculo de ícono turquesa y raya metida; el renglón en curso se tiñe de azul.",
+      "html": "<nav class=\"ds-tarjeta-lista\"><a class=\"ds-renglon\" href=\"#\"><span class=\"ds-icono-redondo\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z\"/><circle cx=\"12\" cy=\"13\" r=\"3\"/></svg></span><span class=\"ds-renglon-texto\"><span class=\"ds-renglon-titulo\">Revisar una planta</span><span class=\"ds-renglon-detalle\">Tómale una foto y te digo qué puede tener</span></span><span class=\"ds-chevron\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"m9 18 6-6-6-6\"/></svg></span></a><span class=\"ds-raya\"></span><button class=\"ds-renglon\" data-en-curso=\"si\"><span class=\"ds-icono-redondo\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5.5s-3.5-4-4-6.5c-.5 2.5-2 4.9-4 6.5C6 11.1 5 13 5 15a7 7 0 0 0 7 7z\"/></svg></span><span class=\"ds-renglon-texto\"><span class=\"ds-renglon-titulo\">Secar la tierra</span><span class=\"ds-renglon-detalle\">Mira cómo riega solo</span></span><span class=\"ds-capsula-agua\">Regando</span></button></nav>",
+      "css": ".ds-tarjeta-lista{display:flex;flex-direction:column;padding:6px;max-width:420px;background:var(--tarjeta,#fff);border:1px solid var(--borde,#e5e1d8);border-radius:var(--radio,20px);box-shadow:var(--sombra-tarjeta,0 1px 2px rgba(19,40,61,.04),0 2px 10px rgba(19,40,61,.04));font-family:\"Figtree Variable\",system-ui,sans-serif;}.ds-renglon{display:flex;align-items:center;gap:16px;width:100%;min-height:64px;padding:12px;border:0;border-radius:14px;background:transparent;color:var(--tinta,#13283d);text-decoration:none;text-align:left;font:inherit;cursor:pointer;transition:background-color 120ms cubic-bezier(.2,.6,.35,1);}.ds-renglon:hover{background:var(--cristal-suave,#f9f8f5);}.ds-renglon[data-en-curso],.ds-renglon[data-en-curso]:hover{background:var(--agua-suave,#e7effb);}.ds-renglon[data-en-curso] .ds-icono-redondo{background:var(--tarjeta,#fff);color:var(--agua,#2f6fd6);}.ds-renglon:focus-visible{outline:2px solid var(--acento,#0b7393);outline-offset:2px;}.ds-icono-redondo{display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;width:40px;height:40px;border-radius:50%;background:var(--acento-suave,#e3f1f6);color:var(--acento,#0b7393);}.ds-renglon-texto{flex:1;min-width:0;display:flex;flex-direction:column;}.ds-renglon-titulo{font-size:16px;font-weight:600;line-height:1.25;}.ds-renglon-detalle{font-size:14px;color:var(--apagado,#5c6977);}.ds-chevron{display:inline-flex;color:var(--apagado,#5c6977);}.ds-raya{display:block;height:1px;margin:0 12px;background:var(--borde,#e5e1d8);}.ds-capsula-agua{--c:var(--agua,#2f6fd6);display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;background:color-mix(in srgb,var(--c) 13%,var(--tarjeta,#fff));border:1px solid color-mix(in srgb,var(--c) 28%,transparent);color:color-mix(in srgb,var(--c) 75%,var(--tinta,#13283d));font-size:.875rem;font-weight:700;white-space:nowrap;}.ds-capsula-agua::before{content:\"\";width:8px;height:8px;border-radius:50%;background:var(--c);}"
+    },
+    {
+      "name": "Franja de estado",
+      "kind": "custom",
+      "refersTo": "status-strip",
+      "description": "Aviso teñido dentro de una tarjeta (helada, lluvia, narración en vivo).",
+      "html": "<p class=\"ds-franja-estado\" style=\"--c:var(--alerta,#a35c00)\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M2 12h20M12 2v20M4.9 4.9l14.2 14.2M19.1 4.9 4.9 19.1\"/></svg>Posible helada el jueves en la madrugada.</p>",
+      "css": ".ds-franja-estado{--c:var(--alerta,#a35c00);display:flex;align-items:flex-start;gap:10px;max-width:420px;margin:0;padding:11px 14px;border-radius:14px;background:color-mix(in srgb,var(--c) 12%,var(--tarjeta,#fff));border:1px solid color-mix(in srgb,var(--c) 25%,transparent);color:var(--tinta,#13283d);font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:.925rem;font-weight:600;line-height:1.45;}.ds-franja-estado>svg{color:var(--c);flex-shrink:0;margin-top:1px;}"
+    },
+    {
+      "name": "Barra de navegación inferior",
+      "kind": "nav",
+      "refersTo": "nav-tab-active",
+      "description": "Barra fija blanca; la pestaña elegida mete su ícono en una píldora teñida.",
+      "html": "<nav class=\"ds-nav\"><a class=\"ds-nav-tab\" aria-current=\"page\" href=\"#\"><span class=\"ds-nav-pildora\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8\"/><path d=\"M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z\"/></svg></span>Inicio</a><a class=\"ds-nav-tab\" href=\"#\"><span class=\"ds-nav-pildora\"><svg width=\"20\" height=\"20\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" aria-hidden=\"true\"><path d=\"M7 20h10\"/><path d=\"M10 20c5.5-2.5.8-6.4 3-10\"/><path d=\"M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z\"/><path d=\"M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.3 1.7-4.6-2.7.1-4 1-4.9 2z\"/></svg></span>Cultivo</a></nav>",
+      "css": ".ds-nav{display:flex;max-width:420px;background:var(--tarjeta,#fff);border-top:1px solid var(--borde,#e5e1d8);font-family:\"Figtree Variable\",system-ui,sans-serif;}.ds-nav-tab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-height:64px;padding:8px 0 6px;font-size:12.5px;font-weight:550;color:var(--tinta-suave,#4a5a6a);text-decoration:none;}.ds-nav-pildora{display:flex;align-items:center;justify-content:center;width:56px;height:30px;border-radius:999px;transition:background-color 200ms cubic-bezier(.2,.6,.35,1);}.ds-nav-tab[aria-current=\"page\"]{color:var(--acento-fuerte,#075b75);font-weight:750;}.ds-nav-tab[aria-current=\"page\"] .ds-nav-pildora{background:var(--acento-suave,#e3f1f6);}.ds-nav-tab:not([aria-current]):hover{color:var(--tinta,#13283d);}.ds-nav-tab:focus-visible{outline:2px solid var(--acento,#0b7393);outline-offset:2px;}"
+    },
+    {
+      "name": "Franja de demostración",
+      "kind": "custom",
+      "refersTo": "demo-banner",
+      "description": "Solo en la demostración pública: banda marina de 44 px con la píldora \"Pruébalo\" invertida.",
+      "html": "<div class=\"ds-franja-demo\"><span><strong>Demostración</strong><span class=\"ds-franja-demo-suave\"> con datos de ejemplo</span></span><button class=\"ds-franja-demo-boton\"><svg width=\"13\" height=\"13\" viewBox=\"0 0 24 24\" fill=\"currentColor\" aria-hidden=\"true\"><polygon points=\"6 3 20 12 6 21 6 3\"/></svg>Pruébalo</button></div>",
+      "css": ".ds-franja-demo{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px;padding:0 16px;background:#13283d;color:#f6f4ef;font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:13.5px;}.ds-franja-demo-suave{opacity:.8;}.ds-franja-demo-boton{display:inline-flex;align-items:center;gap:6px;flex-shrink:0;min-height:32px;padding:0 14px;border:0;border-radius:999px;background:#f6f4ef;color:#13283d;font-family:\"Figtree Variable\",system-ui,sans-serif;font-size:13.5px;font-weight:750;cursor:pointer;transition:transform 120ms cubic-bezier(.2,.6,.35,1),background-color 120ms cubic-bezier(.2,.6,.35,1);}.ds-franja-demo-boton:hover{background:#ffffff;}.ds-franja-demo-boton:active{transform:scale(.97);}.ds-franja-demo-boton:focus-visible{outline:2px solid #f6f4ef;outline-offset:2px;}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Papel y tinta en el campo",
+    "overview": "IonDroplet se ve como una libreta limpia que alguien del campo lleva en la mano: fondo crema liso, tarjetas blancas con un filo fino y tinta azul marino. Nada compite por la atención salvo dos cosas: el estado del cultivo (dicho con un color que significa algo) y la única acción turquesa que el agricultor puede necesitar. Es un sistema pensado para un celular de gama media, a pleno sol, en manos de alguien de 45 a 50 años: letra base de 16 px, blancos táctiles de 44 a 64 px y contraste alto en los dos temas.\n\nEl sistema \"calma\" reemplazó al vidrio líquido anterior: sin degradados ni desenfoque detrás del texto, sin bloques sólidos de color para los estados. Los colores salen del póster de IonDroplet (crema, marino, turquesa). El verde dejó de ser decoración y quedó solo para decir \"está bien\". El modo noche es un azul marino profundo, no negro, con los estados subidos de luz.\n\nLa demostración pública (Vercel) es una extensión del mismo mundo, no otro: agrega solo marino sólido, en la franja de arriba y en el bisel del celular de la vista de presentación, porque eso es \"del sitio\" y no de la app. La consola densa de Operación (`/operacion`) es un subsistema aparte, encerrado bajo su propio contenedor, con reglas propias de densidad.",
+    "keyCharacteristics": [
+      "Fondo crema plano, tarjetas blancas separadas por filo (1 px) y una sombra casi imperceptible.",
+      "Un solo color de acción (turquesa) para botones, selección, íconos de sección y el asistente.",
+      "Los estados (ok, agua, ojo, peligro) solo informan, siempre teñidos: fondo claro, filo del mismo color, letra fuerte.",
+      "Tres radios: 14, 20 y píldora.",
+      "Figtree variable en un solo tipo; jerarquía por peso (550 a 800) y tracking negativo en los tamaños grandes.",
+      "Claro y oscuro con los mismos nombres de token; movimiento discreto que respeta `prefers-reduced-motion`."
+    ],
+    "rules": [
+      {
+        "name": "The One Teal Rule",
+        "body": "El turquesa es el único color de acción. Si algo se toca para hacer algo o está elegido, va en turquesa; si no, no lleva turquesa.",
+        "section": "colors"
+      },
+      {
+        "name": "The Color Means Something Rule",
+        "body": "Verde, azul, ámbar y rojo solo dicen un estado (bien, regando, ojo, peligro). Un ícono o un fondo nunca toman un color de estado por adorno.",
+        "section": "colors"
+      },
+      {
+        "name": "The Tint Not Block Rule",
+        "body": "Un estado se pinta teñido: fondo al 12-13 % del color sobre la tarjeta, filo al 25-28 %, letra o ícono en el color pleno. El relleno sólido de estado queda solo para un botón de acción confirmada (\"Detener riego\", \"Sí, regar\") y para el contador de avisos.",
+        "section": "colors"
+      },
+      {
+        "name": "The Navy Belongs To The Site Rule",
+        "body": "El marino sólido es del sitio de demostración (franja y bisel), en los dos temas; ninguna tarjeta, aviso ni botón de la app usa marino de fondo.",
+        "section": "colors"
+      },
+      {
+        "name": "The One Title Rule",
+        "body": "Una pantalla, un título de pantalla. Lo demás son títulos de bloque.",
+        "section": "typography"
+      },
+      {
+        "name": "The Quiet Label Rule",
+        "body": "En la app \"calma\" las etiquetas van en minúscula y sentence case. Las mayúsculas espaciadas existen solo dentro de la consola de Operación.",
+        "section": "typography"
+      },
+      {
+        "name": "The Tabular Numbers Rule",
+        "body": "Toda cifra que cambia en vivo (humedad, KPIs, la franja que narra) usa cifras tabulares para no bailar.",
+        "section": "typography"
+      },
+      {
+        "name": "The Edge Separates Rule",
+        "body": "Dos superficies se distinguen por el filo, no por la sombra. Si un elemento necesita sombra para verse, primero revisa el filo.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Only Floating Things Lift Rule",
+        "body": "La sombra elevada es para lo que tapa la pantalla (hoja, panel, ventana, el celular). Una tarjeta en el flujo nunca la usa.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Three Radii Rule",
+        "body": "14, 20 y píldora. Un radio nuevo solo se justifica si dibuja un objeto real (el celular, la hoja).",
+        "section": "shapes"
+      }
+    ],
+    "dos": [
+      "**Do** usar el turquesa (`acento`) para lo único que se toca para actuar o lo que está elegido, y en ningún otro lugar.",
+      "**Do** pintar todo estado teñido: fondo al 12-13 % del color, filo al 25-28 %, letra o ícono en el color pleno, con el color pasado por la variable `--c`.",
+      "**Do** separar superficies con el filo de 1 px (`borde`) y dejar la sombra elevada para lo que flota sobre la pantalla.",
+      "**Do** mantener los blancos táctiles en 44 px como mínimo, 48 px en botones y campos, 64 px en renglones.",
+      "**Do** usar 14 px para controles, 20 px para tarjetas y píldora para chips; nada más sin un objeto real que lo pida.",
+      "**Do** decir de dónde viene cada cifra (medido, calculado, pronosticado, registrado, falta) con la píldora de procedencia, y marcar lo que falta con filo punteado.",
+      "**Do** dar a cada valor de color su par de modo noche con el mismo nombre de token, en `prefers-color-scheme` y en `[data-tema=\"oscuro\"]`.",
+      "**Do** usar cifras tabulares en todo número que cambia en vivo.",
+      "**Do** ofrecer las acciones como renglones dentro de una sola tarjeta-lista con círculo de ícono, no como cuadros iguales en rejilla."
+    ],
+    "donts": [
+      "**Don't** usar verde, azul, ámbar o rojo como adorno: solo dicen bien, regando, ojo o peligro.",
+      "**Don't** pintar un estado como bloque sólido; el relleno sólido de estado es solo para un botón de acción confirmada y el contador de avisos.",
+      "**Don't** poner degradados ni desenfoque detrás del texto; los únicos degradados son señales de movimiento (la banda de riego y el brillo del esqueleto de carga).",
+      "**Don't** usar marino sólido de fondo dentro de la app: es de la franja de demostración y del bisel del celular.",
+      "**Don't** escribir etiquetas en mayúsculas espaciadas fuera de la consola de Operación.",
+      "**Don't** usar más de un título de pantalla por pantalla.",
+      "**Don't** dejar que el subsistema de Operación (su densidad de 13.5 px, mayúsculas y monoespaciada) se filtre fuera de su contenedor."
+    ]
+  }
+}

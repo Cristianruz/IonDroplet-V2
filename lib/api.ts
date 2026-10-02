@@ -1,5 +1,6 @@
 import { leerSesion, olvidarSesion, pedirSesion } from './sesion'
 import { leerLlave, pedirVinculo } from './dueno'
+import { MODO_DEMO } from './modo'
 
 // Dónde vive el backend.
 //
@@ -31,6 +32,11 @@ export const API_URL = resolverApi()
  * ningún archivo llame a fetch contra la API por fuera de esta función.
  */
 export async function apiFetch(ruta: string, init: RequestInit = {}): Promise<Response> {
+  // La demostración pública no sale a la red: contesta el sistema simulado.
+  if (MODO_DEMO) {
+    const { fetchDemo } = await import('./demo')
+    return fetchDemo(ruta, init)
+  }
   const sesion = leerSesion()
   const cabeceras = new Headers(init.headers)
   if (sesion) cabeceras.set('Authorization', `Bearer ${sesion.token}`)

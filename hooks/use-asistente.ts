@@ -58,8 +58,10 @@ export function useAsistente() {
   // abrirse: si no, pisaría lo que se platicó en la pantalla del asistente.
   const recargar = useCallback(() => {
     const guardadas = leerGuardadas()
-    setBurbujas(guardadas)
-    siguienteId.current = guardadas.reduce((m, b) => Math.max(m, b.id), 0) + 1
+    // Si lo guardado está vacío pero ya hay plática en pantalla (una pregunta
+    // que llegó en la dirección, ?pregunta=), se queda la de pantalla.
+    setBurbujas(prev => (guardadas.length === 0 && prev.length > 0 ? prev : guardadas))
+    siguienteId.current = Math.max(siguienteId.current, guardadas.reduce((m, b) => Math.max(m, b.id), 0) + 1)
     cargada.current = true
   }, [])
   useEffect(recargar, [recargar])

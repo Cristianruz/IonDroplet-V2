@@ -40,8 +40,8 @@ export default function PantallaAjustes() {
   }, [])
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      <h1 className="text-xl font-bold leading-tight">Ajustes</h1>
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
+      <h1 className="titulo-pantalla">Ajustes</h1>
 
       {/* Ajustes es del agricultor: aquí va solo lo que él usa. Lo técnico
           (panel de operación, llave de la IA) vive plegado al final. */}
@@ -100,7 +100,7 @@ export default function PantallaAjustes() {
       >
         <span className="flex items-center gap-3">
           <BookOpen size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
-          Ver la guía de inicio
+          Ver la bienvenida y la guía rápida
         </span>
         <ChevronRight size={18} style={{ color: 'var(--tinta-suave)' }} aria-hidden />
       </button>
@@ -151,7 +151,7 @@ export default function PantallaAjustes() {
               teléfono de quien viene a ver el sistema no puede gastar créditos. */}
           <section className="flex flex-col gap-3" aria-label="Llave del dueño">
             <h2 className="text-base font-semibold flex items-center gap-2">
-              <Sparkles size={17} style={{ color: 'var(--verde)' }} aria-hidden />
+              <Sparkles size={17} style={{ color: 'var(--acento)' }} aria-hidden />
               Llave del dueño
             </h2>
 

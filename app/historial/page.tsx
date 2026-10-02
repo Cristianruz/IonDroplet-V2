@@ -8,12 +8,12 @@ import { useHistorial, RANGOS, type RangoHistorial } from '@/hooks/use-historial
 import { useRegistro } from '@/hooks/use-registro'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { duracionLarga } from '@/lib/tiempo'
-import { Aparece } from '@/components/ui/aparece'
 import { ConsejoIA } from '@/components/ia/consejo-ia'
 import { EsqueletoGrafica, EsqueletoCifras, EsqueletoLista } from '@/components/ui/esqueletos'
 
 export default function PantallaHistorial() {
-  const [rango, setRango] = useState<RangoHistorial>('hoy')
+  // Siete días de entrada: en un día casi no se ve el ir y venir del riego.
+  const [rango, setRango] = useState<RangoHistorial>('7dias')
   const { puntos, totalLecturas, promedio, resumen, cargando, conectado, horas } = useHistorial(rango)
   const { estadoEsp } = useIonDroplet({ conHistorial: false })
   const registro = useRegistro(horas)
@@ -28,28 +28,18 @@ export default function PantallaHistorial() {
   const etiquetaRango = RANGOS.find(r => r.id === rango)?.etiqueta ?? 'Hoy'
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      <h1 className="text-xl font-bold leading-tight">Historial</h1>
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
+      <h1 className="titulo-pantalla">Historial</h1>
 
       <ConsejoIA pantalla="historial" />
 
-      {/* Hoy / 7 días / 30 días */}
-      <div className="grid grid-cols-3 gap-3" role="group" aria-label="Qué tanto tiempo ver">
-        {RANGOS.map(({ id, etiqueta }) => {
-          const activo = rango === id
-          return (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setRango(id)}
-              className="opcion text-[13.5px]"
-              style={{ minHeight: 44 }}
-              aria-pressed={activo}
-            >
-              {etiqueta}
-            </button>
-          )
-        })}
+      {/* Hoy / 7 días / 30 días: el mismo selector que en Cultivo. */}
+      <div className="segmentado" role="group" aria-label="Qué tanto tiempo ver">
+        {RANGOS.map(({ id, etiqueta }) => (
+          <button key={id} type="button" onClick={() => setRango(id)} aria-pressed={rango === id}>
+            {etiqueta}
+          </button>
+        ))}
       </div>
 
       {cargando ? (
@@ -60,54 +50,37 @@ export default function PantallaHistorial() {
         </>
       ) : (
         <>
-          <Aparece><GraficaHumedad
+          <GraficaHumedad
             historial={puntos}
             titulo={`Humedad de la tierra · ${etiquetaRango.toLowerCase()}`}
             altura={320}
             riegos={registro.riegos}
-          /></Aparece>
+          />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <Cifra
-              valor={promedio !== null ? `${Math.round(promedio)}%` : null}
-              etiqueta="de humedad en promedio"
-              nota={
-                totalLecturas > 0
-                  ? `Sacado de ${totalLecturas.toLocaleString('es-MX')} mediciones`
-                  : 'Todavía no hay mediciones en este tiempo'
-              }
-            />
-            <Cifra
-              valor={resumen ? String(resumen.riegos) : null}
-              etiqueta={resumen && resumen.riegos === 1 ? 'riego' : 'riegos'}
-              nota={
-                !resumen
-                  ? 'No se pudo leer el registro'
-                  : resumen.riegos === 0
-                    ? 'No se ha regado en este tiempo'
-                    : 'Contados desde que quedó listo el registro'
-              }
-            />
-            <Cifra
-              valor={resumen ? duracionLarga(resumen.segundos_agua) : null}
-              etiqueta="de agua"
-              nota={
-                !resumen
-                  ? 'No se pudo leer el registro'
-                  : resumen.sin_duracion > 0
-                    ? `Falta el tiempo de ${resumen.sin_duracion} ${resumen.sin_duracion === 1 ? 'riego que quedó' : 'riegos que quedaron'} sin cerrar`
-                    : 'Sumando lo que duró cada riego'
-              }
-            />
-          </div>
+          {/* Las tres cifras del periodo, juntas en una tarjeta. */}
+          <section className="tarjeta flex flex-col gap-3" aria-label={`Resumen de ${etiquetaRango.toLowerCase()}`}>
+            <dl className="grid grid-cols-3 gap-3">
+              <Cifra valor={promedio !== null ? `${Math.round(promedio)}%` : null} etiqueta="humedad promedio" />
+              <Cifra valor={resumen ? String(resumen.riegos) : null} etiqueta={resumen && resumen.riegos === 1 ? 'riego' : 'riegos'} />
+              <Cifra valor={resumen ? duracionLarga(resumen.segundos_agua) : null} etiqueta="de agua" />
+            </dl>
+            <p className="text-sm texto-apagado">
+              {totalLecturas > 0
+                ? `Sacado de ${totalLecturas.toLocaleString('es-MX')} mediciones del sensor.`
+                : 'Todavía no hay mediciones en este tiempo.'}
+              {resumen && resumen.sin_duracion > 0 &&
+                ` Falta el tiempo de ${resumen.sin_duracion} ${resumen.sin_duracion === 1 ? 'riego que quedó' : 'riegos que quedaron'} sin cerrar.`}
+              {!resumen && ' No se pudo leer el registro de riegos.'}
+            </p>
+          </section>
 
-          <Aparece retraso={60}><RegistroAcciones
+          <RegistroAcciones
             acciones={registro.acciones}
             hayMas={registro.hayMas}
             cargando={registro.cargando}
             onVerMas={registro.verMas}
             bombaEncendida={estadoEsp.pumpState === 1}
-          /></Aparece>
+          />
         </>
       )}
     </main>
@@ -115,24 +88,22 @@ export default function PantallaHistorial() {
 }
 
 // Un número que nadie ha medido todavía no se rellena: se dice que falta.
-function Cifra({ valor, etiqueta, nota }: { valor: string | null; etiqueta: string; nota: string }) {
+function Cifra({ valor, etiqueta }: { valor: string | null; etiqueta: string }) {
   return (
-    <section
-      className="tarjeta"
-      aria-label={etiqueta}
-    >
-      <p
-        className="font-bold leading-none"
+    <div className="flex flex-col gap-1">
+      <dd
+        className="font-bold leading-none m-0"
         style={{
           // Un valor largo ("menos de 1 min") no cabe al tamaño de un número.
-          fontSize: valor && valor.length > 7 ? 'clamp(1.25rem, 7vw, 1.75rem)' : 'clamp(2rem, 10vw, 2.5rem)',
-          color: valor ? 'var(--agua)' : 'var(--apagado)',
+          fontSize: valor && valor.length > 6 ? 18 : 28,
+          letterSpacing: '-.02em',
+          fontVariantNumeric: 'tabular-nums',
+          color: valor ? 'var(--tinta)' : 'var(--apagado)',
         }}
       >
-        {valor ?? '—'}
-      </p>
-      <p className="text-base font-semibold mt-2">{etiqueta}</p>
-      <p className="text-sm mt-1" style={{ color: 'var(--tinta-suave)' }}>{nota}</p>
-    </section>
+        {valor ?? '-'}
+      </dd>
+      <dt className="text-sm texto-suave order-last">{etiqueta}</dt>
+    </div>
   )
 }

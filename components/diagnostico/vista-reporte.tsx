@@ -59,7 +59,7 @@ function BarraProbabilidad({ h }: { h: Hipotesis }) {
               width: 18,
               height: 6,
               borderRadius: 3,
-              background: n <= nivel ? 'var(--verde)' : 'var(--pista)',
+              background: n <= nivel ? 'var(--acento)' : 'var(--pista)',
             }}
           />
         ))}
@@ -144,20 +144,20 @@ export function VistaReporte({ reporte: r, cultivoDeclarado, onAgregarFoto, onEm
           <p className="text-sm texto-suave">
             Planta que se ve: <strong>{r.plantaVista}</strong>
             {r.coincideConCultivo === 'no' && cultivoDeclarado && (
-              <> — no parece {cultivoDeclarado.toLowerCase()}. Revisa que la foto corresponda al cultivo seleccionado.</>
+              <>. No parece {cultivoDeclarado.toLowerCase()}: revisa que la foto corresponda al cultivo seleccionado.</>
             )}
           </p>
         )}
       </section>
 
       {r.observaciones.length > 0 && (
-        <Bloque titulo="Lo que se observa" icono={<Microscope size={18} aria-hidden style={{ color: 'var(--verde)' }} />}>
+        <Bloque titulo="Lo que se observa" icono={<Microscope size={18} aria-hidden style={{ color: 'var(--acento)' }} />}>
           <Lista elementos={r.observaciones} />
         </Bloque>
       )}
 
       {r.hipotesis.length > 0 && (
-        <Bloque titulo="Posibles causas" icono={<Stethoscope size={18} aria-hidden style={{ color: 'var(--verde)' }} />}>
+        <Bloque titulo="Posibles causas" icono={<Stethoscope size={18} aria-hidden style={{ color: 'var(--acento)' }} />}>
           <div className="flex flex-col gap-3">
             {r.hipotesis.map((h, i) => (
               <TarjetaHipotesis key={`${h.nombre}-${i}`} h={h} orden={i + 1} />
@@ -167,7 +167,7 @@ export function VistaReporte({ reporte: r, cultivoDeclarado, onAgregarFoto, onEm
       )}
 
       {(r.accionesInmediatas.length > 0 || r.relacionConElRiego || r.cuandoLlamarATecnico) && (
-        <Bloque titulo="Qué hacer" icono={<CheckCircle2 size={18} aria-hidden style={{ color: 'var(--verde)' }} />}>
+        <Bloque titulo="Qué hacer" icono={<CheckCircle2 size={18} aria-hidden style={{ color: 'var(--acento)' }} />}>
           {r.accionesInmediatas.length > 0 && <Lista elementos={r.accionesInmediatas} />}
           {r.relacionConElRiego && (
             <div>

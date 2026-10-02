@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { apiFetch, parseTimestampUTC } from '@/lib/api'
+import { EVENTO_REFRESCAR } from '@/lib/modo'
 
 // Las alertas las decide el servidor con reglas de código, no la IA: un aviso
 // de helada no puede depender de que el modelo esté disponible. Aquí sólo se
@@ -56,7 +57,11 @@ export function useResumenAlertas(intervaloMs = 60000) {
   useEffect(() => {
     cargar()
     const id = setInterval(cargar, intervaloMs)
-    return () => clearInterval(id)
+    window.addEventListener(EVENTO_REFRESCAR, cargar)
+    return () => {
+      clearInterval(id)
+      window.removeEventListener(EVENTO_REFRESCAR, cargar)
+    }
   }, [cargar, intervaloMs])
 
   return { resumen, recargar: cargar }

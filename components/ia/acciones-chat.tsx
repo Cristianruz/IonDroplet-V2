@@ -12,7 +12,7 @@ import { VincularAparato } from '@/components/ia/vincular-aparato'
 const BOTON: Record<AccionChat, { texto: string; hecho: string; Icono: typeof Droplet; color: string }> = {
   regar: { texto: 'Regar ahora', hecho: 'Riego iniciado.', Icono: Droplet, color: 'var(--agua)' },
   detener: { texto: 'Detener el riego', hecho: 'Riego detenido.', Icono: Square, color: 'var(--peligro)' },
-  automatico: { texto: 'Activar riego automático', hecho: 'Riego automático activado.', Icono: Bot, color: 'var(--verde)' },
+  automatico: { texto: 'Activar riego automático', hecho: 'Riego automático activado.', Icono: Bot, color: 'var(--acento)' },
   manual: { texto: 'Pasar a riego manual', hecho: 'Riego en manual: el sistema ya no riega solo.', Icono: Hand, color: 'var(--alerta)' },
 }
 

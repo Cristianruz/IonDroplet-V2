@@ -62,9 +62,11 @@ interface Props {
   onAgregar: () => void
   /** La lectura del asistente, debajo del título. */
   consejo?: ReactNode
+  /** Lo que va entre la escena y la ficha: lo que se usa más seguido. */
+  children?: ReactNode
 }
 
-export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: Props) {
+export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo, children }: Props) {
   const { humedad, sensorActivo, ultimaLectura, estadoEsp, conectado } = useIonDroplet({ conHistorial: false })
   const { clima } = useClima(parcela.id)
   const { series } = useComparar(24, 2)
@@ -141,7 +143,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
   }
 
   const etiquetaEtapa = !capturada
-    ? 'Etapa sin capturar — las plantas van en gris hasta que la registres'
+    ? 'Etapa sin capturar: las plantas van en gris hasta que la registres'
     : previsualizando
       ? `Así se vería en ${FASES[iVis].nombre.toLowerCase()}`
       : `Etapa: ${etapa!.nombre}`
@@ -152,7 +154,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
       ? 'Arrastra para ver cómo se verá en otra etapa. Al soltar regresa a la etapa registrada.'
       : 'Sin etapa capturada no puedo dibujar el cultivo: te lo enseño en gris, no lo invento.'
 
-  const colorVista = previsualizando ? 'var(--agua)' : capturada ? 'var(--verde)' : 'var(--apagado)'
+  const colorVista = previsualizando ? 'var(--agua)' : capturada ? 'var(--acento)' : 'var(--apagado)'
 
   // --- La ficha: cada dato dice de dónde salió.
   const litros =
@@ -219,11 +221,16 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
 
   return (
     <>
-      <div className="flex items-center justify-between gap-2.5">
-        <h1 className="titulo-pantalla">Cultivo</h1>
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="titulo-pantalla truncate">{parcela.nombre || 'Mi cultivo'}</h1>
+          <p className="text-[15px] texto-suave">
+            {[cultivo?.nombre ?? parcela.cultivo, superficie ? `${parcela.area_ha} ha` : null].filter(Boolean).join(' · ')}
+          </p>
+        </div>
         {conectado && (
-          <span className="flex items-center gap-1.5 text-[13px] font-semibold texto-suave" role="status">
-            <span className="punto" style={{ background: 'var(--verde)' }} aria-hidden />
+          <span className="flex items-center gap-1.5 text-[13px] font-semibold texto-suave mt-2 whitespace-nowrap" role="status">
+            <span className="punto" style={{ background: 'var(--ok)' }} aria-hidden />
             Conectado
           </span>
         )}
@@ -292,24 +299,23 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
             <p className="text-base font-semibold leading-snug">{etiquetaEtapa}</p>
           </div>
 
-          {/* Botones grandes para girar: con guantes no se hace un gesto fino. */}
-          <div className="grid grid-cols-3 gap-2">
-            <button type="button" className="boton boton-secundario control-escena" onClick={() => escena.current?.girar(-0.5)}>
-              <ChevronLeft size={18} aria-hidden /> Girar
+          {/* Una fila de botones grandes: con guantes no se hace un gesto
+              fino, pero tampoco hacen falta dos filas de controles. */}
+          <div className="grid grid-cols-5 gap-2" role="group" aria-label="Mover la vista">
+            <button type="button" className="boton boton-secundario" style={{ padding: 0 }} onClick={() => escena.current?.girar(-0.5)} aria-label="Girar a la izquierda">
+              <ChevronLeft size={22} aria-hidden />
             </button>
-            <button type="button" className="boton boton-secundario control-escena" onClick={() => escena.current?.reiniciar()}>
-              <Crosshair size={16} aria-hidden /> Centrar
+            <button type="button" className="boton boton-secundario" style={{ padding: 0 }} onClick={() => escena.current?.girar(0.5)} aria-label="Girar a la derecha">
+              <ChevronRight size={22} aria-hidden />
             </button>
-            <button type="button" className="boton boton-secundario control-escena" onClick={() => escena.current?.girar(0.5)}>
-              Girar <ChevronRight size={18} aria-hidden />
+            <button type="button" className="boton boton-secundario" style={{ padding: 0 }} onClick={() => escena.current?.reiniciar()} aria-label="Centrar la vista">
+              <Crosshair size={20} aria-hidden />
             </button>
-          </div>
-          <div className="grid grid-cols-2 gap-2">
-            <button type="button" className="boton boton-secundario" style={{ minHeight: 52 }} onClick={() => escena.current?.acercar(0.8)} aria-label="Alejar">
-              <Minus size={20} aria-hidden />
+            <button type="button" className="boton boton-secundario" style={{ padding: 0 }} onClick={() => escena.current?.acercar(0.8)} aria-label="Alejar">
+              <Minus size={22} aria-hidden />
             </button>
-            <button type="button" className="boton boton-secundario" style={{ minHeight: 52 }} onClick={() => escena.current?.acercar(1.25)} aria-label="Acercar">
-              <Plus size={20} aria-hidden />
+            <button type="button" className="boton boton-secundario" style={{ padding: 0 }} onClick={() => escena.current?.acercar(1.25)} aria-label="Acercar">
+              <Plus size={22} aria-hidden />
             </button>
           </div>
 
@@ -421,7 +427,7 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
                       transform: 'translateX(-50%)',
                       width: i === iReal ? 14 : 10,
                       height: i === iReal ? 14 : 10,
-                      background: i === iReal && capturada ? 'var(--verde)' : i < iVis ? 'color-mix(in srgb, var(--verde) 45%, transparent)' : 'var(--borde)',
+                      background: i === iReal && capturada ? 'var(--acento)' : i < iVis ? 'color-mix(in srgb, var(--acento) 45%, transparent)' : 'var(--borde)',
                       border: '2px solid #fff',
                       boxShadow: '0 1px 4px rgba(22,60,45,.3)',
                     }}
@@ -475,21 +481,25 @@ export function VistaParcela({ parcela, umbral, onEditar, onAgregar, consejo }: 
         </div>
       </section>
 
+      {children}
+
       <section className="tarjeta flex flex-col gap-3" aria-label="Datos de este cultivo">
-        <h2 className="titulo-bloque">Datos de este cultivo</h2>
+        <h2 className="titulo-bloque">Ficha del cultivo</h2>
         <dl className="flex flex-col">
           {ficha.map(f => (
             <div
               key={f.etiqueta}
               className="flex items-baseline justify-between gap-2.5"
-              style={{ padding: '7px 0', borderBottom: '1px solid var(--pista)' }}
+              style={{ padding: '10px 0', borderBottom: '1px solid var(--pista)' }}
             >
-              <dt className="text-sm texto-suave">{f.etiqueta}</dt>
+              <dt className="text-[15px] texto-suave">{f.etiqueta}</dt>
               <dd className="flex items-center gap-[7px] text-right m-0">
                 <span className="text-[15px] font-bold" style={{ color: f.color ?? (f.procedencia === 'falta' ? 'var(--tinta-suave)' : 'var(--tinta)'), fontVariantNumeric: 'tabular-nums' }}>
                   {f.valor}
                 </span>
-                <span className="procedencia" data-tipo={f.procedencia}>{f.textoProcedencia}</span>
+                {f.textoProcedencia !== 'registrado' && (
+                  <span className="procedencia" data-tipo={f.procedencia}>{f.textoProcedencia}</span>
+                )}
               </dd>
             </div>
           ))}

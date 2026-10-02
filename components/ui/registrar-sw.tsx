@@ -10,6 +10,9 @@ import { useEffect } from 'react'
 export function RegistrarSW() {
   useEffect(() => {
     if (typeof navigator === 'undefined' || !('serviceWorker' in navigator)) return
+    // En desarrollo los archivos no llevan huella en el nombre y el caché
+    // serviría código viejo después de cada cambio.
+    if (process.env.NODE_ENV !== 'production') return
 
     // Se espera a que la página cargue: registrar antes compite con la
     // descarga de lo que el agricultor está esperando ver.

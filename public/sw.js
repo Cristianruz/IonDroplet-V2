@@ -13,7 +13,7 @@
 // 3D, sin login. Al subir el
 // número, el service worker borra las copias viejas al activarse; si no, un
 // navegador que ya abrió la app seguiría enseñando la versión anterior.
-const VERSION = 'iondroplet-v5'
+const VERSION = 'iondroplet-v6'
 const CACHE_APP = `${VERSION}-app`
 const CACHE_API = `${VERSION}-api`
 

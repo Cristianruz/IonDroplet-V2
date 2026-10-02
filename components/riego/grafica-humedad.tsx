@@ -96,7 +96,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
             humedad
           </span>
           <span className="flex items-center gap-2">
-            <span className="rounded-full" style={{ width: 14, height: 14, background: 'var(--verde)' }} aria-hidden />
+            <span className="rounded-full" style={{ width: 14, height: 14, background: 'var(--acento)' }} aria-hidden />
             riego
           </span>
         </div>
@@ -144,7 +144,7 @@ export function GraficaHumedad({ historial, titulo, altura, riegos = [] }: Props
                 cx={x}
                 cy={MARGEN.arriba + altoUtil}
                 r={5}
-                fill="var(--verde)"
+                fill="var(--acento)"
                 stroke="white"
                 strokeWidth={1.5}
               />

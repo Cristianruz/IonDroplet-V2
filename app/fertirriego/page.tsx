@@ -1,7 +1,8 @@
 'use client'
 
 import { useState } from 'react'
-import { FlaskConical, Plus, Trash2, X } from 'lucide-react'
+import Link from 'next/link'
+import { ArrowLeft, FlaskConical, Plus, Trash2, X } from 'lucide-react'
 import { useFertirriego } from '@/hooks/use-fertirriego'
 import { FertirriegoForm } from '@/components/riego/fertirriego-form'
 import { Aparece } from '@/components/ui/aparece'
@@ -22,8 +23,14 @@ export default function PantallaFertirriego() {
   const [borrandoId, setBorrandoId] = useState<number | null>(null)
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      <h1 className="text-xl font-bold leading-tight">Nutrientes aplicados</h1>
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
+      <header className="flex flex-col gap-2">
+        <Link href="/cultivo" className="flex items-center gap-2 text-base font-semibold w-fit" style={{ color: 'var(--acento)' }}>
+          <ArrowLeft size={18} aria-hidden />
+          Cultivo
+        </Link>
+        <h1 className="titulo-pantalla">Nutrientes aplicados</h1>
+      </header>
 
       {!anotando && (
         <button
@@ -60,7 +67,7 @@ export default function PantallaFertirriego() {
             aria-label="Resumen de los últimos 90 días"
           >
             <h2 className="text-base font-semibold flex items-center gap-2">
-              <FlaskConical size={16} style={{ color: 'var(--verde)' }} aria-hidden />
+              <FlaskConical size={16} style={{ color: 'var(--acento)' }} aria-hidden />
               En los últimos 3 meses
             </h2>
 
@@ -74,8 +81,8 @@ export default function PantallaFertirriego() {
                   <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>
                     {nombreNutriente(n.nutriente)}
                   </span>
-                  <span className="text-xl font-bold" style={{ color: 'var(--verde)' }}>
-                    {n.total === null ? '—' : n.total.toLocaleString('es-MX')}
+                  <span className="text-xl font-bold" style={{ color: 'var(--acento)' }}>
+                    {n.total === null ? '-' : n.total.toLocaleString('es-MX')}
                     <span className="text-sm font-semibold ml-1">{n.unidad}</span>
                   </span>
                   <span className="text-base" style={{ color: 'var(--tinta-suave)' }}>

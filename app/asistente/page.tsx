@@ -34,17 +34,17 @@ function Asistente() {
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
       <header className="flex flex-col gap-2">
         <Link
           href="/"
           className="flex items-center gap-2 text-base font-semibold w-fit"
-          style={{ color: 'var(--verde)' }}
+          style={{ color: 'var(--acento)' }}
         >
           <ArrowLeft size={18} aria-hidden />
           Inicio
         </Link>
-        <h1 className="text-xl font-bold leading-tight">Asistente</h1>
+        <h1 className="titulo-pantalla">Asistente</h1>
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
           Ve lo que miden tus aparatos. Pregúntale lo que necesites de tu riego.
         </p>
@@ -150,7 +150,7 @@ function Asistente() {
           onClick={enviar}
           disabled={enviando || texto.trim() === ''}
           className="rounded-lg flex items-center justify-center sobre-estado disabled:opacity-40"
-          style={{ width: 64, height: 60, flexShrink: 0, background: 'var(--verde)' }}
+          style={{ width: 64, height: 60, flexShrink: 0, background: 'var(--acento)' }}
           aria-label="Enviar la pregunta"
         >
           <Send size={18} aria-hidden />

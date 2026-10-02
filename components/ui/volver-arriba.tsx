@@ -50,7 +50,7 @@ export function VolverArriba() {
         bottom: 'calc(76px + env(safe-area-inset-bottom))',
         width: 56,
         height: 56,
-        color: 'var(--verde)',
+        color: 'var(--acento)',
         opacity: visible ? 1 : 0,
         transform: visible ? 'translateY(0) scale(1)' : 'translateY(12px) scale(.9)',
         pointerEvents: visible ? 'auto' : 'none',

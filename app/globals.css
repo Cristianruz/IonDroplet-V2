@@ -1,78 +1,84 @@
 @import "tailwindcss";
+@import "@fontsource-variable/figtree";
 
 /* ==================================================================
-   SISTEMA VISUAL — VIDRIO LÍQUIDO PARA EL SOL (dirección 2a)
+   SISTEMA VISUAL — CALMA (1 oct 2026)
    ------------------------------------------------------------------
-   Se queda el vidrio, pero deja de ser transparente donde hay texto.
-   Tres reglas hacen que aguante el sol:
+   Reemplaza al vidrio líquido. Lo que pidió el usuario: que se sienta
+   amigable, que no esté saturada y que no sea todo verde.
 
-   1. El panel que carga texto va al 92 % y lleva sombra propia: el
-      contraste no depende del fondo. El cristal al 66 % (--cristal-suave)
-      sólo va en cosas sin dato crítico: botones secundarios, columnas
-      del pronóstico.
-   2. El semáforo y los niveles de riesgo van en cápsula de color SÓLIDO
-      con texto blanco (.capsula), nunca en transparencia.
-   3. El degradado se queda en las orillas y detrás de las cápsulas,
-      nunca debajo de una palabra.
+   1. Papel y tinta. Fondo crema liso, tarjetas blancas con un filo fino
+      y una sombra apenas. Sin degradados ni desenfoque detrás del texto.
+   2. Un solo color de acción: el turquesa del logo (--acento). Botones,
+      pestaña elegida, íconos de la app y el asistente van en ese color.
+   3. El verde ya no es decoración: solo dice "está bien" (--ok). El ámbar
+      dice "ojo" y el rojo "peligro". Así el color vuelve a significar algo.
+   4. Los estados van en cápsula TEÑIDA (fondo claro, letra fuerte), no en
+      bloque sólido: se leen igual y no gritan.
 
-   Si el teléfono no sabe desenfocar, o pide menos transparencia, los
-   mismos paneles se vuelven opacos y no cambia nada más (final del archivo).
+   Los colores salen del póster de IonDroplet: crema, azul marino y
+   turquesa.
    ================================================================== */
 
 :root {
-  --fondo: #edf6f1;
-  --tarjeta: rgba(255, 255, 255, .92);
-  --cristal-suave: rgba(255, 255, 255, .66);
-  --elevado: rgba(255, 255, 255, .80);
-  --tarjeta-solida: #f8fbf9;
+  /* Superficies */
+  --fondo: #f6f4ef;
+  --tarjeta: #ffffff;
+  --tarjeta-solida: #ffffff;
+  --elevado: #ffffff;
+  --cristal-suave: #f9f8f5;
+  --pista: #eeebe4;
 
   /* Texto */
-  --tinta: #0c1a15;
-  --tinta-suave: #3a4f45;
-  --etiqueta: #40584d;
-  --apagado: #5a6e63;
+  --tinta: #13283d;
+  --tinta-suave: #4a5a6a;
+  --etiqueta: #5a6776;
+  --apagado: #5c6977;
 
   /* Líneas */
-  --borde: rgba(12, 26, 21, .10);
-  --pista: rgba(12, 26, 21, .08);
+  --borde: #e5e1d8;
 
-  /* Acento */
-  --verde: #11794a;
-  --verde-fuerte: #0d6139;
-  --verde-suave: rgba(17, 121, 74, .12);
+  /* El color de la marca: acciones, selección, la app misma. */
+  --acento: #0b7393;
+  --acento-fuerte: #075b75;
+  --acento-suave: #e3f1f6;
 
-  /* Estados. En texto y filo sobre vidrio; en cápsula, de fondo sólido. */
-  --agua: #0f62b8;
-  --alerta: #8a5a05;
-  --alerta-texto: #7a5004;
-  --peligro: #b02222;
-  --riesgo-medio: #8a5a05;
+  /* Estados. Solo dicen algo; nunca adornan. */
+  --ok: #26794a;
+  --ok-suave: #e5f2ea;
+  --agua: #2f6fd6;
+  --agua-suave: #e7effb;
+  --alerta: #a35c00;
+  --alerta-texto: #8a4d00;
+  --peligro: #b42a1f;
+  --riesgo-medio: #a35c00;
   --oro: #8a6512;
-  --fondo-alerta: rgba(138, 90, 5, .12);
-  --fondo-peligro: rgba(176, 34, 34, .10);
-  /* Texto encima de una cápsula de estado. */
+  --fondo-alerta: #fcf0dc;
+  --fondo-peligro: #fbeae8;
   --sobre-estado: #ffffff;
 
-  /* Vidrio */
-  --vidrio-filo: rgba(255, 255, 255, .9);
-  --vidrio-brillo: inset 0 1px 0 #fff;
-  --sombra-color: rgba(10, 40, 30, .14);
-  --desenfoque: blur(18px) saturate(165%);
-  --sombra-tarjeta: var(--vidrio-brillo), 0 8px 22px var(--sombra-color);
-  --sombra-boton: var(--vidrio-brillo), 0 3px 10px rgba(10, 40, 30, .12);
-  --sombra-hundida: inset 0 1px 3px rgba(12, 26, 21, .18);
-  --sombra-acento: inset 0 1px 0 rgba(255, 255, 255, .24), 0 5px 16px rgba(17, 121, 74, .30);
-  --sombra-hundida-acento: inset 0 2px 6px rgba(0, 0, 0, .25);
-  --sombra-elevada: 0 18px 44px rgba(8, 34, 24, .28);
-  --brillo-capsula: inset 0 1px 0 rgba(255, 255, 255, .28);
-  --degradado-fondo:
-    radial-gradient(75% 55% at 4% 0%, rgba(30, 190, 130, .30), transparent 72%),
-    radial-gradient(65% 45% at 100% 14%, rgba(30, 130, 225, .26), transparent 72%),
-    radial-gradient(80% 50% at 50% 104%, rgba(20, 180, 165, .22), transparent 72%),
-    linear-gradient(180deg, #edf6f1 0%, #e4eef4 100%);
+  /* Nombres viejos. "verde" era a la vez el acento y el "bien"; ahora es
+     solo el "bien", y las pantallas usan --acento para lo demás. */
+  --verde: var(--ok);
+  --verde-fuerte: #1d5f3a;
+  --verde-suave: var(--ok-suave);
+
+  /* Relieve: casi nada. Lo separa el filo, no la sombra. */
+  --vidrio-filo: var(--borde);
+  --vidrio-brillo: none;
+  --sombra-color: rgba(19, 40, 61, .08);
+  --desenfoque: none;
+  --sombra-tarjeta: 0 1px 2px rgba(19, 40, 61, .04), 0 2px 10px rgba(19, 40, 61, .04);
+  --sombra-boton: 0 1px 2px rgba(19, 40, 61, .06);
+  --sombra-hundida: inset 0 1px 2px rgba(19, 40, 61, .08);
+  --sombra-acento: 0 2px 8px rgba(11, 115, 147, .22);
+  --sombra-hundida-acento: inset 0 2px 4px rgba(0, 0, 0, .18);
+  --sombra-elevada: 0 12px 40px rgba(19, 40, 61, .18);
+  --brillo-capsula: none;
+  --degradado-fondo: none;
 
   /* Geometría */
-  --radio: 22px;
+  --radio: 20px;
   --radio-sm: 14px;
   --radio-pill: 999px;
 
@@ -82,90 +88,84 @@
   --lento: 340ms;
 }
 
-/* Modo noche. El vidrio aquí sí es claro sobre oscuro (10 %), y los
-   estados suben de luminosidad; la cápsula lleva texto oscuro encima. */
+/* Modo noche: azul marino profundo, no negro; los estados suben de luz. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-tema="claro"]) {
-    --fondo: #0a1512;
-    --tarjeta: rgba(255, 255, 255, .10);
-    --cristal-suave: rgba(255, 255, 255, .07);
-    --elevado: rgba(22, 36, 31, .88);
-    --tarjeta-solida: #16221d;
-    --tinta: #e8f3ee;
-    --tinta-suave: #c4d6cd;
-    --etiqueta: #9fb6ab;
-    --apagado: #9fb6ab;
-    --borde: rgba(255, 255, 255, .14);
-    --pista: rgba(255, 255, 255, .10);
-    --verde: #45d383;
-    --verde-fuerte: #6ee09e;
-    --verde-suave: rgba(69, 211, 131, .16);
-    --agua: #5aaef5;
-    --alerta: #f0b849;
-    --alerta-texto: #f0b849;
-    --peligro: #f07068;
-    --riesgo-medio: #f0b849;
+    --fondo: #0e1a26;
+    --tarjeta: #15232f;
+    --tarjeta-solida: #15232f;
+    --elevado: #1a2a38;
+    --cristal-suave: #1a2a38;
+    --pista: #22344a;
+    --tinta: #e9f0f6;
+    --tinta-suave: #b6c4d1;
+    --etiqueta: #9fb0c0;
+    --apagado: #93a4b5;
+    --borde: #27394c;
+    --acento: #4ec1df;
+    --acento-fuerte: #7dd3ea;
+    --acento-suave: rgba(78, 193, 223, .14);
+    --ok: #5cc98a;
+    --ok-suave: rgba(92, 201, 138, .14);
+    --agua: #78aaff;
+    --agua-suave: rgba(120, 170, 255, .14);
+    --alerta: #f2b54a;
+    --alerta-texto: #f2b54a;
+    --peligro: #f27a70;
+    --riesgo-medio: #f2b54a;
     --oro: #e2b64f;
-    --fondo-alerta: rgba(240, 184, 73, .14);
-    --fondo-peligro: rgba(240, 112, 104, .14);
-    --sobre-estado: #0b1510;
-    --vidrio-filo: rgba(255, 255, 255, .18);
-    --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .14);
-    --sombra-color: rgba(0, 0, 0, .45);
-    --sombra-hundida: inset 0 1px 3px rgba(0, 0, 0, .4);
-    --sombra-acento: inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 20px rgba(69, 211, 131, .28);
-    --sombra-elevada: 0 18px 44px rgba(0, 0, 0, .5);
-    --brillo-capsula: inset 0 1px 0 rgba(255, 255, 255, .35);
-    --degradado-fondo:
-      radial-gradient(75% 55% at 4% 0%, rgba(30, 190, 130, .22), transparent 72%),
-      radial-gradient(65% 45% at 100% 14%, rgba(30, 130, 225, .20), transparent 72%),
-      linear-gradient(180deg, #0a1512 0%, #08110f 100%);
+    --fondo-alerta: rgba(242, 181, 74, .13);
+    --fondo-peligro: rgba(242, 122, 112, .13);
+    --sobre-estado: #0b1620;
+    --verde-fuerte: #84dba8;
+    --sombra-color: rgba(0, 0, 0, .35);
+    --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .25);
+    --sombra-boton: 0 1px 2px rgba(0, 0, 0, .25);
+    --sombra-hundida: inset 0 1px 2px rgba(0, 0, 0, .35);
+    --sombra-acento: 0 2px 10px rgba(78, 193, 223, .22);
+    --sombra-elevada: 0 14px 44px rgba(0, 0, 0, .5);
   }
 }
 
 :root[data-tema="oscuro"] {
-  --fondo: #0a1512;
-  --tarjeta: rgba(255, 255, 255, .10);
-  --cristal-suave: rgba(255, 255, 255, .07);
-  --elevado: rgba(22, 36, 31, .88);
-  --tarjeta-solida: #16221d;
-  --tinta: #e8f3ee;
-  --tinta-suave: #c4d6cd;
-  --etiqueta: #9fb6ab;
-  --apagado: #9fb6ab;
-  --borde: rgba(255, 255, 255, .14);
-  --pista: rgba(255, 255, 255, .10);
-  --verde: #45d383;
-  --verde-fuerte: #6ee09e;
-  --verde-suave: rgba(69, 211, 131, .16);
-  --agua: #5aaef5;
-  --alerta: #f0b849;
-  --alerta-texto: #f0b849;
-  --peligro: #f07068;
-  --riesgo-medio: #f0b849;
+  --fondo: #0e1a26;
+  --tarjeta: #15232f;
+  --tarjeta-solida: #15232f;
+  --elevado: #1a2a38;
+  --cristal-suave: #1a2a38;
+  --pista: #22344a;
+  --tinta: #e9f0f6;
+  --tinta-suave: #b6c4d1;
+  --etiqueta: #9fb0c0;
+  --apagado: #93a4b5;
+  --borde: #27394c;
+  --acento: #4ec1df;
+  --acento-fuerte: #7dd3ea;
+  --acento-suave: rgba(78, 193, 223, .14);
+  --ok: #5cc98a;
+  --ok-suave: rgba(92, 201, 138, .14);
+  --agua: #78aaff;
+  --agua-suave: rgba(120, 170, 255, .14);
+  --alerta: #f2b54a;
+  --alerta-texto: #f2b54a;
+  --peligro: #f27a70;
+  --riesgo-medio: #f2b54a;
   --oro: #e2b64f;
-  --fondo-alerta: rgba(240, 184, 73, .14);
-  --fondo-peligro: rgba(240, 112, 104, .14);
-  --sobre-estado: #0b1510;
-  --vidrio-filo: rgba(255, 255, 255, .18);
-  --vidrio-brillo: inset 0 1px 0 rgba(255, 255, 255, .14);
-  --sombra-color: rgba(0, 0, 0, .45);
-  --sombra-hundida: inset 0 1px 3px rgba(0, 0, 0, .4);
-  --sombra-acento: inset 0 1px 0 rgba(255, 255, 255, .35), 0 6px 20px rgba(69, 211, 131, .28);
-  --sombra-elevada: 0 18px 44px rgba(0, 0, 0, .5);
-  --brillo-capsula: inset 0 1px 0 rgba(255, 255, 255, .35);
-  --degradado-fondo:
-    radial-gradient(75% 55% at 4% 0%, rgba(30, 190, 130, .22), transparent 72%),
-    radial-gradient(65% 45% at 100% 14%, rgba(30, 130, 225, .20), transparent 72%),
-    linear-gradient(180deg, #0a1512 0%, #08110f 100%);
+  --fondo-alerta: rgba(242, 181, 74, .13);
+  --fondo-peligro: rgba(242, 122, 112, .13);
+  --sobre-estado: #0b1620;
+  --verde-fuerte: #84dba8;
+  --sombra-color: rgba(0, 0, 0, .35);
+  --sombra-tarjeta: 0 1px 2px rgba(0, 0, 0, .25);
+  --sombra-boton: 0 1px 2px rgba(0, 0, 0, .25);
+  --sombra-hundida: inset 0 1px 2px rgba(0, 0, 0, .35);
+  --sombra-acento: 0 2px 10px rgba(78, 193, 223, .22);
+  --sombra-elevada: 0 14px 44px rgba(0, 0, 0, .5);
 }
 
 html {
-  /* 15 px, que es lo que usan las aplicaciones de uso diario. Antes eran
-     16 sobre una escala inflada, y una sola tarjeta ocupaba media
-     pantalla. La legibilidad para el agricultor no se pierde: se
-     sostiene con peso y contraste, no con tamaño. */
-  font-size: 15px;
+  /* 16 px: el agricultor tiene 45–50 años y lee en el campo. */
+  font-size: 16px;
   scroll-behavior: smooth;
   color-scheme: light;
 }
@@ -178,25 +178,19 @@ html[data-tema="oscuro"] { color-scheme: dark; }
 body {
   background: var(--fondo);
   color: var(--tinta);
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  caret-color: var(--acento);
+  accent-color: var(--acento);
+  scrollbar-color: color-mix(in srgb, var(--tinta) 25%, transparent) transparent;
+  font-family: "Figtree Variable", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
-  letter-spacing: -0.005em;
+  line-height: 1.5;
 }
 
-/* El fondo de color que se ve a través del vidrio. Va fijo y en su propia
-   capa: no se repinta al hacer scroll y ninguna pantalla lo tiene que poner. */
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  background: var(--degradado-fondo);
-  pointer-events: none;
-}
+/* Lo que el navegador pinta solo también lleva los colores de la app. */
+::selection { background: color-mix(in srgb, var(--acento) 25%, transparent); color: var(--tinta); }
+a { text-underline-offset: 3px; }
 
-/* Cualquier borde que no diga de qué color es, usa el del tema. Así una
-   clase suelta de Tailwind no se pinta del color del texto ni hay que ir
-   componente por componente poniéndole el color a mano. */
+/* Cualquier borde que no diga de qué color es, usa el del tema. */
 *,
 *::before,
 *::after {
@@ -205,54 +199,46 @@ body::before {
 
 /* ==================================================================
    COMPONENTES
-   Clases con nombre, para que las pantallas digan qué es cada cosa en
-   vez de repetir diez utilidades sueltas.
    ================================================================== */
 
 .tarjeta {
   background: var(--tarjeta);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  /* El filo de luz marca la orilla del vidrio aunque el fondo sea claro. */
-  border: 1px solid var(--vidrio-filo);
+  border: 1px solid var(--borde);
   border-radius: var(--radio);
   box-shadow: var(--sombra-tarjeta);
-  padding: 17px;
+  padding: 18px;
 }
 
 @media (min-width: 640px) {
-  .tarjeta { padding: 20px; }
+  .tarjeta { padding: 22px; }
 }
 
 /* Título de pantalla. Uno por pantalla. */
 .titulo-pantalla {
-  font-size: 1.35rem;
-  font-weight: 700;
+  font-size: 1.5rem;
+  font-weight: 750;
   letter-spacing: -0.02em;
   line-height: 1.2;
 }
 
 /* Encabezado de tarjeta o de bloque. */
 .titulo-bloque {
-  font-size: 0.95rem;
-  font-weight: 650;
+  font-size: 1.05rem;
+  font-weight: 700;
   letter-spacing: -0.01em;
 }
 
-/* La etiqueta chiquita arriba de un dato. */
+/* La etiqueta chiquita arriba de un dato. Sin mayúsculas gritonas. */
 .etiqueta {
-  font-size: 10.5px;
-  font-weight: 700;
-  letter-spacing: .09em;
-  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 650;
+  letter-spacing: .01em;
   color: var(--etiqueta);
 }
 
-/* El número protagonista. Antes era de 72 px; 34 se lee igual de bien
-   y deja lugar para lo demás. */
 .dato {
   font-size: 2.1rem;
-  font-weight: 700;
+  font-weight: 750;
   letter-spacing: -0.03em;
   line-height: 1.05;
   font-variant-numeric: tabular-nums;
@@ -260,83 +246,79 @@ body::before {
 
 .dato-unidad {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 650;
   color: var(--tinta-suave);
   margin-left: 2px;
 }
 
-/* El número de la humedad en Inicio: el dato que se ve desde lejos. */
 .dato-grande {
-  font-size: 52px;
-  font-weight: 700;
+  font-size: 56px;
+  font-weight: 750;
   letter-spacing: -.045em;
   line-height: .9;
   font-variant-numeric: tabular-nums;
 }
-.dato-grande .dato-unidad { font-size: 20px; margin-left: 3px; }
+.dato-grande .dato-unidad { font-size: 22px; margin-left: 3px; }
 
-/* Cápsula de estado: color SÓLIDO, texto blanco. Es lo único que dice un
-   estado; nunca se lee a través de una transparencia. El color se pasa con
-   --c (style={{ '--c': 'var(--alerta)' }}). */
+/* Cápsula de estado: fondo teñido, letra fuerte. Se lee bajo el sol y no
+   grita. El color se pasa con --c (style={{ '--c': 'var(--alerta)' }}). */
 .capsula {
-  --c: var(--verde);
+  --c: var(--ok);
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  padding: 6px 12px;
+  padding: 5px 12px;
   border-radius: var(--radio-pill);
-  background: var(--c);
-  color: var(--sobre-estado);
-  font-size: 13.5px;
+  background: color-mix(in srgb, var(--c) 13%, var(--tarjeta));
+  border: 1px solid color-mix(in srgb, var(--c) 28%, transparent);
+  color: var(--c);
+  font-size: 0.875rem;
   font-weight: 700;
   line-height: 1.2;
   white-space: nowrap;
-  box-shadow: var(--brillo-capsula), 0 4px 14px color-mix(in srgb, var(--c) 32%, transparent);
 }
 .capsula::before {
   content: "";
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: currentColor;
   flex-shrink: 0;
 }
-/* Nivel de riesgo: la misma cápsula, más chica y en mayúsculas, sin punto. */
+/* Nivel de riesgo: la misma cápsula, más chica, sin punto. */
 .capsula-nivel {
-  padding: 4px 11px;
-  font-size: 11px;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-  box-shadow: var(--brillo-capsula);
+  padding: 3px 10px;
+  font-size: 0.75rem;
+  letter-spacing: .02em;
 }
 .capsula-nivel::before { display: none; }
 
-/* Franja de aviso sólida dentro de una tarjeta (calor fuerte, helada). */
+/* Aviso importante dentro de una tarjeta (helada, lluvia): teñido también. */
 .franja-estado {
   --c: var(--alerta);
   display: flex;
   align-items: flex-start;
-  gap: 9px;
-  padding: 10px 13px;
+  gap: 10px;
+  padding: 11px 14px;
   border-radius: var(--radio-sm);
-  background: var(--c);
-  color: var(--sobre-estado);
-  font-size: 13.5px;
-  font-weight: 700;
-  line-height: 1.4;
-  box-shadow: var(--brillo-capsula);
+  background: color-mix(in srgb, var(--c) 12%, var(--tarjeta));
+  border: 1px solid color-mix(in srgb, var(--c) 25%, transparent);
+  color: var(--tinta);
+  font-size: 0.925rem;
+  font-weight: 600;
+  line-height: 1.45;
 }
+.franja-estado > svg { color: var(--c); }
 
-/* Cristal al 66 %: sólo para lo que no carga un dato crítico. */
 .cristal-suave {
   background: var(--cristal-suave);
-  border: 1px solid var(--vidrio-filo);
-  box-shadow: var(--vidrio-brillo);
+  border: 1px solid var(--borde);
 }
 
 .texto-suave { color: var(--tinta-suave); }
 .sobre-estado { color: var(--sobre-estado); }
 .texto-apagado { color: var(--apagado); }
+.texto-acento { color: var(--acento); }
 
 /* --- Botones --- */
 .boton {
@@ -344,112 +326,117 @@ body::before {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  min-height: 42px;
-  padding: 0 16px;
+  min-height: 48px;
+  padding: 0 18px;
   border-radius: var(--radio-sm);
   border: 1px solid transparent;
-  font-size: 0.95rem;
-  font-weight: 650;
+  font-size: 1rem;
+  font-weight: 700;
   cursor: pointer;
   transition: background-color var(--rapido) var(--curva),
               border-color var(--rapido) var(--curva),
               box-shadow var(--rapido) var(--curva),
-              opacity var(--rapido) var(--curva);
+              transform var(--rapido) var(--curva);
 }
 
 .boton:disabled { opacity: .5; cursor: default; box-shadow: none; }
+.boton:not(:disabled):active { transform: scale(.98); }
 
 .boton-primario {
-  background: var(--verde);
+  background: var(--acento);
   color: var(--sobre-estado);
   box-shadow: var(--sombra-acento);
 }
 @media (hover: hover) and (pointer: fine) {
-  .boton-primario:not(:disabled):hover { background: var(--verde-fuerte); }
+  .boton-primario:not(:disabled):hover { background: var(--acento-fuerte); }
 }
-/* Al tocarlo se hunde un poco: se siente que respondió. */
-.boton-primario:not(:disabled):active { box-shadow: var(--sombra-hundida-acento); }
 
 .boton-secundario {
-  background: var(--cristal-suave);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  border-color: var(--vidrio-filo);
+  background: var(--tarjeta);
+  border-color: var(--borde);
   color: var(--tinta);
   box-shadow: var(--sombra-boton);
 }
 @media (hover: hover) and (pointer: fine) {
-  .boton-secundario:not(:disabled):hover { background: var(--tarjeta); }
+  .boton-secundario:not(:disabled):hover { background: var(--cristal-suave); }
 }
-.boton-secundario:not(:disabled):active { box-shadow: var(--sombra-hundida); }
 
 .boton-sutil {
   background: transparent;
   color: var(--tinta-suave);
-  min-height: 36px;
+  min-height: 40px;
   padding: 0 10px;
-  font-weight: 600;
+  font-weight: 650;
 }
 @media (hover: hover) and (pointer: fine) {
   .boton-sutil:not(:disabled):hover { background: var(--pista); color: var(--tinta); }
 }
 
-/* Botón que ocupa el ancho: el de la acción principal de la pantalla. */
 .boton-ancho { width: 100%; }
 
+/* --- Renglones de ListaEnlaces --- */
+.lista-raya {
+  display: block;
+  height: 1px;
+  margin: 0 12px;
+  background: var(--borde);
+}
+.lista-renglon {
+  transition: background-color var(--rapido) var(--curva);
+}
+.lista-renglon[data-en-curso] { background: var(--agua-suave); }
+/* Sobre el fondo azul el círculo del ícono se perdía: va en el de la tarjeta. */
+.lista-renglon[data-en-curso] .icono-redondo { background: var(--tarjeta); color: var(--agua); }
+@media (hover: hover) and (pointer: fine) {
+  .lista-renglon:hover { background: var(--cristal-suave); }
+  .lista-renglon[data-en-curso]:hover { background: var(--agua-suave); }
+}
+
 /* --- Campos --- */
-/* Campos: vidrio más opaco, para que lo que se escribe se lea bien. */
 .campo {
   width: 100%;
-  min-height: 42px;
-  padding: 9px 12px;
-  background: var(--elevado);
+  min-height: 48px;
+  padding: 10px 14px;
+  background: var(--tarjeta);
   color: var(--tinta);
   border: 1px solid var(--borde);
   border-radius: var(--radio-sm);
-  box-shadow: var(--sombra-hundida);
-  font-size: 0.95rem;
+  font-size: 1rem;
   transition: border-color var(--rapido) var(--curva),
               box-shadow var(--rapido) var(--curva);
 }
 .campo::placeholder { color: var(--apagado); }
-.campo:focus { border-color: var(--verde); box-shadow: 0 0 0 3px var(--verde-suave); }
+.campo:focus { outline: none; border-color: var(--acento); box-shadow: 0 0 0 3px var(--acento-suave); }
 
 /* --- Pastillas de selección --- */
 .pastilla {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  min-height: 38px;
-  padding: 0 14px;
+  min-height: 42px;
+  padding: 0 16px;
   border-radius: var(--radio-pill);
-  border: 1px solid var(--vidrio-filo);
+  border: 1px solid var(--borde);
   background: var(--tarjeta);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
   color: var(--tinta);
-  box-shadow: var(--sombra-boton);
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.95rem;
+  font-weight: 650;
   cursor: pointer;
   transition: background-color var(--rapido) var(--curva),
               border-color var(--rapido) var(--curva),
-              box-shadow var(--rapido) var(--curva);
+              color var(--rapido) var(--curva);
 }
-/* La elegida va en verde sólido: se distingue sin depender del vidrio. */
+/* La elegida: teñida en turquesa con filo, no un bloque sólido. */
 .pastilla[aria-pressed="true"],
 .pastilla.activa {
-  background: var(--verde);
-  border-color: var(--verde);
-  color: var(--sobre-estado);
-  box-shadow: var(--sombra-acento);
+  background: var(--acento-suave);
+  border-color: var(--acento);
+  color: var(--acento-fuerte);
 }
 @media (hover: hover) and (pointer: fine) {
-  .pastilla:not([aria-pressed="true"]):not(.activa):hover { background: var(--elevado); }
+  .pastilla:not([aria-pressed="true"]):not(.activa):hover { background: var(--cristal-suave); }
 }
-.pastilla:not([aria-pressed="true"]):not(.activa):active { box-shadow: var(--sombra-hundida); }
 
-/* Etiqueta de solo lectura, para listar lo aplicado o lo medido. */
 .marca {
   display: inline-flex;
   align-items: center;
@@ -462,10 +449,9 @@ body::before {
   font-weight: 600;
 }
 
-/* Punto de estado: color en un punto, no en un bloque. */
 .punto {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 }
@@ -476,28 +462,22 @@ body::before {
   border: 0;
 }
 
-/* Avisos. Filo de color a la izquierda en vez de fondo saturado. */
+/* Avisos: fondo teñido suave y un filo fino del mismo color. */
 .aviso {
   border-radius: var(--radio-sm);
-  border: 1px solid var(--vidrio-filo);
-  border-left: 3px solid var(--alerta);
-  background: var(--tarjeta);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  box-shadow: var(--sombra-boton);
+  border: 1px solid color-mix(in srgb, var(--alerta) 30%, transparent);
+  background: color-mix(in srgb, var(--alerta) 8%, var(--tarjeta));
   padding: 12px 14px;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
 }
-.aviso-peligro { border-left-color: var(--peligro); }
-.aviso-ok { border-left-color: var(--verde); }
-
-/* ==================================================================
-   VIDRIO FUERA DE LAS TARJETAS
-   Lo que antes cada pantalla pintaba a mano con style={{ background }}:
-   renglones que llevan a otra pantalla, opciones para escoger, barras
-   fijas y globos del asistente. Con clase cambian todos juntos, y el
-   respaldo sólido del final los cubre a todos.
-   ================================================================== */
+.aviso-peligro {
+  border-color: color-mix(in srgb, var(--peligro) 30%, transparent);
+  background: color-mix(in srgb, var(--peligro) 7%, var(--tarjeta));
+}
+.aviso-ok {
+  border-color: color-mix(in srgb, var(--ok) 30%, transparent);
+  background: color-mix(in srgb, var(--ok) 7%, var(--tarjeta));
+}
 
 /* Renglón que lleva a otra pantalla. */
 .fila-enlace {
@@ -505,139 +485,133 @@ body::before {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  min-height: 56px;
   padding: 12px 16px;
   border-radius: var(--radio-sm);
   background: var(--tarjeta);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  border: 1px solid var(--vidrio-filo);
-  box-shadow: var(--sombra-boton);
+  border: 1px solid var(--borde);
   color: var(--tinta);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 650;
   transition: background-color var(--rapido) var(--curva);
 }
 @media (hover: hover) and (pointer: fine) {
-  .fila-enlace:hover { background: var(--elevado); }
+  .fila-enlace:hover { background: var(--cristal-suave); }
 }
 
-/* Una opción entre varias (tema, horas, cultivo). La elegida va en verde
-   sólido: se distingue sin depender de la transparencia. */
+/* Una opción entre varias (tema, horas, cultivo). */
 .opcion {
   border-radius: var(--radio-sm);
-  background: var(--cristal-suave);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  border: 1px solid var(--vidrio-filo);
-  box-shadow: var(--sombra-boton);
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
   color: var(--tinta-suave);
-  font-weight: 700;
+  font-weight: 650;
   cursor: pointer;
   transition: background-color var(--rapido) var(--curva),
               color var(--rapido) var(--curva),
-              box-shadow var(--rapido) var(--curva);
+              border-color var(--rapido) var(--curva);
 }
 .opcion[aria-pressed="true"] {
-  background: var(--verde);
-  border-color: var(--verde-fuerte);
-  color: var(--sobre-estado);
-  box-shadow: var(--sombra-acento);
+  background: var(--acento-suave);
+  border-color: var(--acento);
+  color: var(--acento-fuerte);
 }
 @media (hover: hover) and (pointer: fine) {
-  .opcion:not([aria-pressed="true"]):hover { background: var(--elevado); color: var(--tinta); }
+  .opcion:not([aria-pressed="true"]):hover { background: var(--cristal-suave); color: var(--tinta); }
 }
 
 /* Barras fijas: la de navegación y la de escribir en el asistente. */
 .barra-vidrio {
-  background: var(--elevado);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  border-top: 1px solid var(--vidrio-filo);
-  box-shadow: 0 -10px 30px var(--sombra-color);
+  background: var(--tarjeta);
+  border-top: 1px solid var(--borde);
 }
 
-/* Lo que flota encima de todo: la ventana del asistente, el botón de subir. */
+/* Lo que flota encima de todo: ventanas, el botón de subir. */
 .panel-vidrio {
-  background: var(--elevado);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  border: 1px solid var(--vidrio-filo);
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
   box-shadow: var(--sombra-elevada);
 }
 
-/* Globos del asistente: el del agricultor en verde, el del sistema de vidrio. */
+/* Globos del asistente: el del agricultor en turquesa, el del sistema claro. */
 .globo {
   background: var(--tarjeta);
-  -webkit-backdrop-filter: var(--desenfoque);
-  backdrop-filter: var(--desenfoque);
-  border: 1px solid var(--vidrio-filo);
+  border: 1px solid var(--borde);
   color: var(--tinta);
 }
 .globo-mio {
-  background: var(--verde);
-  border-color: var(--verde);
+  background: var(--acento);
+  border-color: var(--acento);
   color: var(--sobre-estado);
 }
 
-/* Un hueco dentro de una tarjeta: un dato aparte, un botón de borrar. */
 .hueco { background: var(--pista); }
+
+/* Ícono dentro de un círculo: la marca visual de cada sección. */
+.icono-redondo {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--acento-suave);
+  color: var(--acento);
+}
 
 /* ==================================================================
    PARCELA 3D
-   La escena y lo que va encima de ella. Los chips de encima son vidrio
-   casi opaco: la escena de atrás cambia de color con el dato.
    ================================================================== */
 
-/* Dos opciones del mismo tamaño: "Mi campo" y "Esta parcela". */
+/* Dos opciones del mismo tamaño: la elegida se levanta como tarjeta. */
 .segmentado {
   display: flex;
-  gap: 6px;
+  gap: 4px;
   padding: 4px;
   border-radius: var(--radio-sm);
   background: var(--pista);
 }
 .segmentado > button {
   flex: 1;
-  min-height: 48px;
+  min-height: 46px;
   border: 0;
   border-radius: 11px;
   background: transparent;
   color: var(--tinta-suave);
-  font-size: 14.5px;
+  font-size: 0.95rem;
   font-weight: 700;
   cursor: pointer;
   transition: background-color var(--rapido) var(--curva), color var(--rapido) var(--curva);
 }
 .segmentado > button[aria-pressed="true"] {
-  background: var(--verde);
-  color: var(--sobre-estado);
-  box-shadow: var(--sombra-acento);
+  background: var(--tarjeta);
+  color: var(--tinta);
+  box-shadow: 0 1px 3px rgba(19, 40, 61, .12);
 }
 
 .escena-3d {
   position: relative;
   height: 296px;
-  background: #cfe6f2;
+  background: #d8ebf3;
   overflow: hidden;
 }
 @media (min-width: 768px) {
   .escena-3d { height: 380px; }
 }
 
-/* Van encima de la escena, que es clara en los dos temas: por eso su color
-   es fijo del tema claro y no sigue al tema oscuro. */
+/* Van encima de la escena, que es clara en los dos temas. */
 .chip-escena {
   display: inline-flex;
   align-items: center;
   gap: 5px;
   padding: 5px 10px;
   border-radius: var(--radio-pill);
-  background: rgba(255, 255, 255, .9);
+  background: rgba(255, 255, 255, .92);
   border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
   font-size: 12px;
   font-weight: 700;
 }
-/* Lo que falta va punteado: se ve que es un hueco, no un dato. */
 .chip-escena.chip-falta { border-style: dashed; }
 
 @keyframes onda-agua {
@@ -657,13 +631,13 @@ body::before {
   color: #fff;
   font-size: 13px;
   font-weight: 700;
-  background-color: var(--agua);
+  background-color: #2f6fd6;
   background-image: repeating-linear-gradient(115deg, rgba(255, 255, 255, .22) 0 14px, rgba(255, 255, 255, 0) 14px 32px);
   background-size: 64px 100%;
   animation: onda-agua 1.9s linear infinite;
 }
 
-.control-escena { min-height: 60px; gap: 4px; font-weight: 700; }
+.control-escena { min-height: 56px; gap: 4px; font-weight: 700; }
 
 .linea-etapas {
   position: relative;
@@ -684,15 +658,14 @@ body::before {
   min-height: 60px;
   padding: 0 12px;
   border-radius: 13px;
-  border: 1px solid var(--vidrio-filo);
-  background: var(--cristal-suave);
-  box-shadow: var(--vidrio-brillo);
+  border: 1px solid var(--borde);
+  background: var(--tarjeta);
   color: var(--tinta);
   cursor: pointer;
 }
 .ficha-parcela[aria-pressed="true"] {
-  background: var(--verde-suave);
-  border-color: var(--verde);
+  background: var(--acento-suave);
+  border-color: var(--acento);
 }
 
 /* De dónde salió cada dato de la ficha. */
@@ -702,46 +675,43 @@ body::before {
   align-items: center;
   padding: 3px 8px;
   border-radius: var(--radio-pill);
-  border: 1px solid color-mix(in srgb, var(--p) 35%, transparent);
-  background: color-mix(in srgb, var(--p) 12%, transparent);
+  border: 1px solid color-mix(in srgb, var(--p) 30%, transparent);
+  background: color-mix(in srgb, var(--p) 10%, transparent);
   color: var(--p);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 700;
   white-space: nowrap;
 }
-.procedencia[data-tipo="medido"] { --p: var(--verde); }
+.procedencia[data-tipo="medido"] { --p: var(--ok); }
 .procedencia[data-tipo="calculado"] { --p: var(--agua); }
 .procedencia[data-tipo="pronosticado"] { --p: var(--alerta-texto); }
 .procedencia[data-tipo="registrado"] { background: var(--pista); border-color: var(--borde); }
 .procedencia[data-tipo="falta"] { background: transparent; border-style: dashed; border-color: var(--apagado); }
 
 .agregar-parcela {
-  min-height: 60px;
-  border: 1px dashed color-mix(in srgb, var(--tinta) 30%, transparent);
-  background: var(--cristal-suave);
-  color: var(--verde);
-  font-size: 16px;
+  min-height: 56px;
+  border: 1.5px dashed color-mix(in srgb, var(--acento) 45%, transparent);
+  background: transparent;
+  color: var(--acento);
+  font-size: 1rem;
   font-weight: 700;
 }
 
 /* ==================================================================
    INTERACCIÓN
-   Nada flota ni brinca al pasar el ratón. Lo único que se mueve es el
-   relieve: al tocar un botón, se hunde.
    ================================================================== */
 
 button:not(:disabled):active,
 a:active {
-  opacity: .7;
+  opacity: .75;
 }
-/* Los botones con relieve no se desvanecen al tocarlos: se hunden. */
 .boton:not(:disabled):active,
 .pastilla:not(:disabled):active {
   opacity: 1;
 }
 
 :focus-visible {
-  outline: 2px solid var(--agua);
+  outline: 2px solid var(--acento);
   outline-offset: 2px;
   border-radius: var(--radio-sm);
 }
@@ -759,6 +729,17 @@ a:active {
   50% { opacity: .6; }
 }
 .regando { animation: pulso-riego 1.6s ease-in-out infinite; }
+/* En la cápsula late solo el punto: el texto se queda fijo y legible (al
+   jurado y al agricultor bajo el sol), con la letra un poco más oscura que
+   el azul para pasar de 4.5:1. */
+.capsula.regando {
+  animation: none;
+  color: color-mix(in srgb, var(--c) 75%, var(--tinta));
+}
+.capsula.regando::before {
+  background: var(--c);
+  animation: pulso-riego 1.6s ease-in-out infinite;
+}
 
 @keyframes aparecer {
   from { opacity: 0; transform: translateY(6px); }
@@ -768,13 +749,6 @@ a:active {
 .aparece { opacity: 0; }
 .aparece.visible { animation: aparecer var(--lento) var(--curva) forwards; }
 
-.hero > * {
-  opacity: 0;
-  animation: aparecer var(--lento) var(--curva) forwards;
-}
-.hero > *:nth-child(1) { animation-delay: 30ms; }
-.hero > *:nth-child(2) { animation-delay: 90ms; }
-.hero > *:nth-child(3) { animation-delay: 150ms; }
 
 @keyframes destello {
   from { background-position: -220% 0; }
@@ -786,7 +760,7 @@ a:active {
   background-image: linear-gradient(
     90deg,
     transparent 0%,
-    rgba(255, 255, 255, .5) 50%,
+    rgba(255, 255, 255, .55) 50%,
     transparent 100%
   );
   background-size: 220% 100%;
@@ -794,14 +768,13 @@ a:active {
   border-radius: var(--radio-sm);
 }
 
-:root[data-tema="oscuro"] .esqueleto,
-html:not([data-tema="claro"]) .esqueleto {
-  background-image: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, .06) 50%,
-    transparent 100%
-  );
+:root[data-tema="oscuro"] .esqueleto {
+  background-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, .06) 50%, transparent 100%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .esqueleto {
+    background-image: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, .06) 50%, transparent 100%);
+  }
 }
 
 @keyframes entrar-pantalla {
@@ -809,6 +782,11 @@ html:not([data-tema="claro"]) .esqueleto {
   to   { opacity: 1; transform: none; }
 }
 .pantalla { animation: entrar-pantalla var(--normal) var(--curva); }
+
+@keyframes subir-hoja {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: none; }
+}
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
@@ -819,28 +797,226 @@ html:not([data-tema="claro"]) .esqueleto {
     scroll-behavior: auto !important;
   }
   .aparece { opacity: 1; }
-  .hero > * { opacity: 1; }
 }
 
-/* Sin desenfoque (teléfonos viejos) el vidrio se vuelve sólido: si no, el
-   texto quedaría encima del fondo de color sin nada que lo separe. */
-@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
-  .tarjeta, .fila-enlace, .opcion:not([aria-pressed="true"]), .boton-secundario,
-  .pastilla:not([aria-pressed="true"]):not(.activa), .aviso, .globo:not(.globo-mio),
-  .barra-vidrio, .panel-vidrio, .cristal-suave {
-    background: var(--tarjeta-solida);
+/* ==================================================================
+   DEMOSTRACIÓN
+   Solo existe con NEXT_PUBLIC_DEMO=si (la copia pública de Vercel).
+   ================================================================== */
+
+/* La franja de arriba va en marino en los dos temas: es del sitio, no de la
+   app, y no se debe confundir con una tarjeta ni con un aviso. */
+.franja-demo {
+  --franja-fondo: #13283d;
+  --franja-tinta: #f6f4ef;
+  background: var(--franja-fondo);
+  color: var(--franja-tinta);
+}
+:root[data-tema="oscuro"] .franja-demo {
+  --franja-fondo: #1d3247;
+  --franja-tinta: #e9f0f6;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .franja-demo {
+    --franja-fondo: #1d3247;
+    --franja-tinta: #e9f0f6;
   }
 }
+.franja-demo-suave { opacity: .8; }
+.franja-demo-icono { flex-shrink: 0; }
+/* En los celulares más angostos queda solo "Demostración": la hoja de
+   Pruébalo y la bienvenida ya dicen que los datos son de ejemplo. */
+@media (max-width: 399px) { .franja-demo-icono { display: none; } }
+@media (max-width: 384px) { .franja-demo-suave { display: none; } }
 
-/* Lo mismo si la persona pidió menos transparencia en su teléfono. */
-@media (prefers-reduced-transparency: reduce) {
-  .tarjeta, .fila-enlace, .opcion:not([aria-pressed="true"]), .boton-secundario,
-  .pastilla:not([aria-pressed="true"]):not(.activa), .aviso, .globo:not(.globo-mio),
-  .barra-vidrio, .panel-vidrio, .cristal-suave {
-    background: var(--tarjeta-solida);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
+.franja-demo-boton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  min-height: 32px;
+  padding: 0 14px;
+  border-radius: var(--radio-pill);
+  background: var(--franja-tinta);
+  color: var(--franja-fondo);
+  font-size: 13.5px;
+  font-weight: 750;
+  transition: transform var(--rapido) var(--curva), background-color var(--rapido) var(--curva);
+}
+/* El dedo atina en 44 px aunque la píldora mida 32. */
+.franja-demo-boton::after { content: ""; position: absolute; inset: -6px -4px; }
+.franja-demo-boton:active { opacity: 1; transform: scale(.97); }
+.franja-demo-boton:focus-visible { outline-color: var(--franja-tinta); }
+@media (hover: hover) and (pointer: fine) {
+  .franja-demo-boton:hover { background: #ffffff; }
+}
+
+/* Adentro del celular de la vista de presentación: sin franja (la dice el
+   panel) y sin barra de desplazamiento, que en Windows se come 17 px. */
+html[data-enmarcada] .franja-demo { display: none; }
+html[data-enmarcada] { scrollbar-width: none; }
+html[data-enmarcada]::-webkit-scrollbar { display: none; }
+
+/* La hoja de "Pruébalo": sube desde abajo, sobre todo lo demás. */
+@keyframes aparecer-velo {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.hoja-velo {
+  background: rgba(19, 40, 61, .42);
+  animation: aparecer-velo var(--normal) var(--curva);
+}
+.hoja-pruebas {
+  background: var(--fondo);
+  border-radius: 24px 24px 0 0;
+  box-shadow: var(--sombra-elevada);
+  animation: subir-hoja var(--lento) var(--curva);
+}
+
+/* --- La vista de presentación (pantallas anchas) ---
+   El panel a la izquierda se lee primero; el celular, a su tamaño de verdad
+   (390 px de pantalla), es lo que se demuestra; el código QR es lo que el
+   jurado escanea desde su lugar.
+   De 1024 a 1279 px: panel y QR en una columna, el celular al lado.
+   Desde 1280 px (las laptops del proyector): el QR en su propia columna. */
+.presentacion {
+  --relleno: 24px;
+  --qr: 128px;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(340px, 500px) auto;
+  grid-template-areas:
+    "panel telefono"
+    "qr telefono";
+  justify-content: center;
+  align-content: center;
+  column-gap: clamp(40px, 6vw, 112px);
+  row-gap: clamp(14px, 2.6vh, 24px);
+  padding: var(--relleno) 32px;
+}
+.presentacion-panel {
+  grid-area: panel;
+  align-self: end;
+  display: flex;
+  flex-direction: column;
+  /* En una laptop de 768 px de alto todo cabe sin desplazarse: los huecos
+     se encogen con la altura. */
+  gap: clamp(16px, 3vh, 28px);
+}
+.presentacion-titulo {
+  font-size: clamp(2.25rem, 3.2vw, 3.1rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.presentacion-bajada {
+  max-width: 50ch;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+}
+.presentacion-narra {
+  min-height: 3.2em;
+  font-variant-numeric: tabular-nums;
+}
+.presentacion-qr {
+  grid-area: qr;
+  align-self: start;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: clamp(14px, 2.6vh, 24px);
+  border-top: 1px solid var(--borde);
+}
+.presentacion-qr .codigo-qr {
+  width: var(--qr);
+  height: var(--qr);
+  flex-shrink: 0;
+}
+.presentacion-qr-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.presentacion-qr-titulo {
+  font-size: 1.0625rem;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.presentacion-qr-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 4px 0 0 -10px;
+}
+.presentacion-telefono {
+  grid-area: telefono;
+  align-self: center;
+  width: 414px;
+  height: clamp(600px, calc(100dvh - 2 * var(--relleno)), 868px);
+  padding: 12px;
+  border-radius: 56px;
+  background: #13283d;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, .08),
+    0 12px 24px -12px rgba(19, 40, 61, .35),
+    0 40px 80px -24px rgba(19, 40, 61, .45);
+  animation: subir-hoja 600ms var(--curva);
+}
+.presentacion-pantalla {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  border-radius: 44px;
+  background: var(--fondo);
+}
+:root[data-tema="oscuro"] .presentacion-telefono {
+  background: #050d15;
+  box-shadow: 0 0 0 1px #27394c, 0 40px 80px -24px rgba(0, 0, 0, .7);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-tema="claro"]) .presentacion-telefono {
+    background: #050d15;
+    box-shadow: 0 0 0 1px #27394c, 0 40px 80px -24px rgba(0, 0, 0, .7);
   }
+}
+@media (max-height: 800px) {
+  .presentacion { --relleno: 16px; }
+  .presentacion-titulo { font-size: clamp(2.1rem, 2.9vw, 2.6rem); }
+  .presentacion-bajada { font-size: 1.05rem; }
+}
+@media (min-width: 1280px) {
+  .presentacion {
+    --qr: 220px;
+    grid-template-columns: minmax(340px, 470px) auto minmax(220px, 250px);
+    grid-template-areas: "panel telefono qr";
+    align-items: center;
+    column-gap: clamp(40px, 4.5vw, 96px);
+  }
+  .presentacion-panel,
+  .presentacion-qr { align-self: center; }
+  .presentacion-qr {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    padding-top: 0;
+    border-top: 0;
+  }
+  .presentacion-qr-titulo { font-size: 1.3rem; }
+  .presentacion-qr-acciones { flex-direction: column; align-items: flex-start; gap: 0; }
+}
+/* Si la ventana se angosta, el celular arriba y lo demás abajo. */
+@media (max-width: 1023px) {
+  .presentacion {
+    grid-template-columns: minmax(0, 520px);
+    grid-template-areas: "telefono" "panel" "qr";
+  }
+  .presentacion-telefono { justify-self: center; }
 }
 
 /* ==================================================================

@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from 'react'
 import { apiFetch, parseTimestampUTC } from '@/lib/api'
+import { EVENTO_REFRESCAR } from '@/lib/modo'
 import type { EstadoEsp, PuntoHistorial } from './use-iondroplet'
 import type { Parcela, Umbrales } from './use-parcela'
 
@@ -279,10 +280,21 @@ export function ProveedorDatos({ children }: { children: ReactNode }) {
     }
     document.addEventListener('visibilitychange', alVolver)
 
+    // Un escenario de la demostración cambió todo de golpe: se lee completo,
+    // gráfica incluida, para que el cambio se vea ya.
+    function alRefrescar() {
+      if (temporizador) clearTimeout(temporizador)
+      ultimoHistorial.current = 0
+      ciclos = 0
+      ciclo()
+    }
+    window.addEventListener(EVENTO_REFRESCAR, alRefrescar)
+
     return () => {
       vivo = false
       if (temporizador) clearTimeout(temporizador)
       document.removeEventListener('visibilitychange', alVolver)
+      window.removeEventListener(EVENTO_REFRESCAR, alRefrescar)
       abortar.current?.abort()
     }
   }, [leerSensores, leerParcela, leerHistorial])

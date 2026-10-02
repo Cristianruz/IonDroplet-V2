@@ -6,6 +6,7 @@ import Link from 'next/link'
 import { useAlertas, type Severidad, type Alerta } from '@/hooks/use-alertas'
 import { Aparece } from '@/components/ui/aparece'
 import { fechaCorta } from '@/lib/tiempo'
+import { colorEstado } from '@/lib/estilo'
 
 // Los avisos del sistema.
 //
@@ -37,27 +38,21 @@ function Tarjeta({
   return (
     <article
       className="tarjeta flex flex-col gap-2"
-      style={{
-        borderLeft: `3px solid ${cerrada ? 'var(--borde)' : COLOR[a.severidad]}`,
-        opacity: cerrada ? 0.62 : 1,
-      }}
+      style={{ opacity: cerrada ? 0.62 : 1 }}
     >
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-start justify-between gap-3">
         <span className="titulo-bloque">{a.titulo}</span>
-        <span
-          className="text-xs font-bold uppercase tracking-wide"
-          style={{ color: cerrada ? 'var(--apagado)' : COLOR[a.severidad], whiteSpace: 'nowrap' }}
-        >
+        <span className="capsula capsula-nivel" style={colorEstado(cerrada ? 'var(--apagado)' : COLOR[a.severidad])}>
           {NOMBRE[a.severidad]}
         </span>
       </div>
 
-      {a.detalle && <p className="text-sm texto-suave">{a.detalle}</p>}
+      {a.detalle && <p className="text-[15px] texto-suave">{a.detalle}</p>}
 
       {/* El número que la provocó. Sin esto sería una opinión del sistema. */}
-      {a.dato && <p className="text-xs texto-apagado">{a.dato}</p>}
+      {a.dato && <p className="text-sm font-semibold texto-suave" style={{ fontVariantNumeric: 'tabular-nums' }}>{a.dato}</p>}
 
-      {a.accion && !cerrada && <p className="text-sm font-semibold">{a.accion}</p>}
+      {a.accion && !cerrada && <p className="text-[15px]">{a.accion}</p>}
 
       <div className="flex items-center justify-between gap-2 flex-wrap pt-1">
         <span className="text-xs texto-apagado">{fechaCorta(a.creada)}</span>
@@ -100,7 +95,7 @@ export default function PantallaAlertas() {
   const cerradas = alertas.filter(a => !(a.estado === 'nueva' || a.estado === 'leida'))
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
       <header className="flex flex-col gap-1">
         <Link href="/" className="boton boton-sutil self-start" style={{ padding: 0 }}>
           <ArrowLeft size={15} aria-hidden />

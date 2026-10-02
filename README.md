@@ -32,6 +32,59 @@ pantalla lo explica en vez de fallar.
 La app le pide la API a su misma dirección y Next la reenvía a `BACKEND_URL`
 (por omisión `http://localhost:3001`), así que no hace falta abrir el 3001 ni pelear con CORS.
 
+## Diseño (1 oct 2026)
+
+Los colores salen del póster: fondo crema, texto azul marino y un solo color de acción, el
+turquesa del logo (`--acento`). El verde ya no adorna: solo dice "está bien" (`--ok`); el
+ámbar dice "ojo" y el rojo "peligro". Tarjetas blancas con un filo fino, sin vidrio ni
+degradados, y la letra es Figtree, empaquetada con la app para que funcione sin internet.
+
+- **Inicio** contesta una pregunta: ¿cómo está mi cultivo? Una tarjeta con el medidor, una
+  frase y el botón de regar; debajo el clima de la semana y tres accesos. Lo detallado queda
+  en "Ver más detalles".
+- **Bienvenida y guía rápida** (`components/ui/guia-inicio.tsx`): sale la primera vez, dice
+  qué es IonDroplet y enseña cuatro pasos. Se vuelve a abrir con el "?" de Inicio o desde Ajustes.
+- Los estados van en cápsula teñida (`.capsula`) y las listas de acciones en `ListaEnlaces`.
+
+## Dos copias de la misma app (1 oct 2026)
+
+| Dónde | Qué es | Cómo se prende |
+|---|---|---|
+| Vercel (público) | **Demostración.** Datos simulados en el navegador de cada visita; no hay bomba ni backend detrás. | Variable `NEXT_PUBLIC_DEMO=si` en Vercel |
+| La computadora del riego | **El sistema real**, con el ESP32 y la base. Solo en esta red. | `INICIAR_SISTEMA.bat`, sin esa variable |
+
+En modo demostración `apiFetch` no sale a la red: contesta `lib/demo/`, que simula la humedad,
+los riegos automáticos al cruzar el punto de riego, 30 días de historial, alertas, fertirriego y
+las decisiones del agente. Lo que en el sistema real hace la IA (consejos, análisis, chat y
+diagnóstico por foto) son textos de ejemplo armados con esos datos; el reporte de la foto dice
+que es un ejemplo. Cada visita tiene su propio sistema, que se borra al cerrar la pestaña.
+Aunque `BACKEND_URL` siguiera puesta en Vercel, `/api` contesta 404 en modo demostración.
+
+**Para verla trabajar** (el jurado la abre en su propio celular): el botón **Pruébalo** de la
+franja de arriba abre tres escenarios (`lib/demo/escenarios.ts`):
+
+- **Secar la tierra**: la humedad queda abajo del punto de riego y el automático riega solo en
+  segundos; un riego completo de la demostración dura menos de un minuto.
+- **Desconectar el sensor**: la última lectura envejece, sale el aviso y el automático no decide.
+  El mismo botón lo vuelve a conectar.
+- **Preguntar por qué regó**: abre el asistente con la pregunta, que contesta con los números del
+  último riego.
+
+Abajo de la hoja está **Empezar de nuevo**.
+
+**En una pantalla ancha** (1024 px o más) la demostración se abre en `/presentacion`: la app va
+adentro de un celular de 390 px y al lado hay un panel con los mismos escenarios, una línea que
+narra en vivo lo que pasa en la tierra y un código QR para abrirla en el celular. Cabe completa en
+1366 × 768, la laptop típica del proyector. Para verla sin el marco: `?marco=no`. Para que el
+celular pueda enmarcarla, en modo demostración la cabecera es `X-Frame-Options: SAMEORIGIN`; la app
+real se queda en `DENY`.
+
+Para verla en esta computadora sin pisar la app real (`.next`):
+
+```bash
+NEXT_PUBLIC_DEMO=si NEXT_DIST_DIR=.next-demo npx next dev -p 3007
+```
+
 ## Cómo correrlo
 
 1. Arranca el backend de siempre (el del repo principal, puerto 3001).

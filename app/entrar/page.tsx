@@ -122,7 +122,7 @@ export default function PantallaEntrar() {
         </p>
       )}
 
-      <a href="/" className="text-base font-semibold" style={{ color: 'var(--verde)' }}>
+      <a href="/" className="text-base font-semibold" style={{ color: 'var(--acento)' }}>
         Solo quiero ver el sistema
       </a>
 

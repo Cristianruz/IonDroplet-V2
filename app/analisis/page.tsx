@@ -1,9 +1,8 @@
 'use client'
 
-import { RefreshCw, TriangleAlert, ListChecks, CloudSun, Info, Zap } from 'lucide-react'
+import { RefreshCw, Check, CloudSun, Info, Zap } from 'lucide-react'
 import { useAnalisis, type Nivel, type Confianza } from '@/hooks/use-analisis'
 import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { Aparece } from '@/components/ui/aparece'
 import { AgenteCard } from '@/components/ia/agente-card'
 import { haceCuanto } from '@/lib/tiempo'
 import { colorEstado } from '@/lib/estilo'
@@ -19,6 +18,12 @@ const COLOR_NIVEL: Record<Nivel, string> = {
   alto: 'var(--peligro)',
   medio: 'var(--alerta)',
   bajo: 'var(--verde)',
+}
+
+const TEXTO_NIVEL: Record<Nivel, string> = {
+  alto: 'Alto',
+  medio: 'Medio',
+  bajo: 'Bajo',
 }
 
 const TEXTO_CONFIANZA: Record<Confianza, string> = {
@@ -40,7 +45,7 @@ export default function PantallaAnalisis() {
   const ionizando = estadoEsp.pumpState === 1
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
       <header className="flex items-center justify-between gap-3">
         <h1 className="titulo-pantalla">Análisis</h1>
         <button
@@ -48,7 +53,7 @@ export default function PantallaAnalisis() {
           onClick={refrescar}
           disabled={refrescando || estado === 'cargando'}
           className="boton boton-secundario"
-          style={{ minHeight: 38, padding: '0 13px', borderRadius: 'var(--radio-pill)', fontSize: 13, fontWeight: 700, color: 'var(--tinta-suave)' }}
+          style={{ minHeight: 42, padding: '0 16px', borderRadius: 'var(--radio-pill)', fontSize: 15 }}
         >
           <RefreshCw
             size={15}
@@ -96,188 +101,149 @@ export default function PantallaAnalisis() {
         </p>
       )}
 
-      {/* --- Resumen --- */}
+      {/* --- Resumen: cómo va y qué viene, en un solo lugar --- */}
       {analisis && (
-        <Aparece>
-          <section className="tarjeta flex flex-col gap-3" aria-label="Resumen">
-            <div className="flex items-center justify-between gap-2 flex-wrap">
-              <span className="etiqueta">Lo que veo</span>
-              <span
-                className="flex items-center gap-1.5 text-xs font-bold"
-                style={{ color: analisis.confianza === 'media' ? 'var(--alerta-texto)' : COLOR_CONFIANZA[analisis.confianza] ?? 'var(--apagado)' }}
-              >
-                <span className="punto" style={{ background: COLOR_CONFIANZA[analisis.confianza] ?? 'var(--apagado)' }} aria-hidden />
-                {TEXTO_CONFIANZA[analisis.confianza] ?? analisis.confianza}
-              </span>
-            </div>
-            <p className="text-[14.5px] leading-relaxed">{analisis.resumen}</p>
-            <p className="text-xs texto-apagado">{analisis.porque_confianza}</p>
-            {cuando && (
-              <p className="text-xs texto-apagado">
-                Revisado {haceCuanto(new Date(cuando))?.replace('hace', 'hace') ?? ''}
-              </p>
-            )}
-          </section>
-        </Aparece>
+        <section className="tarjeta flex flex-col gap-3" aria-label="Resumen">
+          <div className="flex items-start justify-between gap-3">
+            <h2 className="titulo-bloque">Cómo va tu cultivo</h2>
+            <span
+              className="capsula capsula-nivel"
+              style={colorEstado(COLOR_CONFIANZA[analisis.confianza] ?? 'var(--apagado)')}
+              title={analisis.porque_confianza}
+            >
+              {TEXTO_CONFIANZA[analisis.confianza] ?? analisis.confianza}
+            </span>
+          </div>
+          <p className="text-[16px] leading-relaxed">{analisis.resumen}</p>
+          {analisis.pronostico && (
+            <p className="text-[15px] leading-relaxed texto-suave flex items-start gap-2">
+              <CloudSun size={18} aria-hidden style={{ flexShrink: 0, marginTop: 2, color: 'var(--alerta)' }} />
+              {analisis.pronostico}
+            </p>
+          )}
+          {cuando && (
+            <p className="text-xs texto-apagado">Revisado {haceCuanto(new Date(cuando)) ?? ''}</p>
+          )}
+        </section>
       )}
 
-      {/* --- Riesgos --- */}
+      {/* --- Qué hacer: lo primero que se busca después del resumen --- */}
+      {analisis && analisis.acciones?.length > 0 && (
+        <section className="tarjeta flex flex-col gap-3" aria-label="Qué te recomiendo">
+          <h2 className="titulo-bloque">Qué te recomiendo</h2>
+          <ol className="flex flex-col gap-3.5">
+            {analisis.acciones.map((a, i) => (
+              <li key={i} className="flex gap-3">
+                <span className="icono-redondo" style={{ width: 30, height: 30 }} aria-hidden>
+                  <Check size={16} />
+                </span>
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-[16px] font-semibold leading-snug">{a.texto}</span>
+                  <span className="text-sm texto-suave">{a.porque}</span>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {/* --- Riesgos: una lista, cada uno con el número que lo sostiene --- */}
       {analisis && analisis.riesgos?.length > 0 && (
-        <Aparece>
-          <section className="flex flex-col gap-2" aria-label="Riesgos">
-            <span className="etiqueta flex items-center gap-1.5">
-              <TriangleAlert size={13} aria-hidden />
-              Riesgos
-            </span>
-            {analisis.riesgos.map(r => (
-              <article
-                className="tarjeta flex flex-col gap-2"
+        <section className="tarjeta flex flex-col" aria-label="Riesgos de la semana">
+          <h2 className="titulo-bloque pb-1">Riesgos de la semana</h2>
+          <ul className="flex flex-col">
+            {analisis.riesgos.map((r, i) => (
+              <li
                 key={r.nombre}
-                style={{ borderLeft: `3px solid ${COLOR_NIVEL[r.nivel] ?? 'var(--borde)'}` }}
+                className="flex flex-col gap-1.5 py-3.5"
+                style={{ borderTop: i > 0 ? '1px solid var(--borde)' : undefined }}
               >
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-[15px] font-bold">{r.nombre}</span>
-                  {/* El nivel en cápsula sólida: se lee igual bajo el sol. */}
-                  <span
-                    className="capsula capsula-nivel"
-                    style={colorEstado(COLOR_NIVEL[r.nivel] ?? 'var(--apagado)')}
-                  >
-                    {r.nivel}
+                <div className="flex items-center justify-between gap-3">
+                  <span className="text-[16px] font-semibold">{r.nombre}</span>
+                  <span className="capsula capsula-nivel" style={colorEstado(COLOR_NIVEL[r.nivel] ?? 'var(--apagado)')}>
+                    {TEXTO_NIVEL[r.nivel] ?? r.nivel}
                   </span>
                 </div>
                 {/* El número que sostiene el nivel. Sin esto sería una opinión. */}
                 {r.dato && (
-                  <span
-                    className="w-fit text-xs font-semibold texto-suave"
-                    style={{ padding: '4px 10px', borderRadius: 8, background: 'var(--pista)', fontVariantNumeric: 'tabular-nums' }}
-                  >
+                  <span className="text-sm font-semibold texto-suave" style={{ fontVariantNumeric: 'tabular-nums' }}>
                     {r.dato}
                   </span>
                 )}
-                <p className="text-[13.5px] leading-normal texto-suave">{r.porque}</p>
-                <p className="text-[14.5px] font-bold">{r.quehacer}</p>
-              </article>
+                <p className="text-[15px]">{r.quehacer}</p>
+              </li>
             ))}
-          </section>
-        </Aparece>
-      )}
-
-      {/* --- Qué esperar --- */}
-      {analisis?.pronostico && (
-        <Aparece>
-          <section className="tarjeta flex flex-col gap-2" aria-label="Qué esperar">
-            <span className="etiqueta flex items-center gap-1.5">
-              <CloudSun size={13} aria-hidden />
-              Qué esperar estos días
-            </span>
-            <p className="text-sm leading-relaxed">{analisis.pronostico}</p>
-          </section>
-        </Aparece>
-      )}
-
-      {/* --- Acciones --- */}
-      {analisis && analisis.acciones?.length > 0 && (
-        <Aparece>
-          <section className="tarjeta flex flex-col gap-3" aria-label="Qué conviene hacer">
-            <span className="etiqueta flex items-center gap-1.5">
-              <ListChecks size={13} aria-hidden />
-              Qué conviene hacer
-            </span>
-            <ol className="flex flex-col gap-3">
-              {analisis.acciones.map((a, i) => (
-                <li key={i} className="flex gap-2.5">
-                  <span
-                    className="punto"
-                    style={{ background: COLOR_NIVEL[a.prioridad] ?? 'var(--apagado)', marginTop: 7 }}
-                    aria-hidden
-                  />
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[14.5px] font-bold">{a.texto}</span>
-                    <span className="text-xs texto-suave">{a.porque}</span>
-                  </div>
-                </li>
-              ))}
-            </ol>
-          </section>
-        </Aparece>
+          </ul>
+        </section>
       )}
 
       {/* --- El agente ---
           Lo que el sistema ajustó solo, con su razón y su botón de regreso.
           Se enseña a propósito: un sistema que mueve el punto de riego sin
           que se note es un sistema en el que no se puede confiar. */}
-      <Aparece><AgenteCard /></Aparece>
+      <AgenteCard />
 
       {/* --- Ionización ---
           En el prototipo no es un aparato aparte: el mismo relé que prende la
           bomba le da corriente a las varillas que ionizan el agua. Por eso aquí
           no hay botón propio (antes lo había y no movía nada) y el estado sale
           del relé, no de lo último que se tocó en la app. */}
-      <Aparece>
-        <section className="tarjeta flex flex-col gap-3" aria-label="Agua ionizada">
-          <div className="flex items-center justify-between gap-2">
-            <span className="etiqueta flex items-center gap-1.5">
-              <Zap size={13} aria-hidden />
-              Agua ionizada
+      <section className="tarjeta flex flex-col gap-3" aria-label="Agua ionizada">
+        <div className="flex items-start justify-between gap-3">
+          <h2 className="titulo-bloque flex items-center gap-2">
+            <Zap size={18} aria-hidden style={{ color: 'var(--oro)' }} />
+            Agua ionizada
+          </h2>
+          {ionizando ? (
+            <span className="capsula" style={colorEstado('var(--oro)')}>Ionizando</span>
+          ) : (
+            <span className="flex items-center gap-1.5 text-sm texto-suave mt-0.5">
+              <span className="punto" style={{ background: 'var(--apagado)' }} aria-hidden />
+              Apagada
             </span>
-            {ionizando ? (
-              <span className="capsula" style={colorEstado('var(--oro)')}>Ionizando</span>
-            ) : (
-              <span className="flex items-center gap-1.5 text-sm font-semibold texto-suave">
-                <span className="punto" style={{ background: 'var(--apagado)' }} aria-hidden />
-                Apagada
-              </span>
-            )}
-          </div>
-
-          <p className="text-sm">
-            La ionización va junto con el riego: cada vez que la bomba riega, las varillas ionizan
-            el agua. Se prende con <strong>Regar ahora</strong> o cuando el sistema decide regar.
-          </p>
-
-          {analisis?.ionizacion && (
-            <p className="text-sm texto-suave">
-              <strong style={{ color: analisis.ionizacion.recomendada ? 'var(--verde)' : 'var(--tinta)' }}>
-                {analisis.ionizacion.recomendada ? 'Conviene regar con agua ionizada.' : 'Por ahora no es necesario.'}
-              </strong>{' '}
-              {analisis.ionizacion.porque}
-            </p>
           )}
+        </div>
 
-          {indicadores?.riego7d?.pct_con_ionizacion !== null &&
-            indicadores?.riego7d?.pct_con_ionizacion !== undefined && (
-              <p className="text-sm">
-                De lo que regaste esta semana,{' '}
-                <strong>{indicadores.riego7d.pct_con_ionizacion}%</strong> llevó agua ionizada.
-              </p>
-            )}
+        <p className="text-[15px] texto-suave">
+          Cada vez que la bomba riega, las varillas ionizan el agua.
+          {indicadores?.riego7d?.pct_con_ionizacion != null && (
+            <> Esta semana, <strong style={{ color: 'var(--tinta)' }}>{indicadores.riego7d.pct_con_ionizacion}%</strong> del riego llevó agua ionizada.</>
+          )}
+        </p>
 
-          <p className="text-xs texto-apagado">
+        {analisis?.ionizacion && (
+          <p className="text-[15px]">
+            <strong>{analisis.ionizacion.recomendada ? 'Conviene regar con agua ionizada.' : 'Por ahora no es necesario.'}</strong>{' '}
+            <span className="texto-suave">{analisis.ionizacion.porque}</span>
+          </p>
+        )}
+
+        <details className="text-sm texto-apagado">
+          <summary className="cursor-pointer font-semibold">¿Qué tan seguro es este dato?</summary>
+          <p className="pt-2">
             El relé no avisa su estado por su cuenta: aquí se ve la última orden que se le mandó.
             Tampoco se mide ninguna propiedad del agua, así que el sistema no puede demostrar el
             efecto de la ionización.
           </p>
-        </section>
-      </Aparece>
+        </details>
+      </section>
 
       {/* --- Lo que falta --- */}
       {analisis && analisis.faltantes?.length > 0 && (
-        <Aparece>
-          <section className="tarjeta flex flex-col gap-2" aria-label="Lo que le falta al análisis">
-            <span className="etiqueta flex items-center gap-1.5">
-              <Info size={13} aria-hidden />
-              Con qué mejoraría este análisis
-            </span>
-            <ul className="flex flex-col gap-1.5">
-              {analisis.faltantes.map((f, i) => (
-                <li key={i} className="text-sm texto-suave flex gap-2">
-                  <span className="punto" style={{ background: 'var(--apagado)', marginTop: 7 }} aria-hidden />
-                  {f}
-                </li>
-              ))}
-            </ul>
-          </section>
-        </Aparece>
+        <section className="tarjeta flex flex-col gap-2" aria-label="Lo que le falta al análisis">
+          <h2 className="titulo-bloque flex items-center gap-2">
+            <Info size={18} aria-hidden className="texto-apagado" />
+            Con qué mejoraría este análisis
+          </h2>
+          <ul className="flex flex-col gap-1.5">
+            {analisis.faltantes.map((f, i) => (
+              <li key={i} className="text-[15px] texto-suave flex gap-2">
+                <span className="punto" style={{ background: 'var(--apagado)', marginTop: 9 }} aria-hidden />
+                {f}
+              </li>
+            ))}
+          </ul>
+        </section>
       )}
     </main>
   )

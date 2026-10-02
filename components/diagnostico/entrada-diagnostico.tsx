@@ -11,7 +11,7 @@ export function EntradaDiagnostico({ parcelaId }: { parcelaId?: number | null })
     >
       <span
         className="flex items-center justify-center shrink-0"
-        style={{ width: 48, height: 48, borderRadius: 'var(--radio-sm)', background: 'var(--verde-suave)', color: 'var(--verde)' }}
+        style={{ width: 48, height: 48, borderRadius: 'var(--radio-sm)', background: 'var(--acento-suave)', color: 'var(--acento)' }}
         aria-hidden
       >
         <Camera size={24} />

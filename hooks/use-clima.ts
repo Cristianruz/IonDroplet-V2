@@ -25,6 +25,8 @@ export interface Clima {
     precipitation_sum: number[]
     precipitation_probability_max: number[]
     wind_speed_10m_max: number[]
+    /** Código del tiempo (WMO): sol, nubes, lluvia. Sirve para el ícono. */
+    weather_code?: number[]
   }
   avisos: AvisoClima[]
 }

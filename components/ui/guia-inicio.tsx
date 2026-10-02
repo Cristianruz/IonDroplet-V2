@@ -1,60 +1,28 @@
 'use client'
 
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
-import { Bell, Camera, ChevronLeft, ChevronRight, House, MessageCircle, Sprout, X } from 'lucide-react'
+import {
+  Bot, Brain, Camera, ChevronLeft, Droplet, Droplets, FlaskConical, House, MessageCircle,
+  Settings, Sprout, TrendingUp, X, type LucideIcon,
+} from 'lucide-react'
+import { Logo } from '@/components/ui/logo'
+import { EVENTO_ABRIR_PRUEBAS, MODO_DEMO } from '@/lib/modo'
+import { colorEstado } from '@/lib/estilo'
 
-// La guía de inicio.
+// La bienvenida y la guía rápida.
 //
-// Sale sola la primera vez que alguien abre la app en un aparato, y se puede
-// volver a ver desde Ajustes. Seis pasos cortos: qué es el sistema y dónde
-// está cada cosa. No sale en el panel de operación (es para el jurado) ni en
-// la pantalla de entrar.
+// Sale sola la primera vez que alguien abre la app en un aparato y se vuelve
+// a ver con el botón "?" de Inicio o desde Ajustes. Primero dice QUÉ ES
+// IonDroplet en tres renglones; después, quien quiera, ve cuatro pasos con un
+// dibujo de la pantalla de verdad. No sale en el panel de operación ni en la
+// pantalla de entrar.
 //
 // Lo que ya se vio vive en el navegador: no hay tabla para esto.
 
-const CLAVE = 'iondroplet.guia-vista'
-/** Otra pantalla (Ajustes) la abre mandando este evento. */
+const CLAVE = 'iondroplet.bienvenida-v2'
+/** Otra pantalla (Inicio, Ajustes) la abre mandando este evento. */
 export const EVENTO_ABRIR_GUIA = 'iondroplet:abrir-guia'
-
-const PASOS = [
-  {
-    Icono: Sprout,
-    titulo: 'Bienvenido a IonDroplet',
-    texto:
-      'El sistema mide la humedad del suelo de tu cultivo, controla el riego con agua ionizada y te ayuda a decidir con datos. Esta guía toma un minuto.',
-  },
-  {
-    Icono: House,
-    titulo: 'Inicio: el estado de tu cultivo',
-    texto:
-      'Aquí ves la humedad actual, si el sistema está regando y por qué. En modo automático riega cuando la humedad baja del punto de riego; con «Regar ahora» inicias un riego cuando lo necesites.',
-  },
-  {
-    Icono: Sprout,
-    titulo: 'Cultivo: la ficha técnica',
-    texto:
-      'Registra cultivo, etapa, superficie y caudal de la bomba: con esos datos se calculan el agua y las recomendaciones. Ahí también ajustas el punto de riego y consultas las plagas de temporada.',
-  },
-  {
-    Icono: Camera,
-    titulo: 'Diagnóstico por foto',
-    texto:
-      'Si notas algo extraño en una planta, toma hasta tres fotos. Recibes las causas más probables, cómo confirmarlas en campo y qué hacer. Lo encuentras en Cultivo y en Plagas.',
-  },
-  {
-    Icono: MessageCircle,
-    titulo: 'El asistente',
-    texto:
-      'El botón verde abre al asistente. Pregúntale sobre riego, clima, plagas o nutrición; también puede proponerte regar o detener el riego, y tú lo confirmas con un toque. La primera vez, vincula el aparato con el código que aparece en la computadora del riego.',
-  },
-  {
-    Icono: Bell,
-    titulo: 'Avisos, Análisis e Historial',
-    texto:
-      'La campana te avisa de heladas, lluvia o fallas del sensor. En Análisis está la evaluación completa de la semana y en Historial, la humedad y los riegos registrados.',
-  },
-]
 
 function yaSeVio(): boolean {
   try {
@@ -71,22 +39,155 @@ function marcarVista() {
   } catch {}
 }
 
+// --- Los dibujos de cada paso: piezas de la app, en chiquito ---
+
+function Maqueta({ children }: { children: ReactNode }) {
+  return (
+    <div
+      className="w-full rounded-[20px] p-4 flex flex-col gap-3"
+      style={{ background: 'var(--tarjeta)', border: '1px solid var(--borde)', boxShadow: 'var(--sombra-tarjeta)' }}
+      aria-hidden
+    >
+      {children}
+    </div>
+  )
+}
+
+function DibujoMedidor() {
+  const r = 34
+  const c = 2 * Math.PI * r
+  return (
+    <Maqueta>
+      <div className="flex items-center gap-4">
+        <svg width="84" height="84" viewBox="0 0 84 84">
+          <circle cx="42" cy="42" r={r} fill="none" stroke="var(--pista)" strokeWidth="9" />
+          <circle cx="42" cy="42" r={r} fill="none" stroke="var(--ok)" strokeWidth="9" strokeLinecap="round"
+            strokeDasharray={`${0.52 * c} ${c}`} transform="rotate(-90 42 42)" />
+          <text x="42" y="48" textAnchor="middle" fontSize="20" fontWeight="800" fill="var(--tinta)">52%</text>
+        </svg>
+        <div className="flex flex-col gap-1 text-left">
+          <span className="font-bold text-[17px]">Tu tierra está bien</span>
+          <span className="text-sm texto-suave">No necesita agua ahora.</span>
+        </div>
+      </div>
+      <div className="flex gap-2 text-xs font-semibold">
+        <span className="capsula capsula-nivel" style={colorEstado('var(--ok)')}>Bien</span>
+        <span className="capsula capsula-nivel" style={colorEstado('var(--alerta)')}>Le falta agua</span>
+        <span className="capsula capsula-nivel" style={colorEstado('var(--agua)')}>Regando</span>
+      </div>
+    </Maqueta>
+  )
+}
+
+function DibujoRiego() {
+  return (
+    <Maqueta>
+      <div className="flex flex-col gap-2 text-left">
+        <span className="text-sm font-semibold texto-suave">Humedad de la tierra</span>
+        <div className="relative h-3 rounded-full" style={{ background: 'var(--pista)' }}>
+          <div className="h-full rounded-full" style={{ width: '58%', background: 'var(--ok)' }} />
+          <span className="absolute" style={{ left: '40%', top: -5, width: 3, height: 22, borderRadius: 2, background: 'var(--tinta)' }} />
+        </div>
+        <span className="text-xs texto-apagado" style={{ paddingLeft: 'calc(40% - 40px)' }}>punto de riego</span>
+      </div>
+      <div className="flex items-center gap-2 rounded-[12px] px-3 py-2" style={{ background: 'var(--acento-suave)' }}>
+        <Bot size={18} style={{ color: 'var(--acento)' }} />
+        <span className="text-sm text-left">Si baja de la raya, riega solo.</span>
+      </div>
+      <span className="boton boton-secundario boton-ancho" style={{ pointerEvents: 'none' }}>
+        <Droplet size={17} /> Regar ahora
+      </span>
+    </Maqueta>
+  )
+}
+
+function DibujoAyuda() {
+  return (
+    <Maqueta>
+      <div className="flex flex-col gap-2">
+        <span className="self-end rounded-[14px] px-3 py-2 text-sm" style={{ background: 'var(--acento)', color: 'var(--sobre-estado)' }}>
+          ¿Conviene regar hoy?
+        </span>
+        <span className="self-start rounded-[14px] px-3 py-2 text-sm text-left" style={{ background: 'var(--pista)', maxWidth: '85%' }}>
+          Hoy no: tu tierra está en 52% y mañana viene lluvia.
+        </span>
+      </div>
+      <div className="flex items-center gap-3 rounded-[14px] p-3" style={{ border: '1px solid var(--borde)' }}>
+        <span className="icono-redondo"><Camera size={19} /></span>
+        <span className="text-sm text-left"><strong>Revisar una planta</strong><br /><span className="texto-suave">Toma una foto y te digo qué puede ser.</span></span>
+      </div>
+    </Maqueta>
+  )
+}
+
+function DibujoSecciones() {
+  const secciones: Array<[LucideIcon, string, string]> = [
+    [House, 'Inicio', 'Cómo está hoy'],
+    [Sprout, 'Cultivo', 'Su ficha y el punto de riego'],
+    [Brain, 'Análisis', 'Riesgos y qué hacer'],
+    [TrendingUp, 'Historial', 'Humedad y riegos'],
+    [Settings, 'Ajustes', 'Tema y la guía'],
+  ]
+  return (
+    <Maqueta>
+      {secciones.map(([Icono, nombre, detalle]) => (
+        <div key={nombre} className="flex items-center gap-3 text-left">
+          <span className="icono-redondo" style={{ width: 34, height: 34 }}><Icono size={17} /></span>
+          <span className="text-[15px]"><strong>{nombre}</strong> <span className="texto-suave">· {detalle}</span></span>
+        </div>
+      ))}
+    </Maqueta>
+  )
+}
+
+const PASOS: Array<{ titulo: string; texto: string; Dibujo: () => ReactNode }> = [
+  {
+    titulo: 'Mira cómo está tu cultivo',
+    texto: 'Al abrir la app ves la humedad de la tierra en un círculo y una frase que te dice si todo está bien o si le falta agua.',
+    Dibujo: DibujoMedidor,
+  },
+  {
+    titulo: 'El riego es automático',
+    texto: 'Cuando la tierra baja del punto de riego, el sistema riega solo y se detiene al llegar a su punto. Si lo necesitas, también puedes regar tú.',
+    Dibujo: DibujoRiego,
+  },
+  {
+    titulo: '¿Dudas? Pregunta o toma una foto',
+    texto: 'El asistente contesta sobre riego, clima y plagas. Si ves algo raro en una planta, tómale una foto y te dice qué puede ser.',
+    Dibujo: DibujoAyuda,
+  },
+  {
+    titulo: 'Todo a la mano',
+    texto: 'Abajo de la pantalla están las secciones. Si te pierdes, toca el signo de pregunta en Inicio y vuelves a ver esta guía.',
+    Dibujo: DibujoSecciones,
+  },
+]
+
+const QUE_HACE: Array<[LucideIcon, string, string]> = [
+  [Droplets, 'Mide la humedad de tu tierra', 'Un sensor en el campo, todo el día.'],
+  [Bot, 'Riega solo cuando hace falta', 'Según el clima y la etapa de tu cultivo.'],
+  [MessageCircle, 'Te explica cada decisión', 'Y te avisa si viene helada o lluvia.'],
+]
+
 export function GuiaInicio() {
   const ruta = usePathname()
   const [abierta, setAbierta] = useState(false)
-  const [paso, setPaso] = useState(0)
+  // -1 es la bienvenida; 0 a 3, los pasos de la guía.
+  const [paso, setPaso] = useState(-1)
   const principal = useRef<HTMLButtonElement | null>(null)
 
   const excluida = ruta?.startsWith('/operacion') || ruta?.startsWith('/entrar')
 
-  // La primera vez, sola. Después, solo si Ajustes la pide.
+  // La primera vez, sola. Después, solo si alguien la pide. Dentro del
+  // celular de la vista de presentación no sale sola: el panel de al lado ya
+  // explica qué es IonDroplet y la bienvenida taparía lo que se demuestra.
   useEffect(() => {
-    if (!excluida && !yaSeVio()) setAbierta(true)
+    if (!excluida && !yaSeVio() && window.parent === window) setAbierta(true)
   }, [excluida])
 
   useEffect(() => {
     const abrir = () => {
-      setPaso(0)
+      setPaso(-1)
       setAbierta(true)
     }
     window.addEventListener(EVENTO_ABRIR_GUIA, abrir)
@@ -98,13 +199,21 @@ export function GuiaInicio() {
     setAbierta(false)
   }, [])
 
+  // Mientras está abierta, la pantalla de atrás no se mueve.
+  useEffect(() => {
+    if (!abierta) return
+    const antes = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = antes }
+  }, [abierta])
+
   // Teclado: Escape cierra, flechas avanzan y regresan.
   useEffect(() => {
     if (!abierta) return
     const alTeclear = (e: KeyboardEvent) => {
       if (e.key === 'Escape') cerrar()
       if (e.key === 'ArrowRight') setPaso(p => Math.min(PASOS.length - 1, p + 1))
-      if (e.key === 'ArrowLeft') setPaso(p => Math.max(0, p - 1))
+      if (e.key === 'ArrowLeft') setPaso(p => Math.max(-1, p - 1))
     }
     window.addEventListener('keydown', alTeclear)
     return () => window.removeEventListener('keydown', alTeclear)
@@ -116,91 +225,153 @@ export function GuiaInicio() {
 
   if (!abierta || excluida) return null
 
-  const { Icono, titulo, texto } = PASOS[paso]
+  const enGuia = paso >= 0
   const ultimo = paso === PASOS.length - 1
 
   return (
-    <>
-      <div className="fixed inset-0 z-[70]" style={{ background: 'rgba(0,0,0,.5)' }} aria-hidden onClick={cerrar} />
-      <section
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="guia-titulo"
-        className="fixed z-[71] panel-vidrio flex flex-col gap-5"
-        style={{
-          left: 16,
-          right: 16,
-          top: '50%',
-          transform: 'translateY(-50%)',
-          maxWidth: 440,
-          margin: '0 auto',
-          padding: 24,
-          borderRadius: 'var(--radio)',
-        }}
+    <section
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="guia-titulo"
+      className="fixed inset-0 z-[70] overflow-y-auto"
+      style={{ background: 'var(--fondo)' }}
+    >
+      <div
+        className="mx-auto flex flex-col min-h-full px-5"
+        style={{ maxWidth: 460, paddingTop: 'max(16px, env(safe-area-inset-top))', paddingBottom: 'max(20px, env(safe-area-inset-bottom))' }}
       >
-        <div className="flex items-center justify-between">
-          <span className="etiqueta">
-            Guía de inicio · {paso + 1} de {PASOS.length}
-          </span>
-          <button type="button" onClick={cerrar} className="boton boton-sutil" style={{ minHeight: 32, padding: '0 8px' }}>
-            <X size={16} aria-hidden />
-            Saltar
+        {/* Barra de arriba: regresar y saltar */}
+        <div className="flex items-center justify-between" style={{ minHeight: 48 }}>
+          {enGuia ? (
+            <button type="button" onClick={() => setPaso(p => p - 1)} className="boton boton-sutil" style={{ paddingLeft: 4 }}>
+              <ChevronLeft size={20} aria-hidden />
+              Atrás
+            </button>
+          ) : <span />}
+          <button type="button" onClick={cerrar} className="boton boton-sutil">
+            {enGuia ? 'Saltar' : <><X size={18} aria-hidden /> Cerrar</>}
           </button>
         </div>
 
-        <div className="flex flex-col items-center text-center gap-3">
-          <span
-            className="flex items-center justify-center"
-            style={{ width: 64, height: 64, borderRadius: '50%', background: 'var(--verde-suave)', color: 'var(--verde)' }}
-            aria-hidden
-          >
-            <Icono size={30} />
-          </span>
-          <h2 id="guia-titulo" className="titulo-pantalla">{titulo}</h2>
-          <p className="text-base texto-suave leading-relaxed" aria-live="polite">{texto}</p>
-        </div>
+        {!enGuia ? (
+          // --- La bienvenida: qué es IonDroplet ---
+          <div key="bienvenida" className="flex-1 flex flex-col gap-7 py-4" style={{ animation: 'subir-hoja var(--lento) var(--curva)' }}>
+            <div className="flex flex-col items-center text-center gap-4">
+              <Logo tamano={84} />
+              <div className="flex flex-col gap-2">
+                <h2 id="guia-titulo" className="font-extrabold" style={{ fontSize: 28, letterSpacing: '-.025em', lineHeight: 1.15 }}>
+                  Bienvenido a IonDroplet
+                </h2>
+                <p className="font-bold" style={{ fontSize: 19, lineHeight: 1.3 }}>
+                  Agua exacta, en el <span style={{ color: 'var(--acento)' }}>momento exacto.</span>
+                </p>
+              </div>
+              <p className="text-[16px] texto-suave leading-relaxed">
+                Somos un sistema de riego inteligente. Cuidamos el agua de tu cultivo para que no
+                le falte ni le sobre, y te explicamos todo con palabras sencillas.
+              </p>
+            </div>
 
-        {/* Los puntos del avance; también sirven para saltar a un paso. */}
-        <div className="flex justify-center gap-2" role="group" aria-label="Pasos de la guía">
-          {PASOS.map((p, i) => (
-            <button
-              key={p.titulo}
-              type="button"
-              onClick={() => setPaso(i)}
-              aria-label={`Paso ${i + 1}: ${p.titulo}`}
-              aria-current={i === paso ? 'step' : undefined}
-              style={{
-                width: i === paso ? 22 : 8,
-                height: 8,
-                borderRadius: 4,
-                background: i === paso ? 'var(--verde)' : 'var(--pista)',
-                transition: 'width var(--normal) var(--curva)',
-              }}
-            />
-          ))}
-        </div>
+            <ul className="flex flex-col gap-4">
+              {QUE_HACE.map(([Icono, titulo, detalle]) => (
+                <li key={titulo} className="flex items-center gap-4">
+                  <span className="icono-redondo" style={{ width: 48, height: 48 }}>
+                    <Icono size={23} aria-hidden />
+                  </span>
+                  <span className="flex flex-col">
+                    <span className="text-[16px] font-bold">{titulo}</span>
+                    <span className="text-sm texto-suave">{detalle}</span>
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-        <div className="grid grid-cols-2 gap-2">
-          <button
-            type="button"
-            onClick={() => setPaso(p => p - 1)}
-            disabled={paso === 0}
-            className="boton boton-secundario"
-          >
-            <ChevronLeft size={18} aria-hidden />
-            Anterior
-          </button>
-          <button
-            ref={principal}
-            type="button"
-            onClick={() => (ultimo ? cerrar() : setPaso(p => p + 1))}
-            className="boton boton-primario"
-          >
-            {ultimo ? 'Comenzar' : 'Siguiente'}
-            {!ultimo && <ChevronRight size={18} aria-hidden />}
-          </button>
-        </div>
-      </section>
-    </>
+            {MODO_DEMO && (
+              <p className="text-sm flex items-start gap-2.5 rounded-[14px] p-3.5" style={{ background: 'var(--fondo-alerta)', color: 'var(--tinta)' }}>
+                <FlaskConical size={18} aria-hidden style={{ color: 'var(--alerta)', flexShrink: 0, marginTop: 1 }} />
+                <span>
+                  Estás viendo una <strong>demostración</strong> con datos de ejemplo: nada riega de
+                  verdad, así que toca todo con confianza.
+                </span>
+              </p>
+            )}
+
+            <div className="mt-auto flex flex-col gap-2">
+              {MODO_DEMO ? (
+                // En la demostración lo primero es verlo trabajar: abre la
+                // hoja de Pruébalo encima de Inicio. La guía queda de segunda.
+                <>
+                  <button
+                    ref={principal}
+                    type="button"
+                    onClick={() => {
+                      cerrar()
+                      window.dispatchEvent(new Event(EVENTO_ABRIR_PRUEBAS))
+                    }}
+                    className="boton boton-primario boton-ancho"
+                    style={{ minHeight: 54, fontSize: 17 }}
+                  >
+                    <Droplets size={19} aria-hidden />
+                    Ver al sistema regar
+                  </button>
+                  <button type="button" onClick={() => setPaso(0)} className="boton boton-secundario boton-ancho">
+                    Ver guía rápida · 1 minuto
+                  </button>
+                </>
+              ) : (
+                <button ref={principal} type="button" onClick={() => setPaso(0)} className="boton boton-primario boton-ancho" style={{ minHeight: 54, fontSize: 17 }}>
+                  Ver guía rápida · 1 minuto
+                </button>
+              )}
+              <button type="button" onClick={cerrar} className="boton boton-sutil boton-ancho">
+                Ir directo a la app
+              </button>
+            </div>
+          </div>
+        ) : (
+          // --- La guía rápida: un paso a la vez ---
+          <div key={paso} className="flex-1 flex flex-col gap-6 py-4" style={{ animation: 'subir-hoja var(--lento) var(--curva)' }}>
+            {(() => { const { Dibujo } = PASOS[paso]; return <Dibujo /> })()}
+            <div className="flex flex-col gap-2">
+              <h2 id="guia-titulo" className="font-extrabold" style={{ fontSize: 24, letterSpacing: '-.02em', lineHeight: 1.2 }}>
+                {PASOS[paso].titulo}
+              </h2>
+              <p className="text-[16px] texto-suave leading-relaxed" aria-live="polite">{PASOS[paso].texto}</p>
+            </div>
+
+            <div className="mt-auto flex flex-col gap-5">
+              <p className="text-sm texto-apagado text-center -mb-2">Paso {paso + 1} de {PASOS.length}</p>
+              <div className="flex justify-center gap-2" role="group" aria-label="Pasos de la guía">
+                {PASOS.map((p, i) => (
+                  <button
+                    key={p.titulo}
+                    type="button"
+                    onClick={() => setPaso(i)}
+                    aria-label={`Paso ${i + 1}: ${p.titulo}`}
+                    aria-current={i === paso ? 'step' : undefined}
+                    style={{
+                      width: i === paso ? 26 : 9,
+                      height: 9,
+                      borderRadius: 5,
+                      background: i <= paso ? 'var(--acento)' : 'var(--pista)',
+                      transition: 'width var(--normal) var(--curva), background-color var(--normal)',
+                    }}
+                  />
+                ))}
+              </div>
+              <button
+                ref={principal}
+                type="button"
+                onClick={() => (ultimo ? cerrar() : setPaso(p => p + 1))}
+                className="boton boton-primario boton-ancho"
+                style={{ minHeight: 54, fontSize: 17 }}
+              >
+                {ultimo ? '¡Listo, empezar!' : 'Siguiente'}
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   )
 }

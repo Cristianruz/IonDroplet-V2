@@ -10,15 +10,15 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'IonDroplet — Riego Inteligente',
+    name: 'IonDroplet · Riego Inteligente',
     short_name: 'IonDroplet',
     description: 'Riego con agua ionizada: humedad, clima y avisos del cultivo.',
     start_url: '/',
     scope: '/',
     display: 'standalone',
     orientation: 'portrait',
-    background_color: '#f7f8f9',
-    theme_color: '#1f7a3d',
+    background_color: '#f6f4ef',
+    theme_color: '#13283d',
     lang: 'es-MX',
     categories: ['productivity', 'utilities'],
     icons: [

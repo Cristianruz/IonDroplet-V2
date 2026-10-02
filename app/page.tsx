@@ -1,148 +1,123 @@
 'use client'
 
-import { useIonDroplet } from '@/hooks/use-iondroplet'
-import { HumedadCard } from '@/components/riego/humedad-card'
-import { RiegoCard } from '@/components/riego/riego-card'
-import { GraficaHumedad } from '@/components/riego/grafica-humedad'
+import { useState } from 'react'
 import Link from 'next/link'
-import { Sprout, Bell } from 'lucide-react'
+import { Bell, ChevronDown, CircleHelp } from 'lucide-react'
+import { useIonDroplet } from '@/hooks/use-iondroplet'
+import { useParcela } from '@/hooks/use-parcela'
+import { useResumenAlertas } from '@/hooks/use-alertas'
+import { TarjetaHoy } from '@/components/inicio/tarjeta-hoy'
+import { ResumenSemana } from '@/components/inicio/resumen-semana'
+import { Accesos } from '@/components/inicio/accesos'
 import { ClimaCard } from '@/components/parcela/clima-card'
 import { BalanceCard } from '@/components/riego/balance-card'
-import { useParcela } from '@/hooks/use-parcela'
-import { Aparece } from '@/components/ui/aparece'
-import { ConsejoIA } from '@/components/ia/consejo-ia'
-import { EsqueletoHumedad, EsqueletoGrafica } from '@/components/ui/esqueletos'
-import { useResumenAlertas } from '@/hooks/use-alertas'
+import { GraficaHumedad } from '@/components/riego/grafica-humedad'
+import { Logo } from '@/components/ui/logo'
+import { EVENTO_ABRIR_GUIA } from '@/components/ui/guia-inicio'
+import { EsqueletoHumedad } from '@/components/ui/esqueletos'
 
-export default function Dashboard() {
+// Inicio, de arriba abajo, en el orden en que el agricultor se pregunta las
+// cosas: ¿cómo está mi cultivo?, ¿qué tiempo viene?, ¿qué más puedo hacer?
+// Lo detallado (pronóstico de 7 días, cuentas del agua, gráfica de 24 h)
+// queda guardado en "Ver más detalles": está, pero no estorba.
+
+function saludo(): string {
+  const h = new Date().getHours()
+  if (h < 12) return 'Buenos días'
+  if (h < 19) return 'Buenas tardes'
+  return 'Buenas noches'
+}
+
+export default function Inicio() {
   const { parcela, umbralRiego, cargando } = useParcela()
   const {
-    humedad,
-    conectado,
-    sensorActivo,
-    ultimaLectura,
-    estadoEsp,
-    historial,
-    regarAhora,
-    terminarRiegoManual,
-    volverAAutomatico,
-    cambiarModo,
+    humedad, conectado, sensorActivo, ultimaLectura, estadoEsp, historial,
+    regarAhora, terminarRiegoManual, volverAAutomatico, cambiarModo,
   } = useIonDroplet()
   const { resumen } = useResumenAlertas()
   const sinVer = resumen?.sinVer ?? 0
-  const hayCriticas = (resumen?.porSeveridad.critica ?? 0) > 0
+  const [detalles, setDetalles] = useState(false)
 
   return (
-    <main className="max-w-5xl mx-auto px-4 py-3 flex flex-col gap-4">
-      {/* Barra superior. El estado del sistema va como un punto y una
-          palabra, no como un bloque de color: cuando todo está bien no
-          tiene por qué llamar la atención. */}
-      <header className="hero flex items-center justify-between gap-3 py-1">
-        <div className="flex items-center gap-2.5">
-          <span
-            className="flex items-center justify-center"
-            style={{
-              width: 32, height: 32, borderRadius: 12,
-              background: 'var(--tarjeta)', border: '1px solid var(--vidrio-filo)',
-              boxShadow: 'var(--sombra-boton)',
-            }}
-            aria-hidden
-          >
-            <Sprout size={18} style={{ color: 'var(--verde)' }} />
-          </span>
-          <h1 className="titulo-pantalla" style={{ fontSize: '18.5px' }}>IonDroplet</h1>
+    <main className="max-w-2xl mx-auto px-4 pt-4 pb-3 flex flex-col gap-4">
+      <header className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <Logo tamano={40} />
+          <div>
+            <p className="text-sm texto-suave leading-tight" suppressHydrationWarning>{saludo()}</p>
+            <h1 className="text-xl font-bold leading-tight" style={{ letterSpacing: '-.02em' }}>IonDroplet</h1>
+          </div>
         </div>
-
-        <div className="flex items-center gap-2">
-          {/* Estado del sistema en una pastilla de vidrio opaco: el punto
-              dice el estado, la palabra lo confirma. Sin conexión no se enseña:
-              el sitio público lo ve el jurado y no debe parecer descompuesto. */}
-          {conectado && (
-          <span
-            className="flex items-center gap-1.5 text-[12.5px] font-bold"
-            style={{
-              padding: '5px 11px', borderRadius: 'var(--radio-pill)',
-              background: 'var(--tarjeta)', border: '1px solid var(--vidrio-filo)',
-              boxShadow: 'var(--sombra-boton)',
-              color: 'var(--tinta)',
-            }}
-            role="status"
+        <div className="flex items-center gap-1">
+          <button
+            type="button"
+            onClick={() => window.dispatchEvent(new Event(EVENTO_ABRIR_GUIA))}
+            className="boton-sutil flex items-center justify-center rounded-full"
+            style={{ width: 44, height: 44, padding: 0 }}
+            aria-label="Ver la guía rápida"
           >
-            <span
-              className="punto"
-              style={{ background: 'var(--verde)' }}
-              aria-hidden
-            />
-            Conectado
-          </span>
-          )}
-
-          {/* La campanita. Sólo lleva número cuando de verdad hay algo:
-              un contador en cero que siempre está ahí deja de mirarse. */}
+            <CircleHelp size={23} aria-hidden />
+          </button>
           <Link
             href="/alertas"
             aria-label={sinVer > 0 ? `Avisos, ${sinVer} sin ver` : 'Avisos'}
-            className="relative flex items-center justify-center"
-            style={{
-              width: 34, height: 34, borderRadius: 'var(--radio-pill)',
-              background: 'var(--tarjeta)', border: '1px solid var(--vidrio-filo)',
-              boxShadow: 'var(--sombra-boton)', color: 'var(--etiqueta)',
-            }}
+            className="boton-sutil relative flex items-center justify-center rounded-full"
+            style={{ width: 44, height: 44, padding: 0 }}
           >
-            <Bell size={18} aria-hidden />
+            <Bell size={23} aria-hidden />
             {sinVer > 0 && (
               <span
                 aria-hidden
-                style={{
-                  position: 'absolute',
-                  top: -2,
-                  right: -2,
-                  minWidth: 17,
-                  height: 17,
-                  padding: '0 4px',
-                  borderRadius: 'var(--radio-pill)',
-                  background: hayCriticas ? 'var(--peligro)' : 'var(--alerta)',
-                  color: 'var(--sobre-estado)',
-                  border: '1.5px solid var(--fondo)',
-                  fontSize: 10,
-                  fontWeight: 700,
-                  lineHeight: '14px',
-                  textAlign: 'center',
-                }}
-              >
-                {sinVer > 9 ? '9+' : sinVer}
-              </span>
+                className="absolute"
+                style={{ top: 9, right: 10, width: 10, height: 10, borderRadius: 999, background: 'var(--alerta)', border: '2px solid var(--fondo)' }}
+              />
             )}
           </Link>
         </div>
       </header>
 
-      <ConsejoIA pantalla="inicio" destacado />
-
       {cargando && humedad === null ? (
-        <div className="grid md:grid-cols-2 gap-4">
-          <EsqueletoHumedad />
-          <EsqueletoHumedad />
-        </div>
+        <EsqueletoHumedad />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
-          <Aparece><HumedadCard humedad={humedad} sensorActivo={sensorActivo} ultimaLectura={ultimaLectura} umbral={umbralRiego ?? 40} /></Aparece>
-          <Aparece retraso={80}><RiegoCard estadoEsp={estadoEsp} humedad={humedad} sensorActivo={sensorActivo} umbral={umbralRiego} regarAhora={regarAhora} terminarRiegoManual={terminarRiegoManual} volverAAutomatico={volverAAutomatico} activarAutomatico={() => cambiarModo(true)} /></Aparece>
-        </div>
+        <TarjetaHoy
+            parcela={parcela}
+            humedad={humedad}
+            sensorActivo={sensorActivo}
+            ultimaLectura={ultimaLectura}
+            umbral={umbralRiego ?? 40}
+            estadoEsp={estadoEsp}
+            regarAhora={regarAhora}
+            terminarRiegoManual={terminarRiegoManual}
+            volverAAutomatico={volverAAutomatico}
+            activarAutomatico={() => cambiarModo(true)}
+          />
       )}
 
-      {/* El clima y la gráfica salen del sistema. Sin él quedarían con un
-          error o vacías, y quien visita el sitio pensaría que no funciona. */}
-      {conectado && <Aparece><ClimaCard parcelaId={parcela?.id ?? null} /></Aparece>}
+      {/* El clima sale del sistema; sin él quedaría un error que no ayuda. */}
+      {conectado && <ResumenSemana parcelaId={parcela?.id ?? null} />}
 
-      <Aparece><BalanceCard /></Aparece>
+      <Accesos avisosSinVer={sinVer} />
 
-      {cargando && historial.length === 0 ? (
-        <EsqueletoGrafica />
-      ) : conectado && (
-        <Aparece><GraficaHumedad historial={historial} /></Aparece>
+      {conectado && (
+        <>
+          <button
+            type="button"
+            onClick={() => setDetalles(d => !d)}
+            aria-expanded={detalles}
+            className="boton boton-sutil self-center"
+          >
+            {detalles ? 'Ocultar detalles' : 'Ver más detalles'}
+            <ChevronDown size={18} aria-hidden style={{ transform: detalles ? 'rotate(180deg)' : 'none', transition: 'transform var(--normal) var(--curva)' }} />
+          </button>
+          {detalles && (
+            <div className="flex flex-col gap-4">
+              <GraficaHumedad historial={historial} />
+              <ClimaCard parcelaId={parcela?.id ?? null} />
+              <BalanceCard />
+            </div>
+          )}
+        </>
       )}
-
     </main>
   )
 }

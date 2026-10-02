@@ -3,6 +3,7 @@ node_modules/
 
 # Next.js
 .next/
+.next-demo/
 out/
 build/
 
@@ -25,3 +26,6 @@ next-env.d.ts
 
 # Herramientas locales (Claude Code)
 .claude/
+
+# Capturas de revisión de impeccable (se regeneran)
+.impeccable/review/

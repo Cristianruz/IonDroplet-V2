@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { Sparkles } from 'lucide-react'
 import { apiFetch } from '@/lib/api'
+import { EVENTO_REFRESCAR, MODO_DEMO } from '@/lib/modo'
 
 export type Pantalla = 'inicio' | 'parcela' | 'historial' | 'plagas'
 
@@ -13,11 +14,19 @@ export type Pantalla = 'inicio' | 'parcela' | 'historial' | 'plagas'
 
 interface Props {
   pantalla: Pantalla
-  /** En Inicio va grande y con fondo; en las demás, una línea discreta. */
+  /** Como tarjeta propia, con título; si no, una línea discreta. */
   destacado?: boolean
+  /** Una línea dentro de un recuadro turquesa claro (Inicio). */
+  enCaja?: boolean
+  /**
+   * Solo en la demostración: cuando cambia (empieza o termina un riego, se
+   * cae el sensor) se vuelve a pedir, para que el consejo no contradiga al
+   * medidor. En el sistema real se pide una vez por visita a la pantalla.
+   */
+  clave?: string
 }
 
-export function ConsejoIA({ pantalla, destacado = false }: Props) {
+export function ConsejoIA({ pantalla, destacado = false, enCaja = false, clave }: Props) {
   const [consejo, setConsejo] = useState<string | null>(null)
   const [pensando, setPensando] = useState(true)
   const [fallo, setFallo] = useState(false)
@@ -40,6 +49,12 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
 
   useEffect(() => {
     pedir()
+  }, [pedir, clave])
+
+  useEffect(() => {
+    if (!MODO_DEMO) return
+    window.addEventListener(EVENTO_REFRESCAR, pedir)
+    return () => window.removeEventListener(EVENTO_REFRESCAR, pedir)
   }, [pedir])
 
   // Si el asistente no pudo opinar, la pantalla sigue sirviendo igual: no se
@@ -60,10 +75,21 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
 
   if (!consejo) return null
 
+  if (enCaja) {
+    return (
+      <div className="rounded-[14px] px-4 py-3 flex items-start gap-2.5" style={{ background: 'var(--acento-suave)' }}>
+        <Sparkles size={17} style={{ color: 'var(--acento)', flexShrink: 0, marginTop: 2 }} aria-hidden />
+        <p className="text-[15px] leading-relaxed" style={{ color: 'var(--tinta)' }} role="status">
+          {consejo}
+        </p>
+      </div>
+    )
+  }
+
   if (!destacado) {
     return (
-      <p className="text-sm flex items-start gap-2 texto-suave" role="status">
-        <Sparkles size={15} style={{ color: 'var(--verde)', flexShrink: 0, marginTop: 2 }} aria-hidden />
+      <p className="text-[15px] flex items-start gap-2 texto-suave" role="status">
+        <Sparkles size={16} style={{ color: 'var(--acento)', flexShrink: 0, marginTop: 3 }} aria-hidden />
         {consejo}
       </p>
     )
@@ -71,7 +97,7 @@ export function ConsejoIA({ pantalla, destacado = false }: Props) {
 
   return (
     <section className="tarjeta flex flex-col gap-2" aria-label="Lo que ve el sistema">
-      <span className="etiqueta flex items-center gap-1.5" style={{ color: 'var(--verde)' }}>
+      <span className="etiqueta flex items-center gap-1.5" style={{ color: 'var(--acento)' }}>
         <Sparkles size={13} aria-hidden />
         Lo que veo hoy
       </span>
