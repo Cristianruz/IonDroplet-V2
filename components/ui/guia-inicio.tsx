@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import {
   Bot, Brain, Camera, ChevronLeft, Droplet, Droplets, Eye, House, MessageCircle,
   Settings, Sprout, TrendingUp, X, type LucideIcon,
@@ -179,7 +179,9 @@ const QUE_HACE: Array<[LucideIcon, string, string]> = [
 
 export function GuiaInicio() {
   const ruta = usePathname()
+  const router = useRouter()
   const [abierta, setAbierta] = useState(false)
+  const [saliendo, setSaliendo] = useState(false)
   // -1 es la bienvenida; 0 a 3, los pasos de la guía.
   const [paso, setPaso] = useState(-1)
   const principal = useRef<HTMLButtonElement | null>(null)
@@ -202,10 +204,19 @@ export function GuiaInicio() {
     return () => window.removeEventListener(EVENTO_ABRIR_GUIA, abrir)
   }, [])
 
+  // Al cerrar o terminar, siempre a Inicio: la guía puede haberse abierto
+  // encima de otra pantalla. El velo se queda un instante mientras se
+  // desvanece porque en el celular el mismo toque a veces "caía" después
+  // sobre la barra de abajo, justo en Análisis.
   const cerrar = useCallback(() => {
     marcarVista()
-    setAbierta(false)
-  }, [])
+    if (window.location.pathname !== '/') router.replace('/')
+    setSaliendo(true)
+    setTimeout(() => {
+      setAbierta(false)
+      setSaliendo(false)
+    }, 350)
+  }, [router])
 
   // Mientras está abierta, la pantalla de atrás no se mueve.
   useEffect(() => {
@@ -242,7 +253,7 @@ export function GuiaInicio() {
       aria-modal="true"
       aria-labelledby="guia-titulo"
       className="fixed inset-0 z-[70] overflow-y-auto"
-      style={{ background: 'var(--fondo)' }}
+      style={{ background: 'var(--fondo)', opacity: saliendo ? 0 : 1, transition: 'opacity 300ms var(--curva)' }}
     >
       <div
         className="mx-auto flex flex-col min-h-full px-5"
