@@ -1,11 +1,9 @@
 // Las respuestas de reserva de la demostración.
 //
-// En la demostración pública contesta la IA de verdad (ver contexto-ia.ts y
-// app/api/demo/ia). Estos textos solo salen si la IA no está disponible: sin
-// llave en el servidor, sin crédito, sin internet o con el límite del día
-// lleno. Se arman con los números del sistema simulado y del clima real, y
-// quien los enseña (index.ts) les pone delante que son de ejemplo. Nunca se
-// presentan como si los hubiera escrito la IA.
+// En la página pública contesta la IA de verdad (ver contexto-ia.ts y
+// app/api/demo/ia), y si no contesta, la pantalla dice que no pudo. Estos
+// textos ya no se enseñan: son las respuestas de responder() para las rutas
+// de la IA, que usan las pruebas de la simulación sin red ni llave.
 //
 // Sin React ni navegador: se prueba con node --test.
 

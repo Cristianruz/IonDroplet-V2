@@ -1,42 +1,13 @@
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { avisosDelClima, climaValido, proximasHoras, pronosticoEnTexto, LUGAR_DEMO, type ClimaReal } from './clima-real.ts'
+import { avisosDelClima, climaValido, proximasHoras, pronosticoEnTexto, LUGAR_DEMO } from './clima-real.ts'
+import { climaDePrueba } from './clima-de-prueba.ts'
 import { climaReal, fijarClimaReal } from './clima.ts'
 import { contextoDelSistema, indicadores, sincronizarAlertasDelClima } from './contexto-ia.ts'
 import { crearEstado } from './simulacion.ts'
 import { responder } from './api-demo.ts'
 
 const AHORA = Date.UTC(2026, 9, 7, 3, 30) // 6 oct, 21:30 en Chihuahua
-
-function climaDePrueba(minimas = [17.9, 16.2, 16, 18.4, 19, 19.5, 21.7]): ClimaReal {
-  return {
-    lugar: LUGAR_DEMO.nombre,
-    latitud: LUGAR_DEMO.latitud,
-    longitud: LUGAR_DEMO.longitud,
-    consultado: new Date(AHORA).toISOString(),
-    current: { time: '2026-10-06T21:30', temperature_2m: 20.8, relative_humidity_2m: 54, apparent_temperature: 20.6, precipitation: 0, wind_speed_10m: 3.1, weather_code: 0, is_day: 0 },
-    hourly: {
-      time: Array.from({ length: 24 }, (_, i) => {
-        const h = 21 + i
-        return h < 24 ? `2026-10-06T${h}:00` : `2026-10-07T${String(h - 24).padStart(2, '0')}:00`
-      }),
-      temperature_2m: Array.from({ length: 24 }, (_, i) => 21 - i * 0.2),
-      precipitation_probability: Array.from({ length: 24 }, () => 5),
-      precipitation: Array.from({ length: 24 }, () => 0),
-      weather_code: Array.from({ length: 24 }, () => 1),
-    },
-    daily: {
-      time: ['2026-10-06', '2026-10-07', '2026-10-08', '2026-10-09', '2026-10-10', '2026-10-11', '2026-10-12'],
-      temperature_2m_max: [26.6, 28.4, 25.6, 26, 27.2, 29.5, 30.2],
-      temperature_2m_min: minimas,
-      precipitation_sum: [0, 0, 0.2, 0, 0, 0.2, 0.3],
-      precipitation_probability_max: [9, 13, 27, 8, 11, 11, 20],
-      wind_speed_10m_max: [8.6, 15.6, 23.4, 12.9, 22, 20.9, 26.8],
-      weather_code: [3, 3, 3, 3, 3, 51, 51],
-      et0_fao_evapotranspiration: [2.62, 4.2, 3.59, 3.76, 4.92, 5.57, 5.7],
-    },
-  }
-}
 
 test('el lugar de la demostración es la ciudad de Chihuahua, no Delicias', () => {
   assert.equal(LUGAR_DEMO.nombre, 'Chihuahua, Chih.')
@@ -96,7 +67,7 @@ test('sin el clima real, la tarjeta dice que el pronóstico es de ejemplo', () =
   const e = crearEstado(AHORA)
   const c = responder(e, 'GET', 'clima', new URLSearchParams(), {}, AHORA).cuerpo as { ubicacion: { real: boolean } }
   assert.equal(c.ubicacion.real, false)
-  assert.ok(indicadores(e, AHORA).faltantes.some(f => /clima real/.test(f)))
+  assert.ok(indicadores(e, AHORA).faltantes.some(f => /No se pudo consultar el clima/.test(f)))
 })
 
 test('una helada del pronóstico entra a la campana y se resuelve cuando el pronóstico ya no la trae', () => {

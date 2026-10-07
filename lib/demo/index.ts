@@ -11,8 +11,8 @@
 // Lo simulado es el cultivo. El clima es el real de Chihuahua y lo que en el
 // sistema real hace la IA (chat, consejos, análisis, punto de riego, agente y
 // foto) lo contesta Claude de verdad, por el servidor de la demostración. Si
-// la IA no está disponible, contestan los textos de reserva de textos-ia.ts y
-// cada uno dice que es de ejemplo.
+// la IA no contesta, la pantalla dice que no pudo, igual que con el backend:
+// nunca se pone un texto armado en su lugar.
 
 import {
   MIN,
@@ -154,13 +154,17 @@ function usaElClima(ruta: string): boolean {
 }
 
 async function climaListo(): Promise<void> {
-  if (Date.now() - ultimaCargaClima < CLIMA_VIGENCIA_MS) return
+  if (climaReal() && Date.now() - ultimaCargaClima < CLIMA_VIGENCIA_MS) return
   const carga = refrescarClima()
-  // Con un clima ya en la mano se refresca por detrás. La primera vez se
-  // espera hasta 4 s; si no llega, se usa el de ejemplo y la tarjeta lo dice.
+  // Con un clima ya en la mano se refresca por detrás. Sin él se espera
+  // hasta 8 s; si no llega, la tarjeta del clima dice que no se pudo
+  // consultar (nunca se enseña otra semana como si fuera esta).
   if (climaReal()) return
-  await Promise.race([carga, new Promise(r => setTimeout(r, 4000))])
+  await Promise.race([carga, new Promise(r => setTimeout(r, 8000))])
 }
+
+/** Sin el pronóstico de hoy, estas rutas contestan que no se pudo, como el backend sin clima. */
+const SIN_CLIMA = ['clima', 'agua/balance']
 
 // --- La IA real ---
 
@@ -200,16 +204,34 @@ function json(cuerpo: unknown, status = 200): Response {
   })
 }
 
-/** Errores que se le dicen tal cual a la persona; con los demás contesta la reserva. */
-function seDiceTalCual(tipo: TipoIA, r: RespuestaIA): r is Extract<RespuestaIA, { ok: false }> {
-  if (r.ok) return false
-  if (tipo === 'consejo' || tipo === 'analisis') return false
-  return r.status === 400 || r.status === 413 || r.status === 422 || r.status === 429
+/** Lo que ve la persona si la IA no contestó ni al segundo intento. */
+const NO_CONTESTO: Record<TipoIA, string> = {
+  chat: 'No pude responder en este momento. Intenta de nuevo en unos segundos.',
+  consejo: 'La IA no pudo opinar en este momento.',
+  analisis: 'No se pudo armar el análisis en este momento.',
+  umbral: 'No pude proponer un punto de riego en este momento. Intenta de nuevo.',
+  agente: 'El agente no pudo revisar en este momento.',
+  foto: 'No se pudieron revisar las fotos en este momento. Tus fotos siguen aquí: intenta de nuevo.',
 }
 
 /**
- * Le pregunta a la IA real. Devuelve la respuesta para la app, o null si hay
- * que contestar con la reserva.
+ * Un corte de la red o un error pasajero del servidor se reintenta una vez,
+ * sin que la persona lo note. La foto no: tarda casi medio minuto y el
+ * reintento la haría esperar el doble.
+ */
+async function preguntarConReintento(tipo: TipoIA, cuerpo: object, signal?: AbortSignal | null): Promise<RespuestaIA> {
+  const r = await preguntarALaIA(cuerpo, signal)
+  const pasajero = !r.ok && (r.status === 0 || r.status === 502)
+  if (!pasajero || tipo === 'foto') return r
+  await esperar(800, signal)
+  return preguntarALaIA(cuerpo, signal)
+}
+
+/**
+ * Le pregunta a la IA real y devuelve la respuesta para la app. Si la IA no
+ * contesta, devuelve el error, como el backend: nunca un texto armado en su
+ * lugar. null solo cuando la petición no le toca a la IA (pregunta vacía,
+ * agente apagado) y la contesta la simulación con su error de siempre.
  */
 async function conIA(
   tipo: TipoIA,
@@ -232,7 +254,7 @@ async function conIA(
       if (guardado && ahora - guardado.cuando < CONSEJO_VIGENCIA_MS) {
         return json({ consejo: guardado.consejo, cuando: new Date(guardado.cuando).toISOString(), deCache: true })
       }
-      r = await preguntarALaIA({ tipo, contexto, pantalla }, signal)
+      r = await preguntarConReintento(tipo, { tipo, contexto, pantalla }, signal)
       if (!r.ok) break
       const consejo = (r.datos as { consejo: string }).consejo
       consejosGuardados.set(clave, { cuando: ahora, consejo })
@@ -240,7 +262,7 @@ async function conIA(
     }
     case 'chat': {
       if (typeof cuerpo.pregunta !== 'string' || cuerpo.pregunta.trim() === '') return null
-      r = await preguntarALaIA({ tipo, contexto, pregunta: cuerpo.pregunta, historial: cuerpo.historial ?? [] }, signal)
+      r = await preguntarConReintento(tipo, { tipo, contexto, pregunta: cuerpo.pregunta, historial: cuerpo.historial ?? [] }, signal)
       if (r.ok) return json(r.datos)
       break
     }
@@ -249,20 +271,21 @@ async function conIA(
         return json({ ...analisisGuardado.datos, deCache: true })
       }
       const ind = indicadores(e, ahora)
-      r = await preguntarALaIA({ tipo, contexto, indicadores: JSON.stringify(ind, null, 2) }, signal)
+      r = await preguntarConReintento(tipo, { tipo, contexto, indicadores: JSON.stringify(ind, null, 2) }, signal)
       if (!r.ok) break
       const datos = { analisis: r.datos, indicadores: ind, cuando: new Date(ahora).toISOString() }
       analisisGuardado = { cuando: ahora, datos }
       return json(datos)
     }
     case 'umbral':
-      r = await preguntarALaIA({ tipo, contexto }, signal)
+      r = await preguntarConReintento(tipo, { tipo, contexto }, signal)
       if (r.ok) return json(r.datos)
       break
     case 'agente': {
       if (!e.agenteHabilitado) return null
       const p = e.parcelas.find(x => x.id === 1) ?? e.parcelas[0]
-      r = await preguntarALaIA(
+      r = await preguntarConReintento(
+        tipo,
         {
           tipo,
           contexto,
@@ -285,7 +308,8 @@ async function conIA(
     }
     case 'foto': {
       const parcelaId = Number.isInteger(cuerpo.parcelaId) ? (cuerpo.parcelaId as number) : null
-      r = await preguntarALaIA(
+      r = await preguntarConReintento(
+        tipo,
         {
           tipo,
           contexto: contextoDeFoto(e, parcelaId, ahora) ?? '',
@@ -302,24 +326,12 @@ async function conIA(
     }
   }
 
-  return seDiceTalCual(tipo, r) ? json({ error: r.error }, r.status) : null
-}
-
-/** A la respuesta de reserva se le pone delante que es de ejemplo: nunca se hace pasar por la IA. */
-function marcarComoEjemplo(tipo: TipoIA, e: Estado, salida: unknown): void {
-  if (!salida || typeof salida !== 'object') return
-  const s = salida as Record<string, unknown>
-  const aviso = 'la IA no está disponible en este momento'
-  if (tipo === 'chat' && typeof s.respuesta === 'string') s.respuesta = `Respuesta de ejemplo (${aviso}). ${s.respuesta}`
-  if (tipo === 'consejo' && typeof s.consejo === 'string') s.consejo = `Ejemplo, sin IA: ${s.consejo}`
-  if (tipo === 'umbral' && typeof s.razon === 'string') s.razon = `Propuesta de ejemplo (${aviso}). ${s.razon}`
-  if (tipo === 'analisis' && s.analisis && typeof s.analisis === 'object') {
-    const a = s.analisis as Record<string, unknown>
-    a.resumen = `Análisis de ejemplo (${aviso}). ${a.resumen ?? ''}`
-  }
-  if (tipo === 'agente' && s.corrio && e.decisiones[0]) {
-    e.decisiones[0].justificacion = `Decisión por reglas (${aviso}). ${e.decisiones[0].justificacion}`
-  }
+  if (r.ok) return null
+  // Lo que la persona puede corregir (una foto pesada, demasiadas preguntas
+  // seguidas) se le dice tal cual; lo demás, con palabras sencillas.
+  const suyo = r.status === 400 || r.status === 413 || r.status === 422 || r.status === 429
+  // 502 y no 503: con 503 las pantallas dirían "no está configurado en esta computadora".
+  return json({ error: suyo ? r.error : NO_CONTESTO[tipo] }, suyo ? r.status : 502)
 }
 
 function esperar(ms: number, signal?: AbortSignal | null): Promise<void> {
@@ -351,10 +363,10 @@ export async function fetchDemo(rutaCompleta: string, init: RequestInit = {}): P
   const cuerpo = await leerCuerpo(init)
 
   if (usaElClima(ruta)) await climaListo()
+  if (SIN_CLIMA.includes(ruta) && !climaReal()) return json({ error: 'No se pudo consultar el clima.' }, 502)
 
   const ia = RUTAS_IA[ruta]
-  const conLaIA = Boolean(ia && ia.metodo === metodo)
-  if (conLaIA) {
+  if (ia && ia.metodo === metodo) {
     const ahora = Date.now()
     const respuesta = await conIA(ia.tipo, cargar(ahora), url.searchParams, cuerpo, ahora, init.signal)
     if (respuesta) {
@@ -366,9 +378,7 @@ export async function fetchDemo(rutaCompleta: string, init: RequestInit = {}): P
   await esperar(demora(ruta), init.signal)
 
   const ahora = Date.now()
-  const estadoActual = cargar(ahora)
-  const { status, cuerpo: salida } = responder(estadoActual, metodo, ruta, url.searchParams, cuerpo, ahora)
-  if (conLaIA && status === 200) marcarComoEjemplo(ia.tipo, estadoActual, salida)
+  const { status, cuerpo: salida } = responder(cargar(ahora), metodo, ruta, url.searchParams, cuerpo, ahora)
   programarGuardado()
   return new Response(JSON.stringify(salida), {
     status,

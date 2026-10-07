@@ -98,10 +98,8 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
       <div className="flex items-center gap-2 flex-wrap">
         <Sun size={17} style={{ color: 'var(--acento)' }} aria-hidden />
         <h2 className="text-[15px] font-bold">Clima en tu cultivo</h2>
-        {clima.ubicacion.lugar && (
-          <span className="text-[13px] texto-suave">
-            · {clima.ubicacion.lugar}, {clima.ubicacion.real ? 'en tiempo real' : 'pronóstico de ejemplo'}
-          </span>
+        {clima.ubicacion.lugar && clima.ubicacion.real && (
+          <span className="text-[13px] texto-suave">· {clima.ubicacion.lugar}, en tiempo real</span>
         )}
       </div>
 
@@ -183,11 +181,9 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
         Máxima, mínima y probabilidad de agua.{' '}
         {clima.ubicacion.real === true
           ? `Pronóstico real de Open-Meteo, consultado a las ${horaDeConsulta(clima.ubicacion.consultado ?? new Date().toISOString())}.`
-          : clima.ubicacion.real === false
-            ? 'No se pudo consultar el clima real: esta semana es de ejemplo.'
-            : clima.ubicacion.fuente === 'aparato'
-              ? 'La ubicación la reporta el aparato del campo.'
-              : 'Ubicación tomada de tu teléfono.'}
+          : clima.ubicacion.fuente === 'aparato'
+            ? 'La ubicación la reporta el aparato del campo.'
+            : 'Ubicación tomada de tu teléfono.'}
       </p>
     </section>
   )

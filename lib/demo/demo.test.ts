@@ -2,6 +2,8 @@ import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { DIA, HORA, MIN, crearEstado, humedadActual, sqlTs, type Estado } from './simulacion.ts'
 import { responder } from './api-demo.ts'
+import { fijarClimaReal } from './clima.ts'
+import { climaDePrueba } from './clima-de-prueba.ts'
 import { desconectarSensor, llover, reconectarSensor, resumen, secarTierra } from './escenarios.ts'
 
 const AHORA = Date.UTC(2026, 9, 1, 18, 0, 0)
@@ -126,10 +128,22 @@ test('el chat ofrece detener solo si está regando', () => {
 })
 
 test('alertas: verlas apaga el contador', () => {
+  // Los avisos nuevos salen del pronóstico real (aquí, uno de prueba): días secos por delante.
+  fijarClimaReal(climaDePrueba())
+  try {
+    const e = crearEstado(AHORA)
+    assert.ok((pedir(e, 'GET', 'alertas/resumen').cuerpo as { sinVer: number }).sinVer > 0)
+    pedir(e, 'POST', 'alertas/vistas')
+    assert.equal((pedir(e, 'GET', 'alertas/resumen').cuerpo as { sinVer: number }).sinVer, 0)
+  } finally {
+    fijarClimaReal(null)
+  }
+})
+
+test('sin el clima real no se inventan avisos del clima', () => {
   const e = crearEstado(AHORA)
-  assert.ok((pedir(e, 'GET', 'alertas/resumen').cuerpo as { sinVer: number }).sinVer > 0)
-  pedir(e, 'POST', 'alertas/vistas')
-  assert.equal((pedir(e, 'GET', 'alertas/resumen').cuerpo as { sinVer: number }).sinVer, 0)
+  pedir(e, 'GET', 'alertas?limit=80')
+  assert.ok(e.alertas.every(a => !a.regla.startsWith('clima_') && a.regla !== 'deficit_agua'))
 })
 
 test('fertirriego: se agrega y se borra', () => {

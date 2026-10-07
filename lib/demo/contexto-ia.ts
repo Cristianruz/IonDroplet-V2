@@ -222,7 +222,7 @@ export function indicadores(e: Estado, ahora: number) {
   const segRiego = riegos.reduce((s, r) => s + (r.duracion_seg ?? 0), 0)
   const segIon = iones.reduce((s, r) => s + (r.duracion_seg ?? 0), 0)
   faltantes.push('El ionizador no confirma su estado: sólo se sabe lo último que se le pidió.')
-  if (!climaReal()) faltantes.push('No se pudo consultar el clima real: el pronóstico es de ejemplo.')
+  if (!climaReal()) faltantes.push('No se pudo consultar el clima en este momento: no hay pronóstico de hoy.')
 
   return {
     sensor,
@@ -324,8 +324,10 @@ const DEFICIT_TRES_DIAS_MM = 8
  * atendido se respeta: un aviso no se repite.
  */
 export function sincronizarAlertasDelClima(e: Estado, ahora: number): void {
+  // Sin el pronóstico de hoy no se avisa nada del clima: se dejan los avisos como estaban.
+  if (!climaReal()) return
   const p = principal(e)
-  const deDondeSale = climaReal() ? 'el pronóstico real de Chihuahua (Open-Meteo)' : 'el pronóstico de ejemplo (no se pudo consultar el real)'
+  const deDondeSale = 'el pronóstico real de Chihuahua (Open-Meteo)'
   const vigentes = new Set<string>()
   const siguienteId = () => e.alertas.reduce((m, a) => Math.max(m, a.id), 0) + 1
 

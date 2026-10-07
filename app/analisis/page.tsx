@@ -6,6 +6,7 @@ import { useIonDroplet } from '@/hooks/use-iondroplet'
 import { AgenteCard } from '@/components/ia/agente-card'
 import { haceCuanto } from '@/lib/tiempo'
 import { colorEstado } from '@/lib/estilo'
+import { MODO_DEMO } from '@/lib/modo'
 
 // El análisis del cultivo. Esta pantalla ocupa el lugar que antes tenía
 // Ionización, que era una pestaña entera para un solo botón.
@@ -90,7 +91,9 @@ export default function PantallaAnalisis() {
 
       {estado === 'error' && conectado && (
         <p className="aviso aviso-peligro">
-          No se pudo armar el análisis. Revisa que la computadora del riego esté encendida.
+          {MODO_DEMO
+            ? 'No se pudo armar el análisis en este momento. Toca «Revisar» para intentarlo de nuevo.'
+            : 'No se pudo armar el análisis. Revisa que la computadora del riego esté encendida.'}
         </p>
       )}
 
