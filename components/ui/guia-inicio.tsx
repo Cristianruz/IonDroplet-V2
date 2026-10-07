@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import {
-  Bot, Brain, Camera, ChevronLeft, Droplet, Droplets, House, Info, MessageCircle,
+  Bot, Brain, Camera, ChevronLeft, Droplet, Droplets, Eye, House, MessageCircle,
   Settings, Sprout, TrendingUp, X, type LucideIcon,
 } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
@@ -295,11 +295,11 @@ export function GuiaInicio() {
             </ul>
 
             {MODO_DEMO && (
-              <p className="text-sm flex items-start gap-2.5 rounded-[14px] p-3.5" style={{ background: 'var(--fondo-alerta)', color: 'var(--tinta)' }}>
-                <Info size={18} aria-hidden style={{ color: 'var(--alerta)', flexShrink: 0, marginTop: 1 }} />
+              <p className="text-sm flex items-start gap-2.5 rounded-[14px] p-3.5" style={{ background: 'var(--acento-suave)', color: 'var(--tinta)' }}>
+                <Eye size={18} aria-hidden style={{ color: 'var(--acento)', flexShrink: 0, marginTop: 1 }} />
                 <span>
-                  Para que lo pruebes sin riesgo, el cultivo es de ejemplo y nada riega de verdad. El
-                  clima de Chihuahua y la IA que te contesta son reales.
+                  Aquí puedes ver el sistema funcionando con un cultivo de prueba. El clima de
+                  Chihuahua y la IA que te contesta son reales.
                 </span>
               </p>
             )}
