@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { CircleAlert, Droplets, Maximize2, RotateCcw, Sprout, Sun } from 'lucide-react'
+import { CircleAlert, Droplets, Maximize2, Projector, RotateCcw, Sprout, Sun } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
 import { ListaEnlaces } from '@/components/ui/lista-enlaces'
 import { colorEstado } from '@/lib/estilo'
@@ -87,10 +87,10 @@ export function Presentacion() {
         </div>
 
         <div className="flex flex-col gap-3">
-          <h1 className="presentacion-titulo">Riega solo y te explica por qué.</h1>
+          <h1 className="presentacion-titulo">Agua exacta, en el momento exacto.</h1>
           <p className="presentacion-bajada">
-            Un sensor mide la humedad de la tierra. El sistema decide cuándo regar y se lo cuenta al
-            agricultor con palabras sencillas.
+            Un sensor mide la humedad de la tierra y el riego entra únicamente cuando el cultivo lo
+            necesita, con el pronóstico real de Chihuahua y un asistente con IA.
           </p>
         </div>
 
@@ -123,7 +123,7 @@ export function Presentacion() {
           <p className="text-[15px] texto-suave leading-snug">
             Apunta la cámara al código o entra a <span className="font-semibold texto-acento">{sitio}</span>
           </p>
-          <p className="text-sm texto-apagado mt-1">Datos de ejemplo: nada riega de verdad.</p>
+          <p className="text-sm texto-apagado mt-1">El cultivo es simulado: nada riega de verdad. El clima y la IA son reales.</p>
           <div className="presentacion-qr-acciones">
             <button type="button" onClick={() => pedir('reiniciar')} className="boton boton-sutil">
               <RotateCcw size={16} aria-hidden />
@@ -132,6 +132,10 @@ export function Presentacion() {
             <a href={pantallaCompleta} className="boton boton-sutil">
               <Maximize2 size={16} aria-hidden />
               Quitar el marco
+            </a>
+            <a href="/proyector" className="boton boton-sutil">
+              <Projector size={16} aria-hidden />
+              Para el proyector
             </a>
           </div>
         </div>

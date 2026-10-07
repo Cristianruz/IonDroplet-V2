@@ -1,11 +1,23 @@
-// El pronóstico de la demostración.
+// El clima de la demostración.
 //
-// Es un pronóstico real de una semana de otoño en el centro de Chihuahua,
-// guardado una vez y corrido a las fechas de hoy. Se usa uno fijo para que el
-// clima, el balance de agua, las alertas y lo que dice el asistente cuadren
-// entre sí. El lugar es de ejemplo: Delicias, no la huerta de nadie.
+// Es el real de la ciudad de Chihuahua: el navegador se lo pide al servidor de
+// la demostración (/api/demo/clima), que a su vez se lo pide a Open-Meteo, y
+// queda aquí con fijarClimaReal(). Con él se arman la tarjeta del clima, los
+// avisos, el balance de agua y lo que lee la IA.
+//
+// Si el clima real no contesta (sin internet, Open-Meteo caído), se usa una
+// semana de otoño guardada, y la tarjeta lo dice: "pronóstico de ejemplo".
+// Nunca se enseña la semana guardada como si fuera la de hoy sin avisarlo.
 
 import { DIA, redondear } from './simulacion.ts'
+import {
+  LUGAR_DEMO,
+  avisosDelClima,
+  horaLocalDeChihuahua,
+  proximasHoras,
+  type AvisoDelClima,
+  type ClimaReal,
+} from './clima-real.ts'
 
 const PLANTILLA = {
   max: [25.7, 22.2, 21.3, 17, 21.6, 24, 24.7],
@@ -17,7 +29,18 @@ const PLANTILLA = {
   et0: [5.49, 4.3, 2.93, 0.52, 2.05, 2.78, 3.24],
 }
 
-export const UBICACION_DEMO = { latitud: 28.19, longitud: -105.47 }
+export const UBICACION_DEMO = { latitud: LUGAR_DEMO.latitud, longitud: LUGAR_DEMO.longitud }
+
+let real: ClimaReal | null = null
+
+/** Lo que llegó de /api/demo/clima. null lo olvida (las pruebas lo usan). */
+export function fijarClimaReal(c: ClimaReal | null): void {
+  real = c
+}
+
+export function climaReal(): ClimaReal | null {
+  return real
+}
 
 /** "2026-10-01" en la hora del aparato, que es la del agricultor. */
 export function fechaLocal(ms: number): string {
@@ -42,6 +65,19 @@ export interface DiasClima {
 }
 
 export function diasDeClima(ahora: number): DiasClima {
+  if (real) {
+    const d = real.daily
+    return {
+      time: d.time,
+      temperature_2m_max: d.temperature_2m_max,
+      temperature_2m_min: d.temperature_2m_min,
+      precipitation_sum: d.precipitation_sum.map(v => v ?? 0),
+      precipitation_probability_max: d.precipitation_probability_max.map(v => v ?? 0),
+      wind_speed_10m_max: d.wind_speed_10m_max,
+      weather_code: d.weather_code ?? [],
+      et0_fao_evapotranspiration: d.et0_fao_evapotranspiration.map(v => v ?? 0),
+    }
+  }
   return {
     time: PLANTILLA.max.map((_, i) => fechaLocal(ahora + i * DIA)),
     temperature_2m_max: PLANTILLA.max,
@@ -54,6 +90,11 @@ export function diasDeClima(ahora: number): DiasClima {
   }
 }
 
+/** Los avisos del pronóstico que esté en uso, real o de ejemplo. */
+export function avisosDeHoy(ahora: number): AvisoDelClima[] {
+  return avisosDelClima(diasDeClima(ahora))
+}
+
 /** La temperatura de este momento: la mínima al amanecer, la máxima a las 4. */
 function factorDelDia(ms: number): number {
   const d = new Date(ms)
@@ -61,26 +102,41 @@ function factorDelDia(ms: number): number {
   return 0.5 + 0.5 * Math.cos((2 * Math.PI * (hora - 16)) / 24)
 }
 
+/** El escenario "Que llueva" es simulado: se dice así, aunque el resto sea real. */
+function avisoDeLluviaSimulada(dia: string, lluviaAhora: number): AvisoDelClima {
+  return { tipo: 'lluvia', nivel: 'aviso', dia, texto: `Está lloviendo ahora (lluvia simulada por la prueba "Que llueva"): unos ${lluviaAhora} mm por hora.` }
+}
+
 export function clima(ahora: number, desde: string, lluviaAhora = 0) {
   const dias = diasDeClima(ahora)
+
+  if (real) {
+    const a = real.current
+    const avisos = avisosDelClima(real.daily)
+    return {
+      ubicacion: {
+        ...UBICACION_DEMO,
+        fuente: 'demostracion',
+        desde,
+        lugar: real.lugar,
+        real: true,
+        consultado: real.consultado,
+      },
+      ahora: lluviaAhora > 0
+        ? { ...a, temperature_2m: redondear(a.temperature_2m - 3), relative_humidity_2m: 94, precipitation: lluviaAhora, wind_speed_10m: 24, weather_code: 63 }
+        : a,
+      dias,
+      horas: proximasHoras(real.hourly, horaLocalDeChihuahua(ahora), 12),
+      avisos: lluviaAhora > 0 ? [avisoDeLluviaSimulada(dias.time[0], lluviaAhora), ...avisos] : avisos,
+    }
+  }
+
+  // Sin el clima real: la semana guardada, y la tarjeta avisa que es de ejemplo.
   const f = factorDelDia(ahora)
   const temperatura = redondear(dias.temperature_2m_min[0] + (dias.temperature_2m_max[0] - dias.temperature_2m_min[0]) * f)
-
-  // El aviso de lluvia, para el día que más agua trae.
-  const iLluvia = dias.precipitation_sum.reduce((m, v, i, a) => (v > a[m] ? i : m), 0)
-  const avisos = [
-    {
-      tipo: 'lluvia',
-      nivel: 'aviso',
-      dia: dias.time[iLluvia],
-      texto:
-        `Se espera agua el ${diaDeLaSemana(ahora + iLluvia * DIA)}: ` +
-        `${dias.precipitation_probability_max[iLluvia]}% de probabilidad, como ${dias.precipitation_sum[iLluvia]} mm.`,
-    },
-  ]
-
+  const avisos = avisosDelClima(dias)
   return {
-    ubicacion: { ...UBICACION_DEMO, fuente: 'telefono', desde },
+    ubicacion: { ...UBICACION_DEMO, fuente: 'demostracion', desde, lugar: LUGAR_DEMO.nombre, real: false, consultado: null },
     ahora: {
       time: new Date(ahora).toISOString().slice(0, 16),
       interval: 900,
@@ -91,10 +147,8 @@ export function clima(ahora: number, desde: string, lluviaAhora = 0) {
       weather_code: lluviaAhora > 0 ? 63 : dias.weather_code[0],
     },
     dias,
-    // Si está lloviendo, es lo primero que se avisa.
-    avisos: lluviaAhora > 0
-      ? [{ tipo: 'lluvia', nivel: 'aviso', dia: dias.time[0], texto: `Está lloviendo ahora: unos ${lluviaAhora} mm por hora.` }, ...avisos]
-      : avisos,
+    horas: [],
+    avisos: lluviaAhora > 0 ? [avisoDeLluviaSimulada(dias.time[0], lluviaAhora), ...avisos] : avisos,
   }
 }
 

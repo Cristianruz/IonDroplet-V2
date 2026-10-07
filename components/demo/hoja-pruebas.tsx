@@ -68,7 +68,7 @@ export function HojaPruebas({ alCerrar }: { alCerrar: () => void }) {
               Mira al sistema trabajar
             </h2>
             <p className="text-[15px] texto-suave leading-snug">
-              Son datos de ejemplo: toca con confianza, nada riega de verdad.
+              El cultivo es simulado: toca con confianza, nada riega de verdad.
             </p>
           </div>
           <button

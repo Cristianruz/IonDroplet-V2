@@ -42,7 +42,9 @@ export const PISO_HUMEDAD = 8
 /** Un riego a mano se corta solo a los 20 minutos, como el freno del backend. */
 export const RIEGO_MANUAL_MAXIMO_MS = 20 * MIN
 
-export const VERSION_ESTADO = 1
+// 2: los avisos del clima salen del pronóstico real. Las visitas guardadas
+// con la versión 1 empiezan de nuevo.
+export const VERSION_ESTADO = 2
 
 export type Origen = 'usuario' | 'ia' | 'umbral' | 'sistema'
 
@@ -274,8 +276,9 @@ function cerrarRiego(e: Estado, fin: number): void {
     fila.detalle = `Riego de ${textoDuracion(segundos)}`
     fila.duracion_seg = segundos
   }
-  // La ionización la liga el aparato a la bomba: queda registrada junto.
-  registrar(e, {
+  // Con la ionización encendida, el aparato la liga a la bomba: queda
+  // registrada junto. Apagada, el riego va con agua sin ionizar.
+  if (e.ion.encendida) registrar(e, {
     tipo: 'ionizacion',
     detalle: `Ionización de ${textoDuracion(segundos)}`,
     origen: e.riego.origen,
@@ -350,7 +353,7 @@ const DECISIONES_PASADAS: Array<{
     despues: 40,
     confianza: 74,
     justificacion:
-      'Esta semana se esperan unos 16 mm de lluvia contra 18 mm que pide el cultivo. Con la lluvia casi cubriendo la demanda, 40% basta para la etapa.',
+      'Para esa semana se esperaban unos 16 mm de lluvia contra 18 mm que pedía el cultivo. Con la lluvia casi cubriendo la demanda, 40% bastaba para la etapa.',
   },
   {
     hace: 2 * DIA + 6 * HORA,
@@ -408,35 +411,11 @@ function parcelasIniciales(ahora: number): ParcelaDemo[] {
   ]
 }
 
+// Los avisos del clima (lluvia, helada, días secos) no van aquí: salen del
+// pronóstico real en contexto-ia.ts, sincronizarAlertasDelClima().
 function alertasIniciales(ahora: number): AlertaDemo[] {
   const base = { parcela_id: 1, atendida_en: null, atendida_por: null }
   return [
-    {
-      ...base,
-      id: 4,
-      regla: 'lluvia_proxima',
-      clave: 'lluvia_proxima',
-      severidad: 'informativa',
-      titulo: 'Viene lluvia esta semana',
-      detalle: 'El pronóstico trae agua en los próximos días. Si llueve, el riego automático no tendrá que trabajar.',
-      dato: 'Hasta 40% de probabilidad y unos 16 mm en la semana.',
-      accion: 'No hace falta hacer nada: el punto de riego ya lo toma en cuenta.',
-      estado: 'nueva',
-      creada: sqlTs(ahora - 3 * HORA),
-    },
-    {
-      ...base,
-      id: 3,
-      regla: 'deficit_agua',
-      clave: 'deficit_agua',
-      severidad: 'atencion',
-      titulo: 'Tres días secos antes de la lluvia',
-      detalle: 'En los próximos tres días el cultivo va a pedir más agua de la que va a llover.',
-      dato: 'Pide 11 mm en tres días y no se espera lluvia en ellos.',
-      accion: 'El riego automático lo cubre. Revisa que los goteros no estén tapados.',
-      estado: 'leida',
-      creada: sqlTs(ahora - 20 * HORA),
-    },
     {
       ...base,
       id: 2,
@@ -567,10 +546,13 @@ export function crearEstado(ahora: number, semilla = 20261001): Estado {
           tipo: 'riego', detalle: `Riego de ${textoDuracion(segundos)}`, origen: 'umbral',
           parcela_id: p.id, t, duracion_seg: segundos,
         })
-        eventos.push({
-          tipo: 'ionizacion', detalle: `Ionización de ${textoDuracion(segundos)}`, origen: 'umbral',
-          parcela_id: p.id, t, duracion_seg: segundos,
-        })
+        // La ionización se apagó hace dos días (e.ion.desde): antes, cada riego iba ionizado.
+        if (t < e.ion.desde) {
+          eventos.push({
+            tipo: 'ionizacion', detalle: `Ionización de ${textoDuracion(segundos)}`, origen: 'umbral',
+            parcela_id: p.id, t, duracion_seg: segundos,
+          })
+        }
         // La lectura de antes del riego y la de después, al terminar.
         lista.push({ t, h: redondear(h) })
         h = meta
@@ -746,7 +728,6 @@ export function decidirAgente(e: Estado, ahora: number, pronostico: Pronostico):
   const antes = e.umbral
   const diferencia = ideal - antes
   const paso = Math.max(-5, Math.min(5, diferencia))
-  const acotada = Math.abs(diferencia) > 5
   const despues = Math.max(10, Math.min(90, antes + paso))
   const cambia = Math.abs(diferencia) >= 2
 
@@ -757,18 +738,44 @@ export function decidirAgente(e: Estado, ahora: number, pronostico: Pronostico):
     ? `${datos} Para esta etapa conviene un punto de ${ideal}%: lo ${paso > 0 ? 'subo' : 'bajo'} de ${antes}% a ${despues}%.`
     : `${datos} El punto de ${antes}% ya es el que pide la etapa: lo dejo igual.`
 
+  return aplicarDecisionDelAgente(e, ahora, {
+    herramienta: cambia ? 'actualizar_umbral_riego' : 'mantener_umbral',
+    valor: cambia ? ideal : antes,
+    justificacion,
+    confianza: cambia ? 76 : 82,
+  })
+}
+
+/**
+ * Aplica lo que decidió el agente (el de reglas de arriba o la IA de verdad)
+ * con los mismos frenos que agente-agronomo.js: el punto queda entre 10 y 90 y
+ * se mueve como mucho 5 puntos por vez. Un cambio de menos de 2 puntos no se
+ * aplica: es ruido.
+ */
+export function aplicarDecisionDelAgente(
+  e: Estado,
+  ahora: number,
+  pedida: { herramienta: DecisionDemo['herramienta']; valor: number; justificacion: string; confianza: number | null }
+): DecisionDemo {
+  const antes = e.umbral
+  const quiere = Math.round(Number.isFinite(pedida.valor) ? pedida.valor : antes)
+  const diferencia = quiere - antes
+  const paso = Math.max(-5, Math.min(5, diferencia))
+  const despues = Math.max(10, Math.min(90, antes + paso))
+  const cambia = pedida.herramienta === 'actualizar_umbral_riego' && Math.abs(despues - antes) >= 2
+
   const decision: DecisionDemo = {
     id: e.decisiones.reduce((m, d) => Math.max(m, d.id), 0) + 1,
     parcela_id: 1,
     cuando: sqlTs(ahora),
     herramienta: cambia ? 'actualizar_umbral_riego' : 'mantener_umbral',
     entrada: null,
-    justificacion,
-    confianza: cambia ? 76 : 82,
+    justificacion: pedida.justificacion,
+    confianza: pedida.confianza,
     valor_antes: antes,
     valor_despues: cambia ? despues : antes,
     aplicada: cambia,
-    acotada: cambia && acotada,
+    acotada: cambia && Math.abs(diferencia) > 5,
     revertida_en: null,
     revertida_por: null,
   }
@@ -777,7 +784,7 @@ export function decidirAgente(e: Estado, ahora: number, pronostico: Pronostico):
     cambiarPuntoDeRiego(e, despues, 'ia', ahora, `El agente movió el punto de riego de ${antes}% a ${despues}%`)
   } else {
     registrar(e, {
-      tipo: 'agente', detalle: `Mantuvo el punto en ${antes}%: ${justificacion}`, origen: 'ia',
+      tipo: 'agente', detalle: `Mantuvo el punto en ${antes}%: ${pedida.justificacion}`, origen: 'ia',
       parcela_id: 1, t: ahora, duracion_seg: null,
     })
   }

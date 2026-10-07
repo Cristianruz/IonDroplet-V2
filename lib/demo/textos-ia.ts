@@ -1,15 +1,18 @@
-// Lo que en el sistema real contesta la IA, en la demostración.
+// Las respuestas de reserva de la demostración.
 //
-// En internet no se llama a Claude: costaría dinero cada visita y pediría la
-// llave del dueño. Estos textos se arman con los números del sistema
-// simulado, en el mismo tono que usa el asistente de verdad. El diagnóstico
-// por foto dice claramente que es un ejemplo: ahí la foto no se mira.
+// En la demostración pública contesta la IA de verdad (ver contexto-ia.ts y
+// app/api/demo/ia). Estos textos solo salen si la IA no está disponible: sin
+// llave en el servidor, sin crédito, sin internet o con el límite del día
+// lleno. Se arman con los números del sistema simulado y del clima real, y
+// quien los enseña (index.ts) les pone delante que son de ejemplo. Nunca se
+// presentan como si los hubiera escrito la IA.
 //
 // Sin React ni navegador: se prueba con node --test.
 
 import { cultivoPorId, etapaPorId } from '../cultivos.ts'
 import { plagasDeCultivo } from '../plagas.ts'
 import { balanceDeDias, diaDeLaSemana, diasDeClima } from './clima.ts'
+import { indicadores } from './contexto-ia.ts'
 import {
   DIA,
   HORA,
@@ -96,7 +99,10 @@ export function consejo(e: Estado, pantalla: string, ahora: number): string {
   if (pantalla === 'plagas') {
     const plaga = plagasDeCultivo(p.cultivo)[0]
     const vigila = plaga ? `vigila ${plaga.nombre.toLowerCase()}` : 'revisa el envés de las hojas'
-    return `Con la tierra en ${h}% y tardes de 25 °C, ${vigila} esta semana. Las lluvias del fin de semana pueden traer hongos: después de que llueva, date una vuelta.`
+    const dias = diasDeClima(ahora)
+    const maxima = Math.round(Math.max(...dias.temperature_2m_max.slice(0, 3)))
+    const lluvia = dias.precipitation_sum.slice(0, 7).some(v => v >= 2)
+    return `Con la tierra en ${h}% y máximas de ${maxima} °C, ${vigila} esta semana.${lluvia ? ' El pronóstico trae lluvia: después de que llueva, revisa si aparecen hongos.' : ''}`
   }
   return loQueViene(e, ahora)
 }
@@ -131,116 +137,78 @@ function loQueViene(e: Estado, ahora: number): string {
     : 'Hoy no le toca agua. La tierra está arriba del punto de riego y el sistema la sigue vigilando.'
 }
 
-/** El análisis completo: los indicadores son números, el texto los explica. */
+/** El análisis de reserva: los indicadores son los mismos que lee la IA; el texto solo los repite. */
 export function analisis(e: Estado, ahora: number) {
   const p = principal(e)
+  const ind = indicadores(e, ahora)
   const h = humedadActual(e)
   const dias = diasDeClima(ahora)
-  const { etcSemana, lluviaSemana } = pronosticoSemana(e, ahora)
-  const deficit = balanceDeDias(ahora, kcDe(p.cultivo, p.etapa), 7).reduce((s, d) => s + (d.deficit_mm ?? 0), 0)
-  const minima = Math.min(...dias.temperature_2m_min)
-  const iMinima = dias.temperature_2m_min.indexOf(minima)
-  const maxima = Math.max(...dias.temperature_2m_max)
-  const probabilidad = Math.max(...dias.precipitation_probability_max)
-  const riegos = riegosDeLaSemana(e, ahora)
-  const minutos = Math.round(riegos.reduce((s, r) => s + (r.duracion_seg ?? 0), 0) / 60)
-  const conIon = riegos.length ? 100 : null
+  const nombreDia = (fecha: string) => diaDeLaSemana(new Date(fecha + 'T12:00:00').getTime())
 
-  const indicadores = {
-    sensor: sensorMudo(e)
-      ? { humedad: Math.round(ultimaLectura(e)?.h ?? h), minutos: Math.round((ahora - (ultimaLectura(e)?.t ?? ahora)) / MIN), vigente: false }
-      : { humedad: h, minutos: 0, vigente: true },
-    parcela: { nombre: p.nombre, cultivo: p.cultivo, etapa: p.etapa, area_ha: p.area_ha },
-    umbral: e.umbral,
-    helada: {
-      nivel: 'bajo',
-      minima_pronosticada: minima,
-      dia: dias.time[iMinima],
-      critica_del_cultivo: 0,
-      margen_grados: redondear(minima),
-      etapa_sensible: false,
-    },
-    calor: { nivel: 'bajo', maxima_pronosticada: maxima, estres_del_cultivo: 38 },
-    lluvia: {
-      probabilidad_maxima_pct: probabilidad,
-      mm_esperados_7d: redondear(lluviaSemana),
-      es_probabilidad_real: true,
-    },
-    agua: {
-      etc_mm_7d: redondear(etcSemana),
-      lluvia_mm_7d: redondear(lluviaSemana),
-      deficit_mm_7d: redondear(deficit),
-      puntos_sobre_umbral: h - e.umbral,
-    },
-    riego7d: { eventos: riegos.length, minutos, pct_con_ionizacion: conIon },
-    ionizacion: {
-      ultimo_pedido: e.ion.encendida ? 'encendida' : 'apagada',
-      desde: new Date(e.ion.desde).toISOString(),
-      confirmada_por_el_aparato: false,
-    },
-    fertirriego90d: e.fertirriego.flatMap(f => f.nutrientes).reduce<Array<{ nutriente: string; total: number; unidad: string | null }>>(
-      (lista, n) => {
-        const fila = lista.find(x => x.nutriente === n.nutriente && x.unidad === n.unidad)
-        if (fila) fila.total = redondear(fila.total + (n.cantidad ?? 0), 2)
-        else lista.push({ nutriente: n.nutriente, total: n.cantidad ?? 0, unidad: n.unidad })
-        return lista
-      },
-      []
-    ),
-    faltantes: [],
+  type Nivel = 'alto' | 'medio' | 'bajo'
+  const riesgos: Array<{ nombre: string; nivel: Nivel; dato: string; porque: string; quehacer: string }> = []
+  if (!ind.sensor.vigente) {
+    riesgos.push({
+      nombre: 'Sensor caído',
+      nivel: 'alto',
+      dato: `Última lectura: ${ind.sensor.humedad ?? '?'}% hace ${ind.sensor.minutos ?? '?'} minutos`,
+      porque: 'Sin lecturas el riego automático no decide.',
+      quehacer: 'Revisa el cable y la corriente del aparato.',
+    })
+  }
+  if (ind.agua.deficit_mm_7d > 0) {
+    riesgos.push({
+      nombre: 'Falta de agua',
+      nivel: ind.agua.deficit_mm_7d >= 15 ? 'medio' : 'bajo',
+      dato: `${ind.agua.deficit_mm_7d} mm de déficit en 7 días`,
+      porque: `El cultivo pide ${ind.agua.etc_mm_7d} mm y se esperan ${ind.agua.lluvia_mm_7d} mm de lluvia.`,
+      quehacer: 'El riego automático lo cubre. Revisa que los goteros no estén tapados.',
+    })
+  }
+  if (ind.helada.nivel === 'alto' || ind.helada.nivel === 'medio') {
+    riesgos.push({
+      nombre: 'Helada',
+      nivel: ind.helada.nivel,
+      dato: `Mínima de ${ind.helada.minima_pronosticada} °C el ${nombreDia(ind.helada.dia)}`,
+      porque: `El cultivo se daña a ${ind.helada.critica_del_cultivo} °C.`,
+      quehacer: 'Riega ligero la tarde anterior y consulta a un técnico si está en floración.',
+    })
+  }
+  if (ind.calor.nivel === 'alto' || ind.calor.nivel === 'medio') {
+    riesgos.push({
+      nombre: 'Calor',
+      nivel: ind.calor.nivel,
+      dato: `Máxima de ${ind.calor.maxima_pronosticada} °C`,
+      porque: `El cultivo se estresa desde ${ind.calor.estres_del_cultivo} °C.`,
+      quehacer: 'Deja el riego en automático y revisa que el agua llegue a todas las hileras.',
+    })
   }
 
   const analisisTexto = {
     resumen:
       `${p.nombre} está en ${nombreEtapa(p).toLowerCase()} con la tierra en ${h}%, ${h >= e.umbral ? 'arriba' : 'abajo'} del punto de riego de ${e.umbral}%. ` +
-      `Esta semana el cultivo pide ${redondear(etcSemana)} mm y se esperan ${redondear(lluviaSemana)} mm de lluvia, casi todos del cuarto día en adelante. ` +
-      `Los tres primeros días los cubre el riego automático.`,
-    confianza: 'alta',
-    porque_confianza: 'El sensor reporta al momento y el pronóstico es de hoy.',
-    riesgos: [
-      {
-        nombre: 'Tres días secos antes de la lluvia',
-        nivel: 'medio',
-        dato: `${redondear(deficit)} mm de déficit en la semana`,
-        porque: 'Los primeros días son los de más evaporación y no trae lluvia.',
-        quehacer: 'Nada extra: el riego automático lo cubre. Revisa que los goteros no estén tapados.',
-      },
-      {
-        nombre: 'Hongos después de la lluvia',
-        nivel: 'bajo',
-        dato: `Hasta ${probabilidad}% de probabilidad de lluvia`,
-        porque: 'Con el ruezno abriendo, la humedad sobre la nuez favorece manchas.',
-        quehacer: 'Date una vuelta después de que llueva y revisa la nuez de la parte baja.',
-      },
-      {
-        nombre: 'Helada',
-        nivel: 'bajo',
-        dato: `Mínima de ${minima} °C el ${diaDeLaSemana(ahora + iMinima * DIA)}`,
-        porque: 'Faltan semanas para las primeras heladas de la región.',
-        quehacer: 'No hace falta hacer nada.',
-      },
-    ],
-    pronostico: `Días templados, máximas de ${Math.min(...dias.temperature_2m_max)} a ${maxima} °C. La lluvia llega del cuarto día en adelante.`,
+      `En los próximos 7 días el cultivo pide ${ind.agua.etc_mm_7d} mm y se esperan ${ind.agua.lluvia_mm_7d} mm de lluvia.`,
+    confianza: ind.sensor.vigente ? 'media' : 'baja',
+    porque_confianza: ind.lluvia.es_probabilidad_real
+      ? 'El pronóstico es el real de hoy; la humedad viene de la simulación de la demostración.'
+      : 'No se pudo consultar el clima real: el pronóstico es de ejemplo.',
+    riesgos,
+    pronostico: `Máximas de ${Math.round(Math.min(...dias.temperature_2m_max))} a ${Math.round(Math.max(...dias.temperature_2m_max))} °C y mínimas desde ${Math.round(Math.min(...dias.temperature_2m_min))} °C. Probabilidad de lluvia de hasta ${ind.lluvia.probabilidad_maxima_pct}%, unos ${ind.agua.lluvia_mm_7d} mm en la semana.`,
     acciones: [
       {
-        prioridad: 'medio',
+        prioridad: 'media',
         texto: 'Deja el riego en automático esta semana.',
-        porque: `El punto de ${e.umbral}% es el que pide la etapa y el agente lo revisa cada día.`,
-      },
-      {
-        prioridad: 'bajo',
-        texto: 'Prepara la cosecha: no subas el punto de riego.',
-        porque: 'Con la tierra muy húmeda cuesta entrar con la maquinaria y la nuez se mancha.',
+        porque: `El punto de ${e.umbral}% lo cuida solo y el agente lo revisa cada día.`,
       },
     ],
     ionizacion: {
       recomendada: false,
-      porque: 'Todavía no hay mediciones que digan cuánto ayuda en esta etapa. Se puede seguir usando, pero no hay un número que lo sostenga.',
+      porque: 'El sistema no mide el efecto de la ionización: solo registra cuándo se encendió.',
     },
-    faltantes: [],
+    faltantes: ind.faltantes,
   }
 
-  return { analisis: analisisTexto, indicadores, cuando: new Date(ahora - 20 * 60000).toISOString() }
+  return { analisis: analisisTexto, indicadores: ind, cuando: new Date(ahora).toISOString() }
 }
 
 export function propuestaDeUmbral(e: Estado, ahora: number) {
@@ -464,10 +432,10 @@ export function reporteDeFoto(e: Estado, cuerpo: Record<string, unknown>) {
     plantaVista: planta,
     coincideConCultivo: 'no_se_puede_saber',
     resumen:
-      `Reporte de ejemplo: en la demostración la foto no se analiza. Así se ve el reporte que da la IA en el sistema real, armado con lo que se sabe de ${planta} en esta temporada.`,
+      `Reporte de ejemplo: la IA no está disponible en este momento y la foto no se analizó. Así se ve el reporte que da la IA, armado con lo que se sabe de ${planta} en esta temporada.`,
     observaciones: [
-      'En la demostración la foto no sale de tu teléfono ni se mira.',
-      'En el sistema real, aquí se describe lo que se ve en la foto: color, forma y tamaño del daño.',
+      'La foto no se analizó: la IA no contestó. Intenta de nuevo en un momento.',
+      'Cuando contesta la IA, aquí se describe lo que se ve en la foto: color, forma y tamaño del daño.',
     ],
     hipotesis,
     severidad: 'leve',

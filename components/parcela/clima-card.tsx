@@ -12,6 +12,14 @@ const ICONO_AVISO: Record<AvisoClima['tipo'], LucideIcon> = {
   calor: Thermometer,
 }
 
+function horaCorta(iso: string) {
+  return `${Number(iso.slice(11, 13))} h`
+}
+
+function horaDeConsulta(iso: string) {
+  return new Date(iso).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' })
+}
+
 // Abreviado a propósito: en una columna de 62px "Mañana" no cabe y se corta.
 function nombreDelDia(fecha: string, i: number) {
   if (i === 0) return 'Hoy'
@@ -79,15 +87,22 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
 
   if (!clima) return null
   const { ahora, dias, avisos } = clima
+  // Cada dos horas, las próximas doce: lo que de verdad cambia una decisión del día.
+  const horas = (clima.horas ?? []).filter((_, i) => i % 2 === 0).slice(0, 6)
 
   return (
     <section
       className="tarjeta flex flex-col gap-3.5"
       aria-label="Clima y pronóstico"
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap">
         <Sun size={17} style={{ color: 'var(--acento)' }} aria-hidden />
         <h2 className="text-[15px] font-bold">Clima en tu cultivo</h2>
+        {clima.ubicacion.lugar && (
+          <span className="text-[13px] texto-suave">
+            · {clima.ubicacion.lugar}, {clima.ubicacion.real ? 'en tiempo real' : 'pronóstico de ejemplo'}
+          </span>
+        )}
       </div>
 
       <div className="flex items-baseline gap-3 flex-wrap">
@@ -102,6 +117,25 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
           aire al {Math.round(ahora.relative_humidity_2m)}% · viento {Math.round(ahora.wind_speed_10m)} km/h
         </p>
       </div>
+
+      {horas.length > 0 && (
+        <div className="flex flex-col gap-1.5">
+          <p className="text-xs font-bold texto-suave">Próximas horas</p>
+          <div className="flex gap-[7px]">
+            {horas.map(h => (
+              <div key={h.hora} className="flex-1 text-center" style={{ minWidth: 0 }}>
+                <p className="text-xs texto-apagado">{horaCorta(h.hora)}</p>
+                <p className="text-[14px] font-bold" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {Math.round(h.temperatura)}°
+                </p>
+                <p className="text-xs font-bold" style={{ color: 'var(--agua)' }}>
+                  {Math.round(h.probabilidad)}%
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Los avisos van primero: son lo que cambia una decisión. */}
       {avisos.length > 0 && (
@@ -147,9 +181,13 @@ export function ClimaCard({ parcelaId }: { parcelaId: number | null }) {
 
       <p className="text-xs texto-apagado">
         Máxima, mínima y probabilidad de agua.{' '}
-        {clima.ubicacion.fuente === 'aparato'
-          ? 'La ubicación la reporta el aparato del campo.'
-          : 'Ubicación tomada de tu teléfono.'}
+        {clima.ubicacion.real === true
+          ? `Pronóstico real de Open-Meteo, consultado a las ${horaDeConsulta(clima.ubicacion.consultado ?? new Date().toISOString())}.`
+          : clima.ubicacion.real === false
+            ? 'No se pudo consultar el clima real: esta semana es de ejemplo.'
+            : clima.ubicacion.fuente === 'aparato'
+              ? 'La ubicación la reporta el aparato del campo.'
+              : 'Ubicación tomada de tu teléfono.'}
       </p>
     </section>
   )

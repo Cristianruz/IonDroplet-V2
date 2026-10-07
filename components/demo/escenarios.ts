@@ -22,7 +22,7 @@ export function escenarios(sensorConectado: boolean): Escenario[] {
     {
       id: 'secar',
       titulo: 'Secar la tierra',
-      detalle: 'Baja la humedad del punto de riego y mira cómo riega solo.',
+      detalle: 'Baja la humedad del punto de riego y mira cómo entra el riego.',
       Icono: Sun,
     },
     {
@@ -33,11 +33,11 @@ export function escenarios(sensorConectado: boolean): Escenario[] {
     },
     sensorConectado
       ? { id: 'sensor', titulo: 'Desconectar el sensor', detalle: 'La app te avisa y no riega a ciegas.', Icono: Unplug }
-      : { id: 'sensor', titulo: 'Volver a conectar el sensor', detalle: 'Regresan las lecturas y el riego sigue solo.', Icono: Plug },
+      : { id: 'sensor', titulo: 'Volver a conectar el sensor', detalle: 'Regresan las lecturas y el riego vuelve a decidir.', Icono: Plug },
     {
       id: 'porque',
       titulo: 'Preguntar por qué regó',
-      detalle: 'El asistente lo explica con los números del cultivo.',
+      detalle: 'Contesta la IA, con los números del cultivo y el clima real.',
       Icono: MessageCircleQuestion,
     },
   ]

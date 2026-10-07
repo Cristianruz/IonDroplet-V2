@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Sparkles } from 'lucide-react'
 import { apiFetch } from '@/lib/api'
 import { EVENTO_REFRESCAR, MODO_DEMO } from '@/lib/modo'
@@ -28,20 +28,27 @@ export function ConsejoIA({ pantalla, enCaja = false, clave }: Props) {
   const [consejo, setConsejo] = useState<string | null>(null)
   const [pensando, setPensando] = useState(true)
   const [fallo, setFallo] = useState(false)
+  // La IA puede tardar unos segundos: si mientras tanto se pidió otro consejo
+  // (empezó un riego), solo cuenta el último.
+  const ultimaPeticion = useRef(0)
 
   const pedir = useCallback(async () => {
+    const esta = ++ultimaPeticion.current
     try {
       const res = await apiFetch(`/api/ai/consejo?pantalla=${pantalla}`)
+      if (esta !== ultimaPeticion.current) return
       if (!res.ok) {
         setFallo(true)
         return
       }
       const datos = await res.json()
+      if (esta !== ultimaPeticion.current) return
       setConsejo(datos.consejo)
+      setFallo(false)
     } catch {
-      setFallo(true)
+      if (esta === ultimaPeticion.current) setFallo(true)
     } finally {
-      setPensando(false)
+      if (esta === ultimaPeticion.current) setPensando(false)
     }
   }, [pantalla])
 

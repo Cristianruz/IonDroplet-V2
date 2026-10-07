@@ -17,6 +17,7 @@ const CARPETAS = ['app', 'components', 'hooks', 'lib']
 const PERMITIDOS: Record<string, string> = {
   'lib/api.ts': 'es apiFetch',
   'app/entrar/page.tsx': 'pide el token; todavía no hay sesión que mandar',
+  'lib/demo/conexion.ts': 'la demostración pide el clima y la IA reales a su propio servidor (/api/demo), no al backend',
 }
 
 function archivos(carpeta: string): string[] {

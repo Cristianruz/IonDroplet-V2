@@ -165,8 +165,8 @@ const PASOS: Array<{ titulo: string; texto: string; Dibujo: () => ReactNode }> =
 
 const QUE_HACE: Array<[LucideIcon, string, string]> = [
   [Droplets, 'Mide la humedad de tu tierra', 'Un sensor en el campo, todo el día.'],
-  [Bot, 'Riega solo cuando hace falta', 'Según el clima y la etapa de tu cultivo.'],
-  [MessageCircle, 'Te explica cada decisión', 'Y te avisa si viene helada o lluvia.'],
+  [Bot, 'Riega cuando hace falta', 'Según el clima y la etapa de tu cultivo.'],
+  [MessageCircle, 'Asistente con IA', 'Resuelve tus dudas y te avisa si viene helada o lluvia.'],
 ]
 
 export function GuiaInicio() {
@@ -268,7 +268,7 @@ export function GuiaInicio() {
               </div>
               <p className="text-[16px] texto-suave leading-relaxed">
                 Somos un sistema de riego inteligente. Cuidamos el agua de tu cultivo para que no
-                le falte ni le sobre, y te explicamos todo con palabras sencillas.
+                le falte ni le sobre.
               </p>
             </div>
 
@@ -290,8 +290,9 @@ export function GuiaInicio() {
               <p className="text-sm flex items-start gap-2.5 rounded-[14px] p-3.5" style={{ background: 'var(--fondo-alerta)', color: 'var(--tinta)' }}>
                 <FlaskConical size={18} aria-hidden style={{ color: 'var(--alerta)', flexShrink: 0, marginTop: 1 }} />
                 <span>
-                  Estás viendo una <strong>demostración</strong> con datos de ejemplo: nada riega de
-                  verdad, así que toca todo con confianza.
+                  Estás viendo una <strong>simulación</strong>: el cultivo, el sensor y la bomba son de
+                  ejemplo y nada riega de verdad, así que toca todo con confianza. El clima es el real
+                  de Chihuahua y la IA que te contesta es real.
                 </span>
               </p>
             )}

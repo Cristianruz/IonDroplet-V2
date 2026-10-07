@@ -29,6 +29,7 @@ import {
   type ParcelaDemo,
 } from './simulacion.ts'
 import { balanceDeDias, clima } from './clima.ts'
+import { sincronizarAlertasDelClima } from './contexto-ia.ts'
 import {
   analisis,
   consejo,
@@ -209,6 +210,9 @@ export function responder(
   ahora: number
 ): Respuesta {
   avanzar(e, ahora)
+  // Los avisos del pronóstico entran a la campana en cuanto el pronóstico los
+  // trae, igual que el motor de alertas del backend.
+  if (ruta.startsWith('alertas') || ruta.startsWith('ai/') || ruta === 'chat') sincronizarAlertasDelClima(e, ahora)
   const partes = ruta.split('/').filter(Boolean)
   const [a, b, c] = partes
   const GET = metodo === 'GET'

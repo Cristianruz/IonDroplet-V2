@@ -11,8 +11,28 @@ export interface AvisoClima {
   texto: string
 }
 
+/** Una hora del pronóstico. Solo la manda la demostración pública. */
+export interface HoraClima {
+  hora: string
+  temperatura: number
+  probabilidad: number
+  lluvia_mm: number
+  codigo: number | null
+}
+
 export interface Clima {
-  ubicacion: { latitud: number; longitud: number; fuente: string | null; desde: string | null }
+  ubicacion: {
+    latitud: number
+    longitud: number
+    fuente: string | null
+    desde: string | null
+    /** Solo en la demostración: el lugar, si el pronóstico es el real y cuándo se consultó. */
+    lugar?: string
+    real?: boolean
+    consultado?: string | null
+  }
+  /** Solo en la demostración: las próximas horas del pronóstico real. */
+  horas?: HoraClima[]
   ahora: {
     temperature_2m: number
     relative_humidity_2m: number

@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { MessageCircle, X, Send, RotateCcw } from 'lucide-react'
 import { useAsistente, SUGERENCIAS } from '@/hooks/use-asistente'
 import { BotonAccionChat, VincularEnChat } from '@/components/ia/acciones-chat'
+import { NotaIADemo } from '@/components/ia/nota-ia-demo'
 
 // El asistente, siempre a la mano.
 //
@@ -114,7 +115,10 @@ export function BurbujaAsistente() {
               className="flex items-center justify-between gap-2 px-4 py-3"
               style={{ borderBottom: '1px solid var(--borde)' }}
             >
-              <span className="titulo-bloque">Asistente</span>
+              <span className="flex flex-col">
+                <span className="titulo-bloque">Asistente</span>
+                <NotaIADemo corta />
+              </span>
               <span className="flex items-center gap-1">
               {burbujas.length > 0 && (
                 <button

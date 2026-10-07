@@ -6,6 +6,7 @@ import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, RotateCcw, Send } from 'lucide-react'
 import { useAsistente, SUGERENCIAS } from '@/hooks/use-asistente'
 import { BotonAccionChat, VincularEnChat } from '@/components/ia/acciones-chat'
+import { NotaIADemo } from '@/components/ia/nota-ia-demo'
 
 function Asistente() {
   const { burbujas, enviando, aviso, pendiente, preguntar, nuevaConversacion, marcarAccionHecha } = useAsistente()
@@ -48,6 +49,7 @@ function Asistente() {
         <p className="text-base" style={{ color: 'var(--tinta-suave)' }}>
           Ve lo que miden tus aparatos. Pregúntale lo que necesites de tu riego.
         </p>
+        <NotaIADemo />
       </header>
 
 

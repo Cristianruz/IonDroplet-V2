@@ -13,7 +13,7 @@ web
 
 ## Product Purpose
 
-IonDroplet mide la humedad del suelo, decide cuándo regar y le explica al agricultor por qué. El éxito es que el agricultor entienda en un vistazo cómo está su cultivo y que el riego pase solo cuando hace falta; y que el jurado se lleve en un minuto que el sistema **riega solo y explica**.
+IonDroplet mide la humedad del suelo, decide cuándo regar y le explica al agricultor por qué. El éxito es que el agricultor entienda en un vistazo cómo está su cultivo y que el riego pase solo cuando hace falta; y que el jurado se lleve en un minuto el lema: **agua exacta, en el momento exacto**. (El usuario pidió el 6 oct 2026 no usar "riega solo y te explica".)
 
 ## Positioning
 
