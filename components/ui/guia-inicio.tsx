@@ -298,8 +298,8 @@ export function GuiaInicio() {
               <p className="text-sm flex items-start gap-2.5 rounded-[14px] p-3.5" style={{ background: 'var(--acento-suave)', color: 'var(--tinta)' }}>
                 <Eye size={18} aria-hidden style={{ color: 'var(--acento)', flexShrink: 0, marginTop: 1 }} />
                 <span>
-                  Aquí puedes ver el sistema funcionando con un cultivo de prueba. El clima de
-                  Chihuahua y la IA que te contesta son reales.
+                  Aquí puedes ver el sistema funcionando con un cultivo de prueba en Chihuahua. El
+                  clima y la IA están funcionando en tiempo real para que lo pruebes.
                 </span>
               </p>
             )}
