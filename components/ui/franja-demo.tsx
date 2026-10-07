@@ -2,15 +2,16 @@
 
 import { useCallback, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
-import { FlaskConical, Play } from 'lucide-react'
+import { Play, Sparkles } from 'lucide-react'
 import { EVENTO_ABRIR_PRUEBAS, MODO_DEMO } from '@/lib/modo'
 import { HojaPruebas } from '@/components/demo/hoja-pruebas'
 import { PuenteDemo } from '@/components/demo/puente-demo'
 
-// La franja de la demostración pública: delgada y en un solo renglón, para
-// que nadie confunda el cultivo simulado con una huerta de verdad sin
-// quitarle espacio a la app. Dice también lo que sí es real: la IA y el clima. Su botón abre los escenarios de prueba: sin
-// ellos, en un minuto de visita no se ve al sistema hacer nada.
+// La franja de arriba en la página pública: delgada y en un solo renglón,
+// para tener a la mano el botón de Pruébalo, que abre los escenarios de
+// prueba: sin ellos, en un minuto de visita no se ve al sistema hacer nada.
+// Que el cultivo es de ejemplo lo dice una vez la guía rápida, que se abre en
+// cada visita.
 //
 // Dentro del celular de la vista de presentación no se ve (lo dice el panel
 // de al lado); ahí solo queda el puente que recibe los escenarios.
@@ -35,10 +36,9 @@ export function FranjaDemo() {
       <div role="note" className="franja-demo">
         <div className="mx-auto flex items-center justify-between gap-3 px-4" style={{ maxWidth: 672, minHeight: 44 }}>
           <span className="flex items-center gap-2 min-w-0 text-[13.5px]">
-            <FlaskConical size={15} aria-hidden className="franja-demo-icono" />
+            <Sparkles size={15} aria-hidden className="franja-demo-icono" />
             <span className="truncate">
-              <strong>Simulación</strong>
-              <span className="franja-demo-suave"> · IA y clima reales</span>
+              <strong>Míralo en acción</strong>
             </span>
           </span>
           <button

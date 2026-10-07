@@ -165,7 +165,7 @@ export function Proyector() {
           <div className="flex flex-col gap-1 min-w-0">
             <p className="proyector-qr-titulo">Pruébala en tu celular</p>
             <p className="proyector-qr-sitio">{sitio}</p>
-            <p className="proyector-qr-nota">Simulación con datos de ejemplo: aquí nada riega de verdad.</p>
+            <p className="proyector-qr-nota">Escanea el código y pruébala tú.</p>
           </div>
         </footer>
       </section>
@@ -181,7 +181,7 @@ export function Proyector() {
             <Clock size={18} aria-hidden />
             <span className="tabular-nums">{textoHora(m.hora)}</span>
           </span>
-          <span className="chip-escena proyector-chip" style={{ color: '#7a5004' }}>Simulación: el tiempo va acelerado</span>
+          <span className="chip-escena proyector-chip" style={{ color: '#7a5004' }}>Tiempo acelerado</span>
           {pausado && <span className="chip-escena proyector-chip" style={{ color: '#13283d' }}>En pausa</span>}
         </div>
 

@@ -814,10 +814,7 @@ a:active {
 }
 .franja-demo-suave { opacity: .8; }
 .franja-demo-icono { flex-shrink: 0; }
-/* En los celulares más angostos queda solo "Demostración": la hoja de
-   Pruébalo y la bienvenida ya dicen que los datos son de ejemplo. */
 @media (max-width: 399px) { .franja-demo-icono { display: none; } }
-@media (max-width: 384px) { .franja-demo-suave { display: none; } }
 
 .franja-demo-boton {
   position: relative;

@@ -473,7 +473,7 @@ export function responder(
       al.estado = estado as typeof al.estado
       if (estado === 'atendida') {
         al.atendida_en = sqlTs(ahora)
-        al.atendida_por = 'Visita de la demostración'
+        al.atendida_por = 'Desde este celular'
       }
       return ok({ id, estado })
     }
@@ -503,7 +503,7 @@ export function responder(
       const d = e.decisiones.find(x => x.id === Number(c))
       if (!d || !d.aplicada || d.revertida_en) return error(400, 'Esa decisión no se puede deshacer.', { ok: false })
       d.revertida_en = sqlTs(ahora)
-      d.revertida_por = 'Visita de la demostración'
+      d.revertida_por = 'Desde este celular'
       cambiarPuntoDeRiego(e, d.valor_antes ?? e.umbral, 'usuario', ahora,
         `Se deshizo el cambio del agente: el punto vuelve a ${d.valor_antes}%`)
       return ok({ ok: true })
@@ -534,7 +534,7 @@ export function responder(
   }
 
   // Vincular el aparato no hace falta: en la demostración no hay llave.
-  if (a === 'dueno') return error(404, 'En la demostración no hace falta vincular este aparato.')
+  if (a === 'dueno') return error(404, 'Este aparato ya puede usar todo: no hace falta vincularlo.')
 
-  return error(404, 'Esta parte no existe en la demostración.')
+  return error(404, 'Esta parte no está disponible aquí.')
 }

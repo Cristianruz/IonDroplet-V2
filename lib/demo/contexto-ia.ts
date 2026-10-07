@@ -91,7 +91,7 @@ export function contextoDelSistema(e: Estado, ahora: number): string {
     partes.push(`El riego en curso empezó ${haceCuanto(ahora - e.riego.desde)} y lo pidió ${e.riego.origen === 'usuario' ? 'el agricultor a mano' : 'el sistema solo'}.`)
   }
   partes.push(`Punto de riego: la bomba enciende sola cuando la humedad baja de ${e.umbral}% y se apaga sola en cuanto la lectura pasa de ${e.umbral}%.`)
-  if (lloviendo(e, ahora)) partes.push('Está lloviendo sobre el cultivo en este momento (lluvia simulada por la prueba "Que llueva").')
+  if (lloviendo(e, ahora)) partes.push('Está lloviendo sobre el cultivo en este momento (lo pidió la persona con la prueba "Que llueva").')
 
   const datos: string[] = [`se llama "${p.nombre}"`, `tiene sembrado ${nombreCultivo(p).toLowerCase()}`]
   const etapa = nombreEtapa(p)

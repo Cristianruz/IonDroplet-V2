@@ -123,7 +123,7 @@ export function Presentacion() {
           <p className="text-[15px] texto-suave leading-snug">
             Apunta la cámara al código o entra a <span className="font-semibold texto-acento">{sitio}</span>
           </p>
-          <p className="text-sm texto-apagado mt-1">El cultivo es simulado: nada riega de verdad. El clima y la IA son reales.</p>
+          <p className="text-sm texto-apagado mt-1">Clima de Chihuahua e IA en tiempo real.</p>
           <div className="presentacion-qr-acciones">
             <button type="button" onClick={() => pedir('reiniciar')} className="boton boton-sutil">
               <RotateCcw size={16} aria-hidden />

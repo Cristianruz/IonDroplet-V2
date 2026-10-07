@@ -104,7 +104,7 @@ function factorDelDia(ms: number): number {
 
 /** El escenario "Que llueva" es simulado: se dice así, aunque el resto sea real. */
 function avisoDeLluviaSimulada(dia: string, lluviaAhora: number): AvisoDelClima {
-  return { tipo: 'lluvia', nivel: 'aviso', dia, texto: `Está lloviendo ahora (lluvia simulada por la prueba "Que llueva"): unos ${lluviaAhora} mm por hora.` }
+  return { tipo: 'lluvia', nivel: 'aviso', dia, texto: `Está lloviendo ahora (prueba "Que llueva"): unos ${lluviaAhora} mm por hora.` }
 }
 
 export function clima(ahora: number, desde: string, lluviaAhora = 0) {

@@ -68,7 +68,7 @@ export function HojaPruebas({ alCerrar }: { alCerrar: () => void }) {
               Mira al sistema trabajar
             </h2>
             <p className="text-[15px] texto-suave leading-snug">
-              El cultivo es simulado: toca con confianza, nada riega de verdad.
+              Elige una prueba y mira cómo responde el sistema.
             </p>
           </div>
           <button

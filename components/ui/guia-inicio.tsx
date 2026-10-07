@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { usePathname } from 'next/navigation'
 import {
-  Bot, Brain, Camera, ChevronLeft, Droplet, Droplets, FlaskConical, House, MessageCircle,
+  Bot, Brain, Camera, ChevronLeft, Droplet, Droplets, House, Info, MessageCircle,
   Settings, Sprout, TrendingUp, X, type LucideIcon,
 } from 'lucide-react'
 import { Logo } from '@/components/ui/logo'
@@ -24,9 +24,17 @@ const CLAVE = 'iondroplet.bienvenida-v2'
 /** Otra pantalla (Inicio, Ajustes) la abre mandando este evento. */
 export const EVENTO_ABRIR_GUIA = 'iondroplet:abrir-guia'
 
+// En la página pública se abre en cada visita, en cualquier celular: cada
+// quien que escanea el código la ve. Se guarda por pestaña (sessionStorage),
+// así no reaparece al cambiar de pantalla ni cuando la cámara recarga la
+// página. En la computadora del riego sale una sola vez (localStorage).
+function almacen(): Storage {
+  return MODO_DEMO ? sessionStorage : localStorage
+}
+
 function yaSeVio(): boolean {
   try {
-    return localStorage.getItem(CLAVE) === '1'
+    return almacen().getItem(CLAVE) === '1'
   } catch {
     // Sin almacenamiento (modo privado) no se insiste en cada pantalla.
     return true
@@ -35,7 +43,7 @@ function yaSeVio(): boolean {
 
 function marcarVista() {
   try {
-    localStorage.setItem(CLAVE, '1')
+    almacen().setItem(CLAVE, '1')
   } catch {}
 }
 
@@ -288,11 +296,10 @@ export function GuiaInicio() {
 
             {MODO_DEMO && (
               <p className="text-sm flex items-start gap-2.5 rounded-[14px] p-3.5" style={{ background: 'var(--fondo-alerta)', color: 'var(--tinta)' }}>
-                <FlaskConical size={18} aria-hidden style={{ color: 'var(--alerta)', flexShrink: 0, marginTop: 1 }} />
+                <Info size={18} aria-hidden style={{ color: 'var(--alerta)', flexShrink: 0, marginTop: 1 }} />
                 <span>
-                  Estás viendo una <strong>simulación</strong>: el cultivo, el sensor y la bomba son de
-                  ejemplo y nada riega de verdad, así que toca todo con confianza. El clima es el real
-                  de Chihuahua y la IA que te contesta es real.
+                  Para que lo pruebes sin riesgo, el cultivo es de ejemplo y nada riega de verdad. El
+                  clima de Chihuahua y la IA que te contesta son reales.
                 </span>
               </p>
             )}

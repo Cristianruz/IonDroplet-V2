@@ -190,7 +190,7 @@ export function analisis(e: Estado, ahora: number) {
       `En los próximos 7 días el cultivo pide ${ind.agua.etc_mm_7d} mm y se esperan ${ind.agua.lluvia_mm_7d} mm de lluvia.`,
     confianza: ind.sensor.vigente ? 'media' : 'baja',
     porque_confianza: ind.lluvia.es_probabilidad_real
-      ? 'El pronóstico es el real de hoy; la humedad viene de la simulación de la demostración.'
+      ? 'El pronóstico es el real de hoy.'
       : 'No se pudo consultar el clima real: el pronóstico es de ejemplo.',
     riesgos,
     pronostico: `Máximas de ${Math.round(Math.min(...dias.temperature_2m_max))} a ${Math.round(Math.max(...dias.temperature_2m_max))} °C y mínimas desde ${Math.round(Math.min(...dias.temperature_2m_min))} °C. Probabilidad de lluvia de hasta ${ind.lluvia.probabilidad_maxima_pct}%, unos ${ind.agua.lluvia_mm_7d} mm en la semana.`,
@@ -366,7 +366,7 @@ export function responderChat(e: Estado, pregunta: string, ahora: number): { res
   }
   return {
     respuesta:
-      'En la demostración contesto preguntas de ejemplo: si conviene regar, el clima, la helada, la etapa del cultivo, plagas, fertilizante y el sensor. En el sistema real contesta la IA con los datos de tu cultivo, y puedes preguntarle lo que quieras.',
+      'Puedo contestarte si conviene regar, cómo viene el clima, si hay riesgo de helada, la etapa del cultivo, plagas, fertilizante y el sensor.',
     accion: null,
   }
 }
