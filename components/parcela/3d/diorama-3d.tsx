@@ -33,6 +33,11 @@ export interface AtributosDiorama {
   vecinas: Array<{ cultivo: string; etapa: string | null; humedad: number | null; umbral: number }>
   /** Marca de la última lectura: cada vez que cambia, el sensor da un pulso. */
   lectura: string
+  /**
+   * Hora del día, decimal. Solo la pasa la pantalla del proyector, que cuenta
+   * un día acelerado; sin ella la luz sigue al reloj del teléfono.
+   */
+  hora?: number | null
 }
 
 export interface ControlDiorama {
@@ -71,6 +76,7 @@ function aTexto(a: AtributosDiorama): Record<string, string> {
     modo: a.modo,
     vecinas: JSON.stringify(a.vecinas),
     lectura: a.lectura,
+    hora: a.hora == null ? '' : a.hora.toFixed(3),
   }
 }
 

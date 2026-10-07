@@ -491,6 +491,10 @@ class ParcelaDiorama extends HTMLElement {
     this.scene?.traverse(o => { if (o.isMesh) o.geometry?.dispose(); });
     if (this.M) Object.values(this.M).forEach(m => { m.map?.dispose(); m.dispose?.(); });
     this.salpicones?.forEach(s => s.material.dispose());
+    // Suelta el contexto de WebGL ya, sin esperar a la recolección: el
+    // proyector vuelve a armar la escena con cada cultivo durante horas y el
+    // navegador solo deja unos cuantos contextos vivos.
+    this.renderer?.forceContextLoss();
     this.renderer?.dispose();
     this.renderer = null;
     this.scene = null;
@@ -1054,8 +1058,9 @@ class ParcelaDiorama extends HTMLElement {
       // Una gota por gotero (y algunas de más, desfasadas): se hincha en la
       // boquilla, cae y salpica.
       const n = Math.max(1, this.emisores.length) * 2;
+      // Gota de 0.065: con menos no se distingue en un proyector ni a pleno sol.
       for (let i = 0; i < Math.min(48, n); i++) {
-        const m = esfera(0.045, this.M.agua, 1);
+        const m = esfera(0.065, this.M.agua, 1);
         m.visible = false; m.userData.t = Math.random(); g.add(m); this.gotas.push(m);
       }
     } else if (sis === 'aspersion') {
@@ -1073,8 +1078,10 @@ class ParcelaDiorama extends HTMLElement {
           this.emisores.push([x, 1.02, z]);
         }
       });
-      for (let i = 0; i < 90; i++) {
-        const m = esfera(0.038, this.M.agua, 0);
+      // 144 gotas de 0.052 (antes 90 de 0.038): los chorros se leen como agua
+      // desde el fondo de un salón y a pleno sol, no como polvito.
+      for (let i = 0; i < 144; i++) {
+        const m = esfera(0.052, this.M.agua, 0);
         m.visible = false;
         m.userData = { t: Math.random(), chorro: i % 3, d: Math.random() };
         g.add(m); this.gotas.push(m);
@@ -1325,7 +1332,7 @@ class ParcelaDiorama extends HTMLElement {
           m.position.set(e[0], lerp(e[1] - 0.03, 0.17, f * f), e[2]);
           m.scale.set(0.8, 1.35, 0.8);
         }
-        if (!quieto && t < antes) this.salpicar(e[0], 0.165, e[2], 0.55);
+        if (!quieto && t < antes) this.salpicar(e[0], 0.165, e[2], 0.8);
       });
       // La mancha crece mientras riega y se seca después.
       const w = this.mojadoRiego;

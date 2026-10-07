@@ -3,7 +3,7 @@ node_modules/
 
 # Next.js
 .next/
-.next-demo/
+.next-demo*/
 out/
 build/
 
@@ -29,3 +29,6 @@ next-env.d.ts
 
 # Capturas de revisión de impeccable (se regeneran)
 .impeccable/review/
+
+# Video de la pantalla del proyector (se regenera)
+*.mp4

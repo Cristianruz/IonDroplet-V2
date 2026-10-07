@@ -1016,6 +1016,568 @@ html[data-enmarcada]::-webkit-scrollbar { display: none; }
 }
 
 /* ==================================================================
+   PROYECTOR (/proyector, solo en la demostración)
+   La demostración corre sola atrás de quien presenta y se lee desde el
+   fondo del salón. Todo crece con lo ancho (vw) y se encoge con lo bajito
+   (vh): cabe igual en un proyector de 1024 × 768 que en una tele de
+   1920 × 1080, sin desplazarse. Siempre en claro (ver layout.tsx).
+   ================================================================== */
+.proyector {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  grid-template-columns: minmax(380px, 40%) minmax(0, 1fr);
+  background: var(--fondo);
+  overflow: hidden;
+}
+.proyector[data-cursor="no"],
+.proyector[data-cursor="no"] * { cursor: none; }
+
+.proyector-panel {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.2vh, 26px);
+  min-height: 0;
+  padding: clamp(18px, 4vh, 48px) clamp(22px, 3vw, 56px);
+}
+.proyector-marca {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.proyector-nombre {
+  font-size: clamp(1.3rem, min(1.7vw, 3vh), 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+.proyector-lema {
+  font-size: clamp(1.1rem, min(1.55vw, 2.8vh), 1.9rem);
+  font-weight: 650;
+  line-height: 1.25;
+  color: var(--tinta-suave);
+  text-wrap: balance;
+}
+
+.proyector-relato {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: clamp(8px, 1.6vh, 18px);
+  animation: aparecer 500ms var(--curva);
+}
+.proyector-cultivo {
+  font-size: clamp(.95rem, min(1.15vw, 2.1vh), 1.4rem);
+  font-weight: 650;
+  color: var(--etiqueta);
+}
+.proyector-titulo {
+  font-size: clamp(1.9rem, min(3.1vw, 5.6vh), 3.9rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.proyector-detalle {
+  max-width: 34ch;
+  font-size: clamp(1.1rem, min(1.5vw, 2.7vh), 1.85rem);
+  line-height: 1.4;
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+  font-variant-numeric: tabular-nums;
+}
+.proyector-chat {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2vh, 12px);
+}
+.proyector-globo {
+  max-width: 92%;
+  padding: .55em .9em;
+  border-radius: var(--radio);
+  font-size: clamp(1rem, min(1.3vw, 2.4vh), 1.6rem);
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+  text-wrap: pretty;
+}
+.proyector-globo.globo-mio { align-self: flex-end; font-weight: 650; }
+.proyector-globo.globo { align-self: flex-start; box-shadow: var(--sombra-tarjeta); }
+
+/* Los capítulos de este cultivo: el de ahora se alarga. */
+.proyector-pasos {
+  display: flex;
+  gap: 6px;
+  margin-top: clamp(2px, .8vh, 8px);
+}
+.proyector-pasos li {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radio-pill);
+  background: var(--pista);
+  transition: width var(--lento) var(--curva), background-color var(--lento);
+}
+.proyector-pasos li[data-paso="hecho"] { background: var(--tinta-suave); }
+.proyector-pasos li[data-paso="ahora"] { width: 28px; background: var(--tinta); }
+
+.proyector-medidor {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.2vh, 12px);
+  padding-top: clamp(10px, 2.2vh, 24px);
+  border-top: 1px solid var(--borde);
+}
+.proyector-lectura {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 18px;
+}
+.proyector-cifra {
+  font-size: clamp(3rem, min(5.4vw, 9.6vh), 6.8rem);
+  font-weight: 750;
+  line-height: .9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.proyector-cifra small {
+  margin-left: 4px;
+  font-size: .45em;
+  font-weight: 650;
+  color: var(--tinta-suave);
+}
+.proyector .capsula {
+  padding: .4em .95em;
+  font-size: clamp(.95rem, min(1.2vw, 2.2vh), 1.45rem);
+}
+.proyector-barra {
+  --c: var(--ok);
+  position: relative;
+  height: clamp(10px, 1.6vh, 16px);
+  border-radius: var(--radio-pill);
+  background: var(--pista);
+}
+.proyector-barra-relleno {
+  position: absolute;
+  inset: 0 auto 0 0;
+  border-radius: inherit;
+  background: var(--c);
+  transition: width 200ms linear, background-color var(--lento);
+}
+/* La raya del punto de riego, en tinta como en el medidor de Inicio. */
+.proyector-barra-punto {
+  position: absolute;
+  top: -6px;
+  bottom: -6px;
+  width: 3px;
+  margin-left: -1.5px;
+  border-radius: 2px;
+  background: var(--tinta);
+}
+.proyector-medidor-pie {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: clamp(.9rem, min(1.05vw, 1.9vh), 1.25rem);
+  font-weight: 600;
+  color: var(--etiqueta);
+}
+
+.proyector-qr {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 1.6vw, 24px);
+  padding-top: clamp(10px, 2.2vh, 24px);
+  border-top: 1px solid var(--borde);
+}
+/* Grande: se escanea desde unos pasos atrás del proyector. */
+.proyector-qr .codigo-qr {
+  width: clamp(130px, min(13vw, 23vh), 280px);
+  height: clamp(130px, min(13vw, 23vh), 280px);
+  flex-shrink: 0;
+}
+.proyector-qr-titulo {
+  font-size: clamp(1.1rem, min(1.45vw, 2.6vh), 1.75rem);
+  font-weight: 750;
+  letter-spacing: -0.01em;
+}
+.proyector-qr-sitio {
+  font-size: clamp(.95rem, min(1.15vw, 2.1vh), 1.4rem);
+  font-weight: 700;
+  color: var(--acento);
+  overflow-wrap: anywhere;
+}
+.proyector-qr-nota {
+  font-size: clamp(.85rem, min(.95vw, 1.8vh), 1.1rem);
+  color: var(--apagado);
+}
+
+/* La escena: el cielo lo pinta ella misma. Entra suave con cada cultivo. */
+.proyector-escena-caja {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  background: #d8ebf3;
+}
+@keyframes aparecer-escena {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+.proyector-escena {
+  position: absolute;
+  inset: 0;
+  animation: aparecer-escena 1.2s var(--curva);
+}
+.proyector-chips {
+  position: absolute;
+  top: clamp(12px, 2.4vh, 28px);
+  left: clamp(12px, 1.6vw, 28px);
+  right: clamp(12px, 1.6vw, 28px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  pointer-events: none;
+}
+.proyector-chip {
+  gap: 8px;
+  padding: .4em .9em;
+  font-size: clamp(.9rem, min(1.05vw, 1.9vh), 1.25rem);
+}
+/* Las bandas de abajo dicen lo que pasa con el agua: se leen desde el fondo. */
+.proyector {
+  --alto-banda: clamp(56px, 8.5vh, 96px);
+}
+.proyector-banda {
+  height: auto;
+  min-height: var(--alto-banda);
+  gap: .55em;
+  padding: 0 clamp(16px, 2vw, 32px);
+  font-size: clamp(1.15rem, min(1.7vw, 3vh), 2.2rem);
+  background-size: 96px 100%;
+}
+.proyector-banda > svg,
+.proyector-aviso > svg {
+  width: 1.25em;
+  height: 1.25em;
+  flex-shrink: 0;
+}
+/* La de lluvia: rayas casi verticales, como la lluvia que cae. */
+.proyector-banda-lluvia {
+  background-image: repeating-linear-gradient(100deg, rgba(255, 255, 255, .2) 0 6px, rgba(255, 255, 255, 0) 6px 22px);
+}
+.proyector-aviso {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: var(--alto-banda);
+  display: flex;
+  align-items: center;
+  gap: .55em;
+  padding: 0 clamp(16px, 2vw, 32px);
+  background: var(--fondo-alerta);
+  border-top: 1px solid color-mix(in srgb, var(--alerta) 30%, transparent);
+  color: var(--tinta);
+  font-size: clamp(1.15rem, min(1.7vw, 3vh), 2.2rem);
+  font-weight: 700;
+}
+.proyector-aviso > svg { color: var(--alerta); }
+
+/* "Pruébala tú": el código en grande encima de la escena, para escanearlo
+   desde lejos. Sobre el velo marino de las hojas de la app. */
+.proyector-velo {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 16px;
+  background: rgba(19, 40, 61, .42);
+  animation: aparecer-escena 600ms var(--curva);
+}
+.proyector-tarjeta-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(6px, 1.2vh, 12px);
+  padding: clamp(18px, 2.4vw, 36px);
+  border-radius: var(--radio);
+  background: var(--tarjeta);
+  box-shadow: var(--sombra-elevada);
+  text-align: center;
+}
+.proyector-tarjeta-qr .codigo-qr {
+  width: min(50vh, 30vw);
+  height: min(50vh, 30vw);
+  margin-bottom: clamp(4px, 1vh, 10px);
+}
+.proyector-tarjeta-qr-titulo {
+  font-size: clamp(1.4rem, min(2.4vw, 4.2vh), 3rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+}
+
+/* Aparecen al mover el mouse y se van solos: en el evento nadie los ve. */
+.proyector-controles {
+  position: absolute;
+  right: clamp(12px, 1.6vw, 28px);
+  bottom: calc(var(--alto-banda) + 14px);
+  display: flex;
+  gap: 8px;
+  transition: opacity var(--lento) var(--curva);
+}
+.proyector-controles[data-visible="no"] { opacity: 0; pointer-events: none; }
+.proyector-control {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 48px;
+  min-height: 48px;
+  border-radius: var(--radio-pill);
+  background: rgba(255, 255, 255, .94);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-boton);
+  color: var(--tinta);
+  font-weight: 700;
+  cursor: pointer;
+}
+.proyector-control-texto { padding: 0 16px; }
+@media (hover: hover) and (pointer: fine) {
+  .proyector-control:hover { background: #ffffff; }
+}
+
+/* En una ventana angosta (no es el caso del proyector): escena arriba y lo
+   demás abajo, desplazándose. */
+@media (max-width: 899px) {
+  .proyector {
+    position: static;
+    min-height: 100dvh;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: 56vh auto;
+    overflow: visible;
+  }
+  .proyector-escena-caja { grid-row: 1; }
+  .proyector-panel { grid-row: 2; }
+}
+
+/* ==================================================================
+   RECORRIDO "ASÍ RIEGA IONDROPLET" (/proceso, solo en la demostración)
+   La escena 3D a todo lo ancho y, encima, tarjetas blancas que flotan:
+   la marca arriba, la lectura del sensor a la derecha y el paso en curso
+   abajo a la izquierda. Se lee desde el fondo del salón y cabe igual de
+   1024 × 768 a 1920 × 1080. Siempre en claro (ver layout.tsx).
+   ================================================================== */
+.proceso {
+  --alto-banda: 0px;
+  --orilla: clamp(16px, 2vw, 36px);
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: #cfe6f2;
+}
+.proceso[data-cursor="no"],
+.proceso[data-cursor="no"] * { cursor: none; }
+.proceso-escena {
+  position: absolute;
+  inset: 0;
+}
+.proceso-fallo {
+  position: absolute;
+  inset: auto var(--orilla) 45% var(--orilla);
+  text-align: center;
+  font-weight: 700;
+}
+
+.proceso-cabeza {
+  position: absolute;
+  top: clamp(14px, 2.6vh, 32px);
+  left: var(--orilla);
+  right: var(--orilla);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  pointer-events: none;
+}
+.proceso-marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(1.2rem, min(1.6vw, 2.9vh), 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--tinta);
+}
+.proceso-cabeza .proceso-marca {
+  padding: .3em .9em .3em .3em;
+  border-radius: var(--radio-pill);
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  box-shadow: var(--sombra-tarjeta);
+}
+.proceso-chip {
+  padding: .45em 1em;
+  font-size: clamp(.9rem, min(1.05vw, 1.9vh), 1.25rem);
+}
+
+/* Las tarjetas que flotan sobre la escena. */
+.proceso-medidor,
+.proceso-relato,
+.proceso-final-tarjeta {
+  background: var(--tarjeta);
+  border: 1px solid var(--borde);
+  border-radius: var(--radio);
+  box-shadow: var(--sombra-elevada);
+}
+.proceso-medidor {
+  position: absolute;
+  top: calc(clamp(14px, 2.6vh, 32px) + clamp(52px, 7.5vh, 76px));
+  right: var(--orilla);
+  width: clamp(300px, 27vw, 480px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(6px, 1.1vh, 12px);
+  padding: clamp(14px, 1.4vw, 24px);
+}
+.proceso-medidor-fila {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 14px;
+}
+.proceso-cifra {
+  font-size: clamp(2.4rem, min(4vw, 7vh), 5rem);
+  font-weight: 750;
+  line-height: .9;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.proceso-cifra small {
+  margin-left: 3px;
+  font-size: .45em;
+  font-weight: 650;
+  color: var(--tinta-suave);
+}
+.proceso .capsula {
+  padding: .4em .95em;
+  font-size: clamp(.9rem, min(1.1vw, 2vh), 1.35rem);
+}
+.proceso-rele {
+  --c: var(--apagado);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-top: clamp(6px, 1.1vh, 12px);
+  border-top: 1px solid var(--borde);
+  font-size: clamp(.95rem, min(1.15vw, 2.1vh), 1.4rem);
+  font-weight: 700;
+}
+.proceso-rele-punto {
+  width: .6em;
+  height: .6em;
+  border-radius: 50%;
+  background: var(--c);
+  flex-shrink: 0;
+}
+
+.proceso-relato {
+  position: absolute;
+  left: var(--orilla);
+  bottom: clamp(16px, 3vh, 40px);
+  max-width: min(48vw, 860px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(8px, 1.4vh, 16px);
+  padding: clamp(16px, 1.8vw, 32px);
+  animation: aparecer 500ms var(--curva);
+}
+.proceso-titulo-fila {
+  display: flex;
+  align-items: center;
+  gap: clamp(10px, 1vw, 18px);
+}
+/* El número del paso: marino del sitio de demostración, no turquesa (no se toca). */
+.proceso-numero {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: clamp(40px, min(3.4vw, 6vh), 66px);
+  height: clamp(40px, min(3.4vw, 6vh), 66px);
+  border-radius: 50%;
+  background: var(--tinta);
+  color: var(--fondo);
+  font-size: clamp(1.2rem, min(1.8vw, 3.2vh), 2.2rem);
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.proceso-titulo {
+  font-size: clamp(1.6rem, min(2.9vw, 5.2vh), 3.6rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  text-wrap: balance;
+}
+.proceso-detalle {
+  max-width: 40ch;
+  font-size: clamp(1.05rem, min(1.45vw, 2.6vh), 1.8rem);
+  line-height: 1.4;
+  color: var(--tinta-suave);
+  text-wrap: pretty;
+  font-variant-numeric: tabular-nums;
+}
+
+/* El cierre: el lema y el código en grande sobre el velo marino. El texto
+   lleva ancho fijo para que el lema no se parta palabra por palabra. */
+.proceso-final {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: var(--orilla);
+  background: rgba(19, 40, 61, .42);
+  animation: aparecer-escena 800ms var(--curva);
+}
+.proceso-final-tarjeta {
+  display: flex;
+  align-items: center;
+  gap: clamp(20px, 3vw, 56px);
+  max-width: 94vw;
+  padding: clamp(24px, 3vw, 56px);
+}
+.proceso-final-tarjeta .codigo-qr {
+  width: min(46vh, 26vw);
+  height: min(46vh, 26vw);
+  flex-shrink: 0;
+}
+.proceso-final-texto {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 1.8vh, 20px);
+  width: min(36vw, 620px);
+}
+.proceso-final-titulo {
+  font-size: clamp(2rem, min(3.6vw, 6.4vh), 4.6rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+  text-wrap: balance;
+}
+.proceso-final-sitio {
+  font-size: clamp(1.1rem, min(1.6vw, 2.8vh), 2rem);
+  font-weight: 750;
+  color: var(--acento);
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 899px) {
+  .proceso-relato { right: var(--orilla); max-width: none; }
+  .proceso-medidor { left: var(--orilla); width: auto; }
+  .proceso-final-tarjeta { flex-direction: column; text-align: center; }
+}
+
+/* ==================================================================
    MODO OPERACIÓN
    Aparte y más denso todavía. Va bajo .op para que no se filtre.
    ================================================================== */

@@ -24,9 +24,12 @@ export const viewport: Viewport = {
 
 // Corre ANTES de pintar. Sin esto, quien escogió oscuro vería un
 // destello blanco en cada carga.
+// El proyector y el recorrido siempre van en claro: un proyector deslava los
+// fondos oscuros.
 const TEMA_SIN_PARPADEO = `
 try {
   var t = localStorage.getItem('iondroplet.tema');
+  if (location.pathname.indexOf('/proyector') === 0 || location.pathname.indexOf('/proceso') === 0) t = 'claro';
   if (t === 'claro' || t === 'oscuro') document.documentElement.setAttribute('data-tema', t);
 } catch (e) {}
 `
@@ -35,7 +38,7 @@ try {
 // la app se enseña adentro de un celular (/presentacion); adentro de ese
 // celular se marca la página para que no repita la franja de arriba. Quien
 // prefiere verla sin el marco entra con ?marco=no y la pestaña lo recuerda.
-// /operacion y /entrar nunca se enmarcan.
+// /operacion, /entrar, /proyector y /proceso nunca se enmarcan.
 const MARCO_DEMO = `
 (function () {
   try {
@@ -51,7 +54,7 @@ const MARCO_DEMO = `
       }
       return;
     }
-    if (ancho && !sinMarco && !/^\\/(operacion|entrar)/.test(l.pathname)) {
+    if (ancho && !sinMarco && !/^\\/(operacion|entrar|proyector|proceso)/.test(l.pathname)) {
       l.replace('/presentacion?ruta=' + encodeURIComponent(l.pathname + l.search));
     }
   } catch (e) {}
